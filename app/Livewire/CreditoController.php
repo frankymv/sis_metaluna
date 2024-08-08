@@ -68,6 +68,10 @@ class CreditoController extends Component
         ->get();
 
 
+
+
+
+
         $this->total_creditos = DB::table('creditos')
         ->rightJoin('ventas','creditos.venta_id','=','ventas.id')
         ->rightJoin('clientes','creditos.cliente_id','=','clientes.id')
@@ -130,11 +134,27 @@ class CreditoController extends Component
 
     public function exportarFila($id)
     {
-        $fecha_reporte=Carbon::now()->toDateTimeString();
-        $credito=Credito::find($id)->toArray();
-        $cliente=Cliente::find($credito['cliente_id'])->toArray();
 
-        $pdf = Pdf::loadView('/livewire/pdf/pdfCredito ',['credito'=>$credito,'cliente'=>$cliente]);
+        $credito=Credito::with('venta')->with('cliente')
+        ->where('no_credito',1)->first();
+
+/*
+        $this->creditos = DB::table('creditos')
+        ->rightJoin('ventas','creditos.venta_id','=','ventas.id')
+        ->rightJoin('clientes','creditos.cliente_id','=','clientes.id')
+        ->where('creditos.no_credito','LIKE',"%{$this->filtroNoCredito}%")
+        ->where('creditos.fecha_credito','LIKE',"%{$this->filtroFechaCredito}%")
+        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
+        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+        ->get();
+*/
+
+
+
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+
+
+        $pdf = Pdf::loadView('/livewire/pdf/pdfCredito ',['dato'=>$credito]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter')->stream();
             }, "$this->title-$fecha_reporte.pdf");

@@ -139,12 +139,9 @@ class NotaCreditoController extends Component
 
         public function updatedSearchNoVenta($value){
             $this->reset(['search_nombres_cliente','search_codigo_cliente']);
-
             $this->ventas=Venta::with('cliente')
             ->where('no_venta','LIKE',"%{$value}%")
             ->get();
-
-
         }
 
 
@@ -174,7 +171,6 @@ class NotaCreditoController extends Component
         public function agregarVenta($id)
         {
             $this->cancelarBuscarVenta();
-
             $venta=Venta::find($id);
 
             $this->correlativo=$venta->correlativo+1;
@@ -183,10 +179,7 @@ class NotaCreditoController extends Component
             $this->venta_id=$venta->id;
             $this->fecha_venta=$venta->fecha_venta;
 
-
             $this->total_venta=$venta->total_venta-$venta->total_nota_credito;
-
-
 
             $this->codigo_interno=$venta->cliente->codigo_interno;
             $this->nombre_empresa=$venta->cliente->nombre_empresa;

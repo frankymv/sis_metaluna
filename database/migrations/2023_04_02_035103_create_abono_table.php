@@ -30,7 +30,8 @@ return new class extends Migration
             $table->string('detalle_pago')->nullable(true);
 
             $table->boolean('abono_anticipado')->default(false)->nullable(true);
-            $table->integer('cliente_id')->nullable(true);
+            $table->unsignedBigInteger('cliente_id')->nullable(true);
+            $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->boolean('abono_anticipado_asignado')->default(false)->nullable(true);
 
             $table->timestamps();
