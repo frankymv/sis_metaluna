@@ -217,7 +217,7 @@ class AbonoController extends Component
         };
 
 
-
+        $this->alertaNotificacion("store");
         $this->cancel();
 
     }
@@ -304,7 +304,7 @@ class AbonoController extends Component
             ]
         );
 
-
+        $this->alertaNotificacion("store");
         $this->cancel();
 
 
@@ -364,6 +364,8 @@ class AbonoController extends Component
                 'detalle_pago'=>$this->detalle_pago,
                 'abono_anticipado_asignado'=>true,
             ]);
+
+        $this->alertaNotificacion("store");
 
         if($this->nuevo_saldo_asignar!=0){
             DB::table('ventas')
@@ -551,19 +553,8 @@ class AbonoController extends Component
                     'saldo_venta'=>$data->saldo_credito
                 ]);
             }
+            $this->alertaNotificacion("destroy");
             $data->delete();
-
-
-        $this->alert('error', 'Borrado exitosamente', [
-            'position' => 'center',
-            'timer' => '2000',
-            'toast' => true,
-            'showConfirmButton' => false,
-            'onConfirmed' => '',
-            'timerProgressBar' => true,
-            'text' => 'Registro borrado exitosamente',
-        ]);
-
 
 
             if(DB::table('estado_cuentas')->where('cliente_id',$this->cliente_id)->exists()){
@@ -603,5 +594,40 @@ class AbonoController extends Component
         $this->reset(['venta_id','cantidad_credito_actual','cantidad_abono','saldo_credito','no_abono','id']);
 
 
+    }
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
+        ]);
     }
 }

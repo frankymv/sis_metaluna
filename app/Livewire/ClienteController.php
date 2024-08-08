@@ -195,7 +195,7 @@ class ClienteController extends Component
             'estado'=>$this->estado
             ]
         );
-
+        $this->alertaNotificacion("store");
         $this->cancel();
     }
 
@@ -243,50 +243,7 @@ class ClienteController extends Component
 
         $this->isEdit = true;
     }
-    /*
-    public function show($rowId){
-        $data = Cliente::find($rowId);
-        $this->tipo_clientes=DataSistema::$tipo_cliente;
-        $this->departamentos=Departamento::all();
-        $this->municipios = Municipio::where('departamento_id',$data->direccion_departamento)->get();
 
-        $this->id_data=$data->id;
-        $this->codigo_interno = $data->codigo_interno;
-        $this->nombre_empresa = $data->nombre_empresa;
-        $this->nombres_cliente = $data->nombres_cliente;
-        $this->apellidos_cliente = $data->apellidos_cliente;
-        $this->cui = $data->cui;
-        $this->numero_patente = $data->numero_patente;
-        $this->nit = $data->nit;
-        $this->telefono_principal = $data->telefono_principal;
-        $this->telefono_secundario = $data->telefono_secundario;
-        $this->direccion_fisica = $data->direccion_fisica;
-        $this->direccion_departamento = $data->direccion_departamento;
-        $this->direccion_municipio = $data->direccion_municipio;
-        $this->ubicacion_latitud = $data->ubicacion_latitud;
-        $this->ubicacion_longitud = $data->ubicacion_longitud;
-        $this->correo_electronico = $data->correo_electronico;
-        $this->estado = $data->estado;
-        $this->limite_credito=$data->limite_credito;
-        $this->dias_limite_credito=$data->dias_limite_credito;
-
-        $this->tipo_cliente_id=$data->tipo_cliente;
-
-
-        if($data->tipo_cliente!='MAYO')
-        {
-            $this->isDisabledMinorista=true;
-        }else{
-            $this->isDisabledMinorista=false;
-
-        }
-
-
-        $this->disabled = true;
-        $this->isShow=true;
-
-    }
-        */
 
     public function update($id){
         $this->validate();
@@ -351,5 +308,40 @@ class ClienteController extends Component
         $this->municipios = Municipio::where('departamento_id',$value)->get();
         $this->last_dep=true;
         $this->reset('municipio_id');
+    }
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
+        ]);
     }
 }
