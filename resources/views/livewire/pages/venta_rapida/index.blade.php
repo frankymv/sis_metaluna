@@ -165,7 +165,7 @@
                             <x-frk.components.label-input label="Saldo Cre." error="saldo_credito" :disabled="$disabledInput" wire:model.live="saldo_credito" />
                         </div>
                         <div class="flex w-full md:w-1/5">
-                            <x-frk.components.label-input label="Dias " error="dias_aultimo_credito" :disabled="$disabledInput" wire:model.live="dias_ultimo_credito" />
+                            <x-frk.components.label-input label="Dias " error="dias_ultimo_credito"  wire:model.live="dias_ultimo_credito" />
                         </div>
 
 

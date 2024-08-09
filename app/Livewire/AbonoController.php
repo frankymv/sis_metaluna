@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Constantes\DataSistema;
+use App\Constantes\VehiculoData as Notifi;
 use App\Models\Abono;
 use App\Models\Cliente;
 use App\Models\EstadoCuenta;
@@ -13,9 +14,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
+
 class AbonoController extends Component
 {
     use LivewireAlert;
+
     public $title='Abono';
     public $data, $id_venta=null,$id=null,$no_abono=0;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isCreateAnticipado = false,$isCreateAnticipadoAsignar = false;
@@ -83,17 +86,6 @@ class AbonoController extends Component
     public function render()
     {
 
-       /* $this->abonos = DB::table('abonos')
-        ->rightJoin('ventas','abonos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-        ->where('abonos.no_abono','LIKE',"%{$this->filtroNoAbono}%")
-        ->where('ventas.no_venta','LIKE',"%{$this->filtroNoVenta}%")
-        ->where('abonos.fecha_abono','LIKE',"%{$this->filtroFechaAbono}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->get();
-
-*/
         $this->abonos= Abono::with('venta')->with('cliente')
             ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
             ->where('fecha_abono','LIkE',"%{$this->filtroFechaAbono}%")
@@ -553,7 +545,7 @@ class AbonoController extends Component
                     'saldo_venta'=>$data->saldo_credito
                 ]);
             }
-            $this->alertaNotificacion("destroy");
+
             $data->delete();
 
 
@@ -630,4 +622,8 @@ class AbonoController extends Component
             'text' => "$texto"
         ]);
     }
+
+
+
+
 }

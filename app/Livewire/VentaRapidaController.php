@@ -35,7 +35,7 @@ class VentaRapidaController extends Component
     //efectivo
     public $efectivo=false;
     //credito
-    public $credito=false, $total_credito=0,$observaciones_credito='';
+    public $credito=false, $total_credito=0,$observaciones_credito='',$fecha_limite_credito=0;
     //anuladoooo
     public $anulado=false, $fecha_anulado=null, $observaciones_anulado='';
     //nota de credito
@@ -172,7 +172,7 @@ public $email_edit=null, $codigo_edit=null;
         $this->direccion_fisica= $cliente->direccion_fisica;
         $this->direccion_departamento= $cliente->direccion_departamento;
         $this->direccion_municipio= $cliente->direccion_municipio;
-
+        $this->dias_ultimo_credito=$cliente->dias_limite_credito;
         if ($cliente->tipo_cliente!=1) {
             $this->tipo_cliente='MAY';
         }else{
@@ -192,7 +192,9 @@ public $email_edit=null, $codigo_edit=null;
         $fechaActual = Carbon::now();
         $client=Cliente::where('nit','=',$id)->first();
 
-        $this->dias_ultimo_credito=(int) round($client->dias_limite_credito-$fechaPrimerCredito->diffInDays($fechaActual));
+        //controla los dias desde el ultimo credito $this->dias_ultimo_credito=$client->dias_limite_credito-$fechaPrimerCredito->diffInDays($fechaActual));
+
+
         }else{
             $this->saldo_credito=0;
         }
@@ -502,11 +504,18 @@ public $email_edit=null, $codigo_edit=null;
     }
 
 
-    public function store(){
 
-                $this->validate(['id_forma_pago'=>'required','nombres_cliente'=>'required']);
+
+    public function store(){
+                $cliente=null;
+
+                $this->validate(['id_forma_pago'=>'required','nombres_cliente'=>'required',
+            'dias_ultimo_credito'=>'required|numeric|min:1'
+            ]);
                 if($this->nit!=null){
                     $cliente=Cliente::find($this->cliente_id);
+
+
                     $this->limite_credito_temp=$cliente->limite_credito;
                 }
                 $data=null;
@@ -576,9 +585,12 @@ public $email_edit=null, $codigo_edit=null;
                             'no_credito'=>$this->no_credito,
                             'venta_id'=>$data->id,
                             'fecha_credito'=>$this->fecha_venta,
+                            'fecha_limite_credito'=>Carbon::createFromFormat('Y-m-d', $this->fecha_venta)->addDay((int)$this->dias_ultimo_credito)->toDateString(),
                             'total_credito'=>$this->total_venta,
                             'cliente_id'=>$this->cliente_id,
                             'observaciones'=>$this->observaciones_credito,
+
+
                         ]);
 
 
@@ -738,6 +750,43 @@ public $email_edit=null, $codigo_edit=null;
             'text' => 'Datos borrados correctamente',
            ]);
     }
+
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
+        ]);
+    }
+
 
 }
 

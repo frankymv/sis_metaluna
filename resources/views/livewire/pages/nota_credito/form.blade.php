@@ -13,10 +13,10 @@
                 <x-frk.components.date-picker wire:model="fecha_nota_credito" error="fecha_nota_credito" label="Fecha nota credito"/>
             </div>
             <div class="flex w-full md:w-1/5">
-                <x-frk.components.input-money  label="Total nota credito" error="total_nota_credito" :disabled="$disabled" wire:model.live="total_nota_credito" />
+                <x-frk.components.input-money  label="Total nota creditoooo" error="total_nota_credito" :disabled="$disabled" wire:model.live="total_nota_credito" />
             </div>
             <div class="flex w-full md:w-1/5">
-                <x-frk.components.input-money label="Nuevo saldo" error="nuevo_saldo" :disabled="$disabled" wire:model="nuevo_saldo" />
+                <x-frk.components.input-money label="Nuevo saldo" error="nuevo_saldo" :disabled="$disabled" wire:model.live="nuevo_saldo" />
             </div>
 
             <div class="flex w-full md:w-1/5"  x-data="{open: @entangle('anulado')}"  >

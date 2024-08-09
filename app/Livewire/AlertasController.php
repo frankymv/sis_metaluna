@@ -1,21 +1,14 @@
 <?php
 
-namespace App\View\Components;
+namespace App\Livewire;
 
-use Illuminate\View\Component;
-use Illuminate\View\View;
+use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class AppLayout extends Component
+class AlertasController extends Component
 {
     use LivewireAlert;
-    /**
-     * Get the view / contents that represents the component.
-     */
-    public function render(): View
-    {
-        return view('layouts.app');
-    }
+
 
     public function alertaNotificacion($tipo){
         $alerta="";
@@ -51,4 +44,9 @@ class AppLayout extends Component
             'text' => "$texto"
         ]);
     }
+
+
+
+
+
 }

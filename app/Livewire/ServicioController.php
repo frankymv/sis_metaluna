@@ -22,6 +22,9 @@ class ServicioController extends Component
     public $disabledInput=false;
     ////////////////////
 
+
+    public $servicios=[];
+
     ////////////////////
     protected $rules = [
         'no_servico'=>'required',
@@ -37,6 +40,8 @@ class ServicioController extends Component
     public function render()
     {
         //dd(Servicio::find(1));
+
+        $this->servicios=Servicio::with('vehiculo')->get();
         return view('livewire.pages.servicio.index');
 
     }

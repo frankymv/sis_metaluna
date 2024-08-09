@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('venta_id')->nullable();
             $table->foreign('venta_id')->references('id')->on('ventas');
             $table->date('fecha_credito');
+            $table->date('fecha_limite_credito');
             $table->float('total_credito');
             $table->unsignedBigInteger('cliente_id')->nullable(true);
             $table->foreign('cliente_id')->references('id')->on('clientes');

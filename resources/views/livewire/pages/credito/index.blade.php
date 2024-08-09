@@ -29,16 +29,18 @@
 
                     <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                     <th class="px-4 py-3">No Credito</th>
+                    <th class="px-4 py-3">Fecha Credito</th>
+                    <th class="px-4 py-3">Fecha Limite Credito</th>
+                    <th class="px-4 py-3">Total</th>
+
                     <th class="px-4 py-3">No Venta</th>
-
-
                     <th class="px-4 py-3">Nombre Cliente</th>
                     <th class="px-4 py-3">Codigo Cliente</th>
-                    <th class="px-4 py-3">Total</th>
-                    <th class="px-4 py-3">Fecha</th>
+
+
+
 
                     <th class="px-4 py-3">Acciones</th>
-
 
                     </tr>
                 </thead>
@@ -46,15 +48,21 @@
                     @foreach ($creditos as $data)
                     <tr class="text-gray-700">
                         <td class="px-4 py-3 text-ms font-semibold border">{{$data->no_credito}}</td>
+                        <td class="px-4 py-3 text-sm border">{{$data->fecha_credito}}</td>
+                        <td class="px-4 py-3 text-sm border">{{$data->fecha_limite_credito}}</td>
+                        <td class="px-4 py-3 text-sm border">{{$data->total_credito}}</td>
+
+
+
+
+
                         <td class="px-4 py-3 text-sm border">{{$data->no_venta}}</td>
 
                         <td class="px-4 py-3 border">
                             <p class="text-xs text-gray-600">{{$data->nombres_cliente}} Telefono {{$data->telefono_principal}}</p>
                         </td>
                         <td class="px-4 py-3 text-sm border">{{$data->codigo_mayorista}}</td>
-                        <td class="px-4 py-3 text-sm border">{{$data->total_credito}}</td>
 
-                        <td class="px-4 py-3 text-sm border">{{$data->fecha_credito}}</td>
                          <td class="px-4 py-3 text-sm border flex w-full">
                             <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
                         </td>

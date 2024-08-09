@@ -34,7 +34,7 @@ class NotaCreditoController extends Component
     public $saldo_cancelado=false;
 
     //notacredito
-    public $id=null,$no_nota_credito=null,$total_nota_credito=0,$fecha_nota_credito=null,$cantidad_existencia=null;
+    public $id=null,$no_nota_credito=null,$total_total_nota_credito=0,$fecha_nota_credito=null,$cantidad_existencia=null;
 
     public $venta_id=null,$cantidad_credito_actual=0,$cantidad_abono=0,$saldo_credito=0,$estado=0,$observaciones=null,$correlativo=0;
     public $tipo_pago=[['id'=>'0','nombre'=>'contado'],['id'=>'1','nombre'=>'credito'],['id'=>'2','nombre'=>'abono']];
@@ -59,7 +59,7 @@ class NotaCreditoController extends Component
         public $forma_pagos,$envios,$tipo_clientes,$rutas,$total_ventas=0,$saldo_total_venta=0;
         public $abonos=[],$estado_cuentas=[],$total_abonos;
 
-        public $total_nota_creditos;
+        public $total_nota_credito=0;
         /////
 
         public $delete_no=null,$delete_nombre=null;
@@ -103,7 +103,7 @@ class NotaCreditoController extends Component
 
         ->get();
 
-        $this->total_nota_credito=NotaCredito::with('venta')->with('cliente')
+        $this->total_total_nota_credito=NotaCredito::with('venta')->with('cliente')
         ->where('no_nota_credito','LIkE',"%{$this->filtroNoNotaCredito}%")
         ->where('fecha_nota_credito','LIkE',"%{$this->filtroFechaNotaCredito}%")
         ->whereRelation('venta','no_venta','LIKE',"%{$this->filtroNoVenta}%")
@@ -166,6 +166,12 @@ class NotaCreditoController extends Component
         }
 
 
+        public function updatedTotalNotaCredito($value){
+
+            $this->nuevo_saldo=$this->total_venta-$value;
+        }
+
+
 
 
         public function agregarVenta($id)
@@ -193,13 +199,7 @@ class NotaCreditoController extends Component
         $this->reset(['isSearchVenta','search_no_venta','search_codigo_cliente','search_nombres_cliente','ventas']);
     }
 
-    public function updatedTotalNotaCredito($value){
 
-
-        $this->validate(['total_nota_credito'=>"numeric|required|min:1|max:$this->total_venta"]);
-
-        $this->nuevo_saldo=$this->total_venta-$value;
-    }
 
     public function store(){
 
