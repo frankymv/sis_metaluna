@@ -2,16 +2,15 @@
 
 namespace App\Livewire;
 
-use App\Models\Inventario;
+use App\Models\Disenio;
+use App\Models\Marca;
+use App\Models\Material;
 use App\Models\Producto;
-use App\Models\Sucursal;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Models\Tipo;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Component;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
-
+use Carbon\Carbon;
 
 class InventarioController extends Component
 {
@@ -27,14 +26,29 @@ class InventarioController extends Component
     public $isEdit = false;
     public $isShow = false;
     public $isDelete = false;
-    public $productos;
+
 
     public $dataa;
 
-    public $products=[];
+    public $productos=[];
+    public $marcas=[];
+    public $tipos=[];
+
+    public $materiales=[];
+    public $disenios=[];
     public $producto_sucursal=[];
 
     public $sucursal_asignada;
+
+
+        /////////filtros
+        public $filtroCodigoProducto=null;
+        public $filtroNombreProducto=null;
+        public $filtroTipo=null;
+        Public $filtroMarca=null;
+        Public $filtroDisenio=null;
+        Public $filtroMaterial=null;
+
 
 
     protected $rules = [
@@ -46,25 +60,51 @@ class InventarioController extends Component
     public function render()
     {
 
+        $this->tipos=Tipo::all();
+        $this->marcas=Marca::all();
+        $this->disenios=Disenio::all();
+        $this->materiales=Material::all();
+
+
+
+
+        //$this->productos=Sucursal::with('productos')->find(2);
+        $this->productos=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
+        ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
+        ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
+        ->whereRelation('marca','id','LIKE',"%{$this->filtroMarca}%")
+        ->whereRelation('tipo','id','LIKE',"%{$this->filtroTipo}%")
+        ->whereRelation('disenio','id','LIKE',"%{$this->filtroDisenio}%")
+        ->whereRelation('material','id','LIKE',"%{$this->filtroMaterial}%")
+        ->get();
+
         return view('livewire.pages.inventario.index');
 
 
     }
 
-    public function pdfExportar(){
-        return redirect()->route('pdfExportarInventario');
+
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfInventarioGeneral',['productos'=>$this->productos]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
     }
 
-    public function pdfExportarInventario()
+    public function exportarFila($id)
     {
 
-        $sucursal=Sucursal::with('Productos')->find(Auth::user()->sucursal_id);
-        $productos=$sucursal->productos;
+        $dato=Producto::find($id)->with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')->first();
 
-        //dd($productos);
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfInventario ',['productos'=>$productos,'sucursal'=>$sucursal]);
-        return $pdf->stream();
-
+            $fecha_reporte=Carbon::now()->toDateTimeString();
+            $pdf = Pdf::loadView('/livewire/pdf/pdfInventario',['dato' => $dato]);
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
+       // }
     }
 
 
