@@ -14,6 +14,7 @@ return new class extends Migration
      */
     public function up()
     {
+        /*
         DB::unprepared('DROP TRIGGER IF EXISTS `agregar_estado_cuenta_credito`');
         DB::unprepared('CREATE TRIGGER agregar_estado_cuenta_credito AFTER INSERT ON creditos
             FOR EACH ROW
@@ -24,13 +25,13 @@ return new class extends Migration
                 SET t_credito = (SELECT total_credito FROM estado_cuentas WHERE cliente_id=NEW.cliente_id);
                 UPDATE estado_cuentas SET total_credito = (NEW.total_credito+t_credito) WHERE cliente_id=NEW.cliente_id;
             ELSE
-                INSERT INTO estado_cuentas (cliente_id,total_abono,total_credito)
-                VALUES (NEW.cliente_id,0,NEW.total_credito);
+                INSERT INTO estado_cuentas (cliente_id,total_credito)
+                VALUES (NEW.cliente_id,NEW.total_credito);
             END IF;
         END');
 
 
-    /*
+
         while total > 0 do
                 SET sucursal_origen =(SELECT id FROM sucursals WHERE  prioridad=prioridad_contador);
                 IF (SELECT EXISTS (SELECT * FROM producto_sucursal WHERE  producto_id=NEW.producto_id AND sucursal_id=sucursal_origen)) THEN

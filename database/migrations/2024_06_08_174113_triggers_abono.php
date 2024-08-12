@@ -13,8 +13,23 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
-/*
+    {/*
+        DB::unprepared('DROP TRIGGER IF EXISTS `agregar_estado_cuenta_abono`');
+        DB::unprepared('CREATE TRIGGER agregar_estado_cuenta_abono AFTER INSERT ON abonos
+            FOR EACH ROW
+            BEGIN
+            DECLARE t_abono INT DEFAULT 0;
+
+            IF (SELECT EXISTS (SELECT id FROM estado_cuentas WHERE  cliente_id=NEW.cliente_id)) THEN
+                SET t_abono = (SELECT total_abono FROM estado_cuentas WHERE cliente_id=NEW.cliente_id);
+                UPDATE estado_cuentas SET total_abono = (NEW.total_abono+t_abono) WHERE cliente_id=NEW.cliente_id;
+            ELSE
+                INSERT INTO estado_cuentas (cliente_id,total_abono)
+                VALUES (NEW.cliente_id,NEW.total_abono);
+            END IF;
+        END');
+
+
         DB::unprepared('DROP TRIGGER IF EXISTS `agregar_estado_cuenta_abono`');
         DB::unprepared('CREATE TRIGGER agregar_estado_cuenta_abono AFTER INSERT ON abonos
             FOR EACH ROW

@@ -33,9 +33,7 @@ return new class extends Migration
 
 
             $table->float('precio_compra')->default(0)->nullable(true);
-            $table->float('precio_venta_base')->default(0)->nullable(true);
-            $table->float('precio_venta_mayorista')->default(0)->nullable(true);
-            $table->float('precio_venta_minorista')->default(0)->nullable(true);
+            $table->float('precio_venta_producto')->default(0)->nullable(true);
             $table->integer('existencia')->default(0)->nullable(true);
 
             $table->boolean('estado')->default(true);

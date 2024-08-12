@@ -8,6 +8,8 @@ use App\Models\Marca;
 use App\Models\Material;
 use App\Models\Producto;
 use App\Models\Tipo;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -16,7 +18,7 @@ class ProductoController extends Component
 {
     use LivewireAlert;
     //
-    public $codigo='', $precio_venta_mayorista=0,$precio_venta_minorista=0,$precio_venta_base=0, $nombre='', $descripcion='', $disabled=false,$disabledButton=false,$calibre=null,   $divisible=false, $marca_id, $tipo_id, $material_id, $disenio_id,  $estado=true,$created_at,$updated_at;
+    public $codigo='', $precio_venta_mayorista=0,$precio_venta_minorista=0,$precio_venta_producto=0, $nombre='', $descripcion='', $disabled=false,$disabledButton=false,$calibre=null,   $divisible=false, $marca_id, $tipo_id, $material_id, $disenio_id,  $estado=true,$created_at,$updated_at;
     public $disabledCodigo=false, $disabledNombre=false,$disabledTipo=false, $disabledGenerar=false;
     public $disabledDisenio=false,$disabledMarca=false, $disabledMaterial=false, $disabledLongitud=false, $disabledPeso=false, $disabledDiametro=false;
 
@@ -31,7 +33,9 @@ class ProductoController extends Component
     public $diametro=null;
     public $tipo_diametro=null;
 
-    public $marcas, $tipos, $materials, $disenios;
+    public $productos=[];
+
+    public $marcas, $tipos, $materiales, $disenios;
     //
     public $title='Producto';
     public $data=null, $id_data=null, $id_last=null;
@@ -40,9 +44,11 @@ class ProductoController extends Component
     public $isShow = false;
     public $isDelete = false;
 
+    public $delete_no=null, $delete_nombre=null;
+
     protected $rules = [
         'codigo'=>'required',
-        'precio_venta_base'=>'required',
+        'precio_venta_producto'=>'required',
         'precio_venta_mayorista'=>'required',
         'precio_venta_minorista'=>'required',
         'nombre'=>'required',
@@ -51,18 +57,44 @@ class ProductoController extends Component
 
     protected $listeners=['edit', 'delete','show'];
 
+    /////////filtros
+    public $filtroCodigoProducto=null;
+    public $filtroNombreProducto=null;
+    public $filtroTipo=null;
+    Public $filtroMarca=null;
+    Public $filtroDisenio=null;
+    Public $filtroMaterial=null;
+
     public function render()
     {
-        $this->longitudes=UnidadMedida::$longitud;
-        $this->pesos=UnidadMedida::$peso;
-        $this->diametros=UnidadMedida::$diametro;
+
+        $this->tipos=Tipo::all();
+        $this->marcas=Marca::all();
+        $this->disenios=Disenio::all();
+        $this->materiales=Material::all();
+
+        //$this->productos=Sucursal::with('productos')->find(2);
+        $this->productos=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
+        ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
+        ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
+        ->whereRelation('marca','id','LIKE',"%{$this->filtroMarca}%")
+        ->whereRelation('tipo','id','LIKE',"%{$this->filtroTipo}%")
+        ->whereRelation('disenio','id','LIKE',"%{$this->filtroDisenio}%")
+        ->whereRelation('material','id','LIKE',"%{$this->filtroMaterial}%")
+        ->get();
+
+
         return view('livewire.pages.producto.index');
     }
 
     public function create(){
+
+        $this->longitudes=UnidadMedida::$longitud;
+        $this->pesos=UnidadMedida::$peso;
+        $this->diametros=UnidadMedida::$diametro;
         $this->marcas=Marca::where('estado',1)->get();
         $this->tipos=Tipo::where('estado',1)->get();
-        $this->materials=Material::where('estado',1)->get();
+        $this->materiales=Material::where('estado',1)->get();
         $this->disenios=Disenio::where('estado',1)->get();
 
         $this->isCreate=true;
@@ -88,21 +120,22 @@ class ProductoController extends Component
             'tipo_id'=>$this->tipo_id,
             'material_id'=>$this->material_id,
             'disenio_id'=>$this->disenio_id,
-            'precio_venta_base'=>$this->precio_venta_base,
-            'precio_venta_mayorista'=>$this->precio_venta_mayorista,
-            'precio_venta_minorista'=>$this->precio_venta_minorista,
+            'precio_venta_producto'=>$this->precio_venta_producto,
             'estado'=>$this->estado
             ]
         );
-
+        $this->alertaNotificacion("store");
         $this->cancel();
 
     }
 
     public function edit($rowId){
+        $this->longitudes=UnidadMedida::$longitud;
+        $this->pesos=UnidadMedida::$peso;
+        $this->diametros=UnidadMedida::$diametro;
         $this->marcas=Marca::all();
         $this->tipos=Tipo::where('estado',1)->get();
-        $this->materials=Material::where('estado',1)->get();
+        $this->materiales=Material::where('estado',1)->get();
         $this->disenios=Disenio::where('estado',1)->get();
 
         $data = Producto::find($rowId);
@@ -140,9 +173,7 @@ class ProductoController extends Component
         $this->tipo_id=$data->tipo_id;
         $this->material_id=$data->material_id;
         $this->disenio_id=$data->disenio_id;
-        $this->precio_venta_base=$data->precio_venta_base;
-        $this->precio_venta_mayorista=$data->precio_venta_mayorista;
-        $this->precio_venta_minorista=$data->precio_venta_minorista;
+        $this->precio_venta_producto=$data->precio_venta_producto;
         $this->estado=$data->estado;
 
         $this->isEdit=true;
@@ -151,7 +182,7 @@ class ProductoController extends Component
     public function show($rowId){
         $this->marcas=Marca::where('estado',1)->get();
         $this->tipos=Tipo::where('estado',1)->get();
-        $this->materials=Material::where('estado',1)->get();
+        $this->materiales=Material::where('estado',1)->get();
         $this->disenios=Disenio::where('estado',1)->get();
         $data = Producto::find($rowId);
 
@@ -171,9 +202,7 @@ class ProductoController extends Component
         $this->peso=$data->peso;
         $this->tipo_peso=$data->tipo_peso;
 
-        $this->precio_venta_base=$data->precio_venta_base;
-        $this->precio_venta_mayorista=$data->precio_venta_mayorista;
-        $this->precio_venta_minorista=$data->precio_venta_minorista;
+        $this->precio_venta_producto=$data->precio_venta_producto;
         $this->created_at = $data->created_at;
         $this->updated_at = $data->updated_at;
         $this->disabled=true;
@@ -200,11 +229,11 @@ class ProductoController extends Component
             'tipo_id'=>$this->tipo_id,
             'material_id'=>$this->material_id,
             'disenio_id'=>$this->disenio_id,
-            'precio_venta_base'=>$this->precio_venta_base,
-            'precio_venta_mayorista'=>$this->precio_venta_mayorista,
-            'precio_venta_minorista'=>$this->precio_venta_minorista,
+            'precio_venta_producto'=>$this->precio_venta_producto,
             'estado'=>$this->estado
         ]);
+
+        $this->alertaNotificacion("update");
 
 
 
@@ -213,12 +242,15 @@ class ProductoController extends Component
 
     }
 
-    public function delete($rowId){
-        $data = Producto::find($rowId);
+    public function delete($id){
+        $data = Producto::find($id);
         $this->id_data=$data->id;
-        $this->nombre = $data->nombre;
+        $this->delete_no=$data->codigo;
+        $this->delete_nombre=$data->nombre;
         $this->isDelete = true;
     }
+
+
 
     public function destroy($rowId){
         $data=Producto::find($rowId);
@@ -227,15 +259,8 @@ class ProductoController extends Component
         try {
             $data->delete();
 
-            $this->alert('success', 'Borrado correctamente', [
-                'position' => 'center',
-                'timer' => '3000',
-                'toast' => true,
-                'showConfirmButton' => false,
-                'onConfirmed' => '',
-                'timerProgressBar' => true,
-                'text' => $mensaje,
-            ]);
+            $this->alertaNotificacion("destroy");
+
         } catch (Exception $e) {
 
 
@@ -272,7 +297,7 @@ class ProductoController extends Component
     public function generar(){
         $marcas='';
         $tipos='';
-        $materials='';
+        $materiales='';
         $disenios='';
         $temp_calibre='';
         $temp_diametro='';
@@ -292,8 +317,8 @@ class ProductoController extends Component
             $marcas=$marcas->nombre.' ';
         }
         if ($this->material_id!=null) {
-            $materials=Material::find($this->material_id);
-            $materials=$materials->nombre.' ';
+            $materiales=Material::find($this->material_id);
+            $materiales=$materiales->nombre.' ';
         }
         if ($this->disenio_id!=null) {
             $disenios=Disenio::find($this->disenio_id);
@@ -347,9 +372,32 @@ class ProductoController extends Component
         $tempB=$this->id_last;
         $this->codigo=substr($tempA->nombre,0,3).$tempB;
 
-       $this->nombre=$tipos.''.$materials.''.$marcas.''.$disenios.''.$temp_calibre.''. $temp_longitud.''. $temp_peso.''. $temp_diametro;
+       $this->nombre=$tipos.''.$materiales.''.$marcas.''.$disenios.''.$temp_calibre.''. $temp_longitud.''. $temp_peso.''. $temp_diametro;
 
     }
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfProductoGeneral',['productos'=>$this->productos]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    public function exportarFila($id)
+    {
+
+        $dato=Producto::find($id)->with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')->first();
+
+            $fecha_reporte=Carbon::now()->toDateTimeString();
+            $pdf = Pdf::loadView('/livewire/pdf/pdfProducto',['dato' => $dato]);
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
+       // }
+    }
+
 
     public function cancel(){
         $this->reset();
@@ -358,11 +406,9 @@ class ProductoController extends Component
     }
 
     public function resetInput(){
-        $this->reset(['codigo','id_last','nombre','marca_id','tipo_id','material_id','disenio_id','calibre','peso','longitud','precio_venta_minorista','precio_venta_mayorista']);
+        $this->reset(['codigo','id_last','nombre','marca_id','tipo_id','material_id','disenio_id','calibre','peso','longitud','precio_venta_producto']);
 
         $this->reset([
-
-
 
             'longitud',
             'tipo_longitud',
@@ -390,4 +436,40 @@ class ProductoController extends Component
             $this->divisible=1;
         }
     }
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
+        ]);
+    }
+
 }

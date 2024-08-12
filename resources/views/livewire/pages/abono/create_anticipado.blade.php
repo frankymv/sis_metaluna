@@ -28,7 +28,7 @@
 
             <div class="flex w-full ">
                 <div class=" w-full md:w-1/4">
-                    <x-frk.components.input-money  label="Cantidad Abono" error="cantidad_abono_anticipado" :disabled="$disabled" wire:model.live="cantidad_abono_anticipado" />
+                    <x-frk.components.input-money  label="Total Abono" error="total_abono" :disabled="$disabled" wire:model.live="cantidad_abono" />
                 </div>
                 <div class=" w-full md:w-3/4">
                 <x-frk.components.label-input label="Observaciones"   wire:model="observaciones" />
@@ -38,7 +38,7 @@
 
         <div class="flex w-full ">
             <div class=" w-full md:w-1/2">
-                <x-frk.components.select label="Tipo Pago" :disabled="$disabled" wire:model.live="tipo_pago_id">
+                <x-frk.components.select label="Tipo Pago" error="tipo_pago_id" :disabled="$disabled" wire:model.live="tipo_pago_id">
                     @foreach ($this->tipo_pago as $data)
                     <option value="{{ $data['valor'] }}" >{{ $data['nombre']}} </option>
                     @endforeach

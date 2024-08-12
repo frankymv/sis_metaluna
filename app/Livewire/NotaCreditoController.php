@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\EstadoCuenta;
 use App\Models\Inventario;
 use App\Models\NotaCredito;
+use App\Models\Producto;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -20,7 +21,7 @@ class NotaCreditoController extends Component
     public $data, $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
-    public $created_at,$updated_at,$disabled=false;
+    public $created_at,$updated_at,$disabled=false,$disabledTotalNotaCredito=false;
     public $nuevo_saldo=0, $fecha_abono=null;
     public $anulacion_venta=false,$anulado=false;
     public $isSearchVenta=false;
@@ -78,21 +79,6 @@ class NotaCreditoController extends Component
     public function render()
     {
 
-/*
-        $this->total_nota_creditos = DB::table('nota_creditos')
-        ->rightJoin('ventas','nota_creditos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-        ->where('nota_creditos.no_nota_credito','LIKE',"%{$this->filtroNoNotaCredito}%")
-        ->where('ventas.no_venta','LIKE',"%{$this->filtroNoVenta}%")
-        ->where('nota_creditos.fecha_nota_credito','LIKE',"%{$this->filtroFechaNotaCredito}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->sum('nota_creditos.total_nota_credito');
-
-*/
-
-
-
 
         $this->nota_creditos=NotaCredito::with('venta')->with('cliente')
         ->where('no_nota_credito','LIkE',"%{$this->filtroNoNotaCredito}%")
@@ -116,9 +102,10 @@ class NotaCreditoController extends Component
         return view('livewire.pages.nota_credito.index');
     }
 
+    public function create()
+    {
+        $this->disabled=true;
 
-
-    public function create(){
         $this->fecha_nota_credito=Carbon::now()->toDateString();
         $data=NotaCredito::latest()->first();
         if ($data) {
@@ -131,133 +118,155 @@ class NotaCreditoController extends Component
         $this->isCreate=true;
     }
 
-
-    public function buscarVenta(){
+    public function buscarVenta()
+    {
         $this->isSearchVenta=true;
         $this->isCreate=false;
-        }
+    }
 
-        public function updatedSearchNoVenta($value){
-            $this->reset(['search_nombres_cliente','search_codigo_cliente']);
-            $this->ventas=Venta::with('cliente')
-            ->where('no_venta','LIKE',"%{$value}%")
-            ->get();
-        }
+    public function updatedSearchNoVenta($value)
+    {
+        $this->reset(['search_nombres_cliente','search_codigo_cliente']);
+        $this->ventas=Venta::with('cliente')
+        ->where('no_venta','LIKE',"%{$value}%")
+        ->get();
+    }
 
+    public function updatedSearchNombresCliente($value)
+    {
+        $this->reset(['search_no_venta','search_codigo_cliente']);
 
-        public function updatedSearchNombresCliente($value){
-            $this->reset(['search_no_venta','search_codigo_cliente']);
-
-
-                $this->ventas=Venta::with('cliente')
-                ->whereRelation('cliente','nombres_cliente','LIKE',"%{$value}%")
-                ->get();
-
-
-        }
-
-        public function updatedSearchCodigoCliente($value){
-            $this->reset(['search_nombres_cliente','search_no_venta']);
 
             $this->ventas=Venta::with('cliente')
-            ->whereRelation('cliente','codigo_interno','LIKE',"%{$value}%")
+            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$value}%")
             ->get();
 
-        }
+
+    }
+
+    public function updatedSearchCodigoCliente($value)
+    {
+        $this->reset(['search_nombres_cliente','search_no_venta']);
+
+        $this->ventas=Venta::with('cliente')
+        ->whereRelation('cliente','codigo_interno','LIKE',"%{$value}%")
+        ->get();
+
+    }
 
 
-        public function updatedTotalNotaCredito($value){
+    public function updatedTotalNotaCredito($value)
+    {
 
-            $this->nuevo_saldo=$this->total_venta-$value;
-        }
+        $this->nuevo_saldo=$this->total_venta-$value;
+    }
 
 
+    public function agregarVenta($id)
+    {
+        $this->cancelarBuscarVenta();
+        $venta=Venta::find($id);
 
+        $this->correlativo=$venta->correlativo+1;
+        $this->no_venta=$venta->no_venta;
 
-        public function agregarVenta($id)
-        {
-            $this->cancelarBuscarVenta();
-            $venta=Venta::find($id);
+        $this->venta_id=$venta->id;
+        $this->fecha_venta=$venta->fecha_venta;
 
-            $this->correlativo=$venta->correlativo+1;
-            $this->no_venta=$venta->no_venta;
+        $this->total_venta=$venta->total_venta-$venta->total_nota_credito;
 
-            $this->venta_id=$venta->id;
-            $this->fecha_venta=$venta->fecha_venta;
+        $this->codigo_interno=$venta->cliente->codigo_interno;
+        $this->nombre_empresa=$venta->cliente->nombre_empresa;
+        $this->nombres_cliente=$venta->cliente->nombres_cliente;
+        $this->apellidos_cliente=$venta->cliente->apellidos_cliente;
 
-            $this->total_venta=$venta->total_venta-$venta->total_nota_credito;
-
-            $this->codigo_interno=$venta->cliente->codigo_interno;
-            $this->nombre_empresa=$venta->cliente->nombre_empresa;
-            $this->nombres_cliente=$venta->cliente->nombres_cliente;
-            $this->apellidos_cliente=$venta->cliente->apellidos_cliente;
-
-        }
+    }
     public function cancelarBuscarVenta(){
         $this->isCreate=true;
 
         $this->reset(['isSearchVenta','search_no_venta','search_codigo_cliente','search_nombres_cliente','ventas']);
     }
 
-
-
     public function store(){
 
-        $this->validate(['fecha_nota_credito'=>'required','total_nota_credito'=>"numeric|required|min:1|max:$this->total_venta"]);
+        $this->validate(['no_venta'=>'required','fecha_nota_credito'=>'required','total_nota_credito'=>"numeric|required|min:1|max:$this->total_venta"]);
 
-        $data=Venta::find($this->venta_id);
+        $venta_temp=Venta::find($this->venta_id);
         if($this->anulacion_venta){
+            //dd(" para anuload");
 
+            //$venta_temp=Venta::find($this->venta_id);
+            $venta_temp->correlativo=$venta_temp->correlativo+1;
 
-            $da=NotaCredito::create(
+            NotaCredito::create(
                 [
                     'no_nota_credito'=>$this->no_nota_credito,
                     'venta_id'=>$this->venta_id,
-                    'total_venta'=>$this->total_venta,
                     'fecha_nota_credito'=>$this->fecha_nota_credito,
                     'total_nota_credito'=>$this->total_nota_credito,
-                    'cliente_id'=>$data->cliente_id,
-                    'total_saldo'=>$this->nuevo_saldo,
-                    'correlativo'=>$this->correlativo,
-                    'anulacion_venta'=>$this->anulado,
+                    'cliente_id'=>$venta_temp->cliente_id,
+                    'correlativo'=>$venta_temp->correlativo,
+                    'anulacion_venta'=>true,
                     'observaciones'=>"Anulacion de la Venta No. $this->venta_id, $this->observaciones",
 
                 ]
             );
 
-            foreach($data->productos as $key => $value){
-                $cantidad_antes = DB::table('producto_sucursal')->where('producto_id','=',$value->id)->where('sucursal_id','=',$data->sucursal_id)->get();
+            foreach($venta_temp->productos as $key => $value){
+                $cantidad_antes = DB::table('producto_sucursal')->where('producto_id','=',$value->id)->where('sucursal_id','=',$venta_temp->sucursal_id)->get();
+
+
                 $can=(int)$cantidad_antes[0]->cantidad;
                 $can=($can+$value->producto_venta->cantidad);
-
                 DB::table('producto_sucursal')
-              ->where('producto_id','=', $value->id,)
-              ->where('sucursal_id','=',$data->sucursal_id)
-              ->update(['cantidad' => $can]);
+                    ->where('producto_id','=', $value->id,)
+                    ->where('sucursal_id','=',$venta_temp->sucursal_id)
+                    ->update(['cantidad' => $can]);
+                $producto_temp=Producto::find($value->id);
+                $producto_temp->existencia+=$value->producto_venta->cantidad;
+                $producto_temp->save();
 
             }
+            if ($venta_temp->forma_pago_venta==="CREDI") {
+                if($estado_cuenta=EstadoCuenta::where('cliente_id',$venta_temp->cliente_id)->first()){
+                    $estado_cuenta->total_credito=$estado_cuenta->total_credito-($venta_temp->total_venta-$venta_temp->total_nota_credito);
+                    $estado_cuenta->total_abono=$estado_cuenta->total_abono-$venta_temp->total_abono;
+                    $estado_cuenta->save();
+                }
+            }
 
+            $venta_temp->nota_credito=true;
+            $venta_temp->anulado=true;
+            $venta_temp->fecha_anulado=$this->fecha_nota_credito;
+            $venta_temp->total_nota_credito=$venta_temp->total_nota_credito+($venta_temp->total_venta-$venta_temp->total_nota_credito);
+            $venta_temp->save();
             $this->alertaNotificacion("store");
 
         }else{
+           // dd(" para nota de credito normal");
+            $venta=Venta::find($this->venta_id);
+            $venta->correlativo=$venta->correlativo+1;
 
-                    $da=NotaCredito::create(
-                        [
-                            'no_nota_credito'=>$this->no_nota_credito,
-                            'venta_id'=>$this->venta_id,
-                            'total_venta'=>$this->total_venta,
-                            'fecha_nota_credito'=>$this->fecha_nota_credito,
-                            'total_nota_credito'=>$this->total_nota_credito,
-                            'total_saldo'=>$this->nuevo_saldo,
-                            'cliente_id'=>$data->cliente_id,
-                            'correlativo'=>$this->correlativo,
-                            'anulacion_venta'=>$this->anulacion_venta,
-                            'observaciones'=>$this->observaciones,
-
-                        ]
-                    );
-
-                    $this->alertaNotificacion("store");
+            $da=NotaCredito::create(
+            [
+                'no_nota_credito'=>$this->no_nota_credito,
+                'venta_id'=>$this->venta_id,
+                'fecha_nota_credito'=>$this->fecha_nota_credito,
+                'total_nota_credito'=>$this->total_nota_credito,
+                'cliente_id'=>$venta->cliente_id,
+                'correlativo'=>$venta->correlativo,
+                'anulacion_venta'=>false,
+                'observaciones'=>$this->observaciones,
+            ]
+            );
+            if($estado_cuenta=EstadoCuenta::where('cliente_id',$venta->cliente_id)->first()){
+                $estado_cuenta->total_credito=$estado_cuenta->total_credito-$this->total_nota_credito;
+                $estado_cuenta->save();
+            }
+            $venta->nota_credito=true;
+            $venta->total_nota_credito=$venta->total_nota_credito+$this->total_nota_credito;
+            $venta->save();
+            $this->alertaNotificacion("store");
     };
     $this->cancel();
 }
@@ -320,6 +329,7 @@ public function exportarFila($id)
                 $data_venta=Venta::find($data->venta_id);
 
                 if($data->correlativo==$data_venta->correlativo){
+
                     $this->isDelete = true;
                     $this->delete_no=$data->no_nota_credito;
                     $this->delete_nombre=$data->total_nota_credito;

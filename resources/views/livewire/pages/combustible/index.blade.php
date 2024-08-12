@@ -21,6 +21,7 @@
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">Placa:{{ $data->numero_placa }} - Alias{{ $data->alias }}</option>
                     @endforeach
                 </x-forms.select>
+                <x-frk.components.label-input label="Observaciones" wire:model.live="filtroObservaciones"/>
                 <x-frk.components.date-picker    label="Fecha Combustible" wire:model.live="filtroFechaCombustible" />
             </div>
         </div>

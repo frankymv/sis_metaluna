@@ -71,7 +71,16 @@ class EstadoCuentaVentaController extends Component
 
 
 
-            $this->ventas=Venta::with('productos')->where('no_venta','LIkE',"%{$this->filtroNoVenta}%")->where('fecha_venta','LIkE',"%{$this->filtroFechaVenta}%")->with('abonos')->with('notacreditos')->with('credito')->with('cliente')->whereRelation('cliente','nombres_cliente','LIkE',"%{$this->filtroNombreCliente}%")->whereRelation('cliente','codigo_interno','LIkE',"%{$this->filtroCodigoCliente}%")->get();
+            $this->ventas=Venta::with('productos')
+            ->with('creditos')
+            ->with('abonos')
+            ->with('notacreditos')
+            ->with('cliente')
+            ->where('no_venta','LIkE',"%{$this->filtroNoVenta}%")
+            ->where('fecha_venta','LIkE',"%{$this->filtroFechaVenta}%")
+            ->whereRelation('cliente','nombres_cliente','LIkE',"%{$this->filtroNombreCliente}%")
+            ->whereRelation('cliente','codigo_interno','LIkE',"%{$this->filtroCodigoCliente}%")->get();
+
 
 
         //dd($this->ventas[0]->cliente->nombres_cliente);

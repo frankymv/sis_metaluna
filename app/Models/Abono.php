@@ -7,23 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Abono extends Model
 {
-
+    use HasFactory;
     protected $fillable =[
         'no_abono',
-        'venta_id',
         'fecha_abono',
-        'saldo_credito',
-        'total_saldo',
         'total_abono',
         'observaciones',
-        'correlativo',
+        'abono_anticipado',
+        'abono_anticipado_asignado',
+        'fecha_abono_anticipado_asignado',
         'tipo_pago',
         'detalle_pago',
-        'abono_anticipado',
-        'fecha_abono_anticipado',
+        'correlativo',
+        'venta_id',
         'cliente_id',
-        'abono_anticipado_asignado'];
-    use HasFactory;
+        ];
 
 
     public function Venta(){

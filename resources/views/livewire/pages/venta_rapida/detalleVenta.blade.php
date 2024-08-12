@@ -10,7 +10,10 @@
                     <x-frk.components.label-input   label="No Venta:" wire:model="no_venta_detalle" disabled  />
                 </div>
                 <div class="w-full md:w-1/2">
-                    <x-frk.components.label-input   label="No Venta:" wire:model="total_venta_detalle" disabled  />
+                    <x-frk.components.label-input   label="Total Venta:" wire:model="total_venta_detalle" disabled  />
+                </div>
+                <div class="w-full md:w-1/2">
+                    <x-frk.components.label-input   label="No Credito:" wire:model="no_credito_detalle" disabled  />
                 </div>
             </div>
                 <div class="flex w-full mb-5">

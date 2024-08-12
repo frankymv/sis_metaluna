@@ -23,6 +23,9 @@ return new class extends Migration
             $table->float('total_credito');
             $table->unsignedBigInteger('cliente_id')->nullable(true);
             $table->foreign('cliente_id')->references('id')->on('clientes');
+             //registro de operaciones a una venta
+             $table->integer('correlativo')->nullable(true)->default('0')->comment('correlativo para el seguimiento de las operaciones de abono y notas de credito');
+
             $table->string('observaciones');
             $table->timestamps();
         });

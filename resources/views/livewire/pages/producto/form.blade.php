@@ -31,7 +31,7 @@
         </x-forms.select>
 
         <x-frk.components.select label="Material" :disabled="$disabledMaterial" wire:model="material_id" >
-            @foreach ($this->materials as $data)
+            @foreach ($this->materiales as $data)
                 <option value="{{ $data->id }}" @if(!$data->estado) disabled @endif wire:key="material-{{ $data->id }}">{{ $data->nombre }}</option>
             @endforeach
         </x-forms.select>
@@ -101,9 +101,7 @@
     </div>
 
     <div class="flex  w-full md:w-1/2 " >
-        <x-frk.components.subtitle-section label="Precio:" />
-        <x-frk.components.input-money label="minorista:" :disabled="$disabled" wire:model="precio_venta_minorista" />
-        <x-frk.components.input-money label="mayorista:" :disabled="$disabled" wire:model="precio_venta_mayorista" />
-        <x-frk.components.input-money label="base:" :disabled="$disabled" wire:model="precio_venta_base" />
+
+        <x-frk.components.input-money label="Precio" :disabled="$disabled" wire:model="precio_venta_producto" />
     </div>
 </div>

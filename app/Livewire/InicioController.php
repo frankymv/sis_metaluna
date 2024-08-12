@@ -36,7 +36,7 @@ class InicioController extends Component
         $this->ventas_del_dia=Venta::where('fecha_venta',Carbon::now()->toDateString())->count();
 
 
-        $this->venta_reciente=Venta::orderBy('fecha_venta', 'DESC')->orderBy('hora_venta', 'DESC')->get();
+        $this->venta_reciente=Venta::orderBy('fecha_venta', 'DESC')->get();
 
 
         $this->ventas_actuales=Venta::where('fecha_venta',Carbon::now())->count();

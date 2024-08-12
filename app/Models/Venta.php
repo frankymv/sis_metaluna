@@ -11,56 +11,38 @@ class Venta extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id',
-        'cliente_id',
-        'saldo_credito_cliente',
-
         'no_venta',
         'fecha_venta',
-        'hora_venta',
         'total_venta',
         'observaciones_venta',
-        'forma_pago',
-
-        'efectivo',
-
-
-
+        'forma_pago_venta',
+        /////cancelado el total de la venta///////////
+        'cancelado_total_venta',
+        'fecha_cancelado_total_venta',
+        /////credito///////////
         'credito',
-        'no_credito',
-        'fecha_credito',
         'total_credito',
-
-        'observaciones_credito',
-
+        /////anulado///////////
         'anulado',
         'fecha_anulado',
-        'observaciones_anulado',
-
+        /////notacredito///////////
         'nota_credito',
-        'fecha_nota_credito',
         'total_nota_credito',
-        'observaciones_nota_credito',
-
-        'saldo_cancelado',
-        'fecha_saldo_cancelado',
-
-        'saldo_total_venta',
-        'visible',
-
-
+        /////abono///////////
+        'abono',
+        'total_abono',
+        /////si requiere envio o traslado a la ubicacion del cliente
         'envio',
         'estado_envio',
 
+        //registro de operaciones a una venta
         'correlativo',
+        ////visible ante los registros y operaciones
+        'visible',
 
-
+        //////CLIENTE////////
+        'cliente_id',
         'sucursal_id',
-
-
-
-
-
     ];
 
     public function Abonos(){
@@ -100,9 +82,10 @@ class Venta extends Model
         ->withPivot('entregado','observaciones');
     }
 
-    public function Credito(){
-        return $this->belongsTo(Credito::class);
+    public function Creditos(){
+        return $this->hasMany(Credito::class);
     }
+
 
     public function Departamentos(){
         return $this->belongsToMany(Departamento::class)

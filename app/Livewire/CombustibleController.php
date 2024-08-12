@@ -50,6 +50,7 @@ class CombustibleController extends Component
     public $filtroUsuario=null;
     public $filtroVehiculo=null;
     public $filtroFechaCombustible=null;
+    public $filtroObservaciones=null;
     /////
 
 
@@ -105,6 +106,7 @@ class CombustibleController extends Component
     ->with('vehiculo')
     ->where('no_combustible','LIkE',"%{$this->filtroNoCombustible}%")
     ->where('fecha_combustible','LIkE',"%{$this->filtroFechaCombustible}%")
+    ->where('observaciones','LIkE',"%{$this->filtroObservaciones}%")
     ->whereRelation('user','id','LIKE',"%{$this->filtroUsuario}%")
     ->whereRelation('vehiculo','id','LIKE',"%{$this->filtroVehiculo}%")
     ->get();
@@ -206,6 +208,7 @@ class CombustibleController extends Component
         ->with('vehiculo')
         ->where('no_combustible','LIkE',"%{$this->filtroNoCombustible}%")
         ->where('fecha_combustible','LIkE',"%{$this->filtroFechaCombustible}%")
+        ->where('observaciones','LIkE',"%{$this->filtroObservaciones}%")
         ->whereRelation('user','id','LIKE',"%{$this->filtroUsuario}%")
         ->whereRelation('vehiculo','id','LIKE',"%{$this->filtroVehiculo}%")
         ->first();

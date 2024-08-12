@@ -9,7 +9,7 @@ class Credito extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['no_credito','venta_id','fecha_credito','total_credito','fecha_limite_credito','cliente_id','observaciones'];
+    protected $fillable = ['no_credito','venta_id','fecha_credito','total_credito','fecha_limite_credito','cliente_id','observaciones','correlativo'];
 
     public function Cliente(){
         return $this->belongsTo(Cliente::class);
@@ -18,4 +18,6 @@ class Credito extends Model
     public function Venta(){
         return $this->belongsTo(Venta::class);
     }
+
+
 }

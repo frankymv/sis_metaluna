@@ -8,12 +8,11 @@
                     <div class="    flex-wrap w-full">
                         <div class="flex-wrap w-full">
                             <div class="flex w-full ">
-                                <x-frk.components.label-input label="No Venta" :disabled="$disabled" wire:model.live="search_no_venta" />
-                                <x-frk.components.label-input label="nombres_cliente" :disabled="$disabled" wire:model.live="search_nombres_cliente" />
-                                <x-frk.components.label-input label="codigo_cliente" :disabled="$disabled" wire:model.live="search_codigo_cliente" />
+                                <x-frk.components.label-input label="No Venta"  wire:model.live="search_no_venta" />
+                                <x-frk.components.label-input label="nombres_cliente"  wire:model.live="search_nombres_cliente" />
+                                <x-frk.components.label-input label="codigo_cliente"  wire:model.live="search_codigo_cliente" />
                                 <x-frk.components.button label="cancelar" wire:click="cancelarBuscarVenta()" />
                             </div>
-
                         </div>
 
                         @if ($ventas)
@@ -57,17 +56,17 @@
                                             {{$value->fecha_venta}}
                                         </th>
                                         <td class="px-2 py-1">
-                                            {{$value->codigo_mayorista}}
+                                            {{$value->cliente->codigo_mayorista}}
                                         </th>
                                         <td class="px-2 py-1">
-                                            {{$value->nombres_cliente}}
+                                            {{$value->cliente->nombres_cliente}}
                                         </th>
 
                                         <td class="px-2 py-1">
-                                            {{$value->total_venta}}
+                                            {{$value->total_venta - $value->total_nota_credito}}
                                         </th>
                                         <td class="px-2 py-1">
-                                            {{$value->saldo_total_venta}}
+                                            {{($value->total_venta - $value->total_nota_credito) - $value->total_abono}}
                                         </th>
 
                                         <td class="px-2 py-1">

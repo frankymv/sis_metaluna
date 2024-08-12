@@ -16,7 +16,7 @@ return new class extends Migration
     {
 
 
-
+/*
         DB::unprepared('DROP TRIGGER IF EXISTS `agregar_nota_creditos`');
         DB::unprepared('CREATE TRIGGER agregar_nota_creditos AFTER INSERT ON nota_creditos
         FOR EACH ROW
@@ -63,7 +63,7 @@ return new class extends Migration
         END IF;
             END');
 
-
+*/
 
     }
 

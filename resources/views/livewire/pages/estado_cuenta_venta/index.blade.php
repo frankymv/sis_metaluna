@@ -31,9 +31,14 @@
                     <th class="px-4 py-3">Envio</th>
                     <th class="px-4 py-3">Fecha Venta</th>
                     <th class="px-4 py-3">Total Venta</th>
+                    <th class="px-4 py-3">Nota Credito</th>
+                    <th class="px-4 py-3">Total Venta con Nota Credito</th>
                     <th class="px-4 py-3">Credito</th>
                     <th class="px-4 py-3">Abono</th>
                     <th class="px-4 py-3">Saldo</th>
+                    <th class="px-4 py-3">Anulado</th>
+                    <th class="px-4 py-3">Detalle Operaciones</th>
+
                     <th class="px-4 py-3">Acciones</th>
                     </tr>
                 </thead>
@@ -42,29 +47,52 @@
                         <tr class="text-gray-700">
                             <td class="px-4 py-3 text-ms font-semibold border">{{$data->no_venta}}</td>
                             <td class="px-4 py-3 border">
-
                                 <p class="text-xs text-gray-600">Codigo Cliente Mayorista: {{$data->cliente->codigo_mayorista}} Nombres: {{$data->cliente->nombres_cliente}}</p>
-
-
-
-                            @foreach ($data->abonos as $dataa)
-                                <p class="text-xs text-gray-600">No_abono: {{$dataa->no_abono}} Fecha: {{$dataa->fecha_abono}}</p>
-                            @endforeach
-                            @foreach ($data->notacreditos as $dataa)
-                                <p class="text-xs text-gray-600">No Nota Credito: {{$dataa->no_nota_credito}} Fecha: {{$dataa->fecha_nota_credito}}</p>
-                            @endforeach
                             </td>
-                            <td class="px-4 py-3 text-sm border">{{$data->forma_pago}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->forma_pago_venta}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->envio}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->fecha_venta}}</td>
+                            <td class="px-4 py-3 text-sm font-semibold border">{{$data->total_venta}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->total_nota_credito}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->total_venta-$data->total_nota_credito}}</td>
 
-                            <td class="px-4 py-3 text-sm border">{{$data->total_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->total_credito}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->total_credito-$data->saldo_total_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->saldo_total_venta}}</td>
+
+
+                            @if (($data->total_credito-$data->total_nota_credito)<=0)
+                            <td class="px-4 py-3 text-sm border"> 0</td>
+                            @else
+                            <td class="px-4 py-3 text-sm border"> {{$data->total_credito-$data->total_nota_credito}}</td>
+                            @endif
+
+                            <td class="px-4 py-3 text-sm border">{{$data->total_abono}}</td>
+
+
+
+
+                            @if ((($data->total_credito-$data->total_nota_credito)-$data->total_abono)<=0)
+                            <td class="px-4 py-3 text-sm border"> 0</td>
+                            @else
+                            <td class="px-4 py-3 text-sm border"> {{($data->total_credito-$data->total_nota_credito)-$data->total_abono}}</td>
+                            @endif
+                            @if ($data->anulado==0)
+                            <td class="px-4 py-3 text-sm border text-green-600 font-bold"> NO</td>
+                            @else
+                            <td class="px-4 py-3 text-sm border text-red-600 font-bold"> SI</td>
+                            @endif
+                            <td class="px-4 py-3 border">
+                            @foreach ($data->creditos as $dataa)
+                                <p class="text-xs text-gray-600">No Credito: {{$dataa->no_credito}} Fecha: {{$dataa->fecha_credito}} Total: {{$dataa->total_credito}}</p>
+                            @endforeach
+                            @foreach ($data->abonos as $dataa)
+                                <p class="text-xs text-gray-600">No_abono: {{$dataa->no_abono}} Fecha: {{$dataa->fecha_abono}} Total: {{$dataa->total_abono}}</p>
+                            @endforeach
+                            @foreach ($data->notacreditos as $dataa)
+                                <p class="text-xs text-gray-600">No Nota Credito: {{$dataa->no_nota_credito}} Fecha: {{$dataa->fecha_nota_credito}} Total: {{$dataa->total_nota_credito}}</p>
+                            @endforeach
+                            </td>
                             <td class="px-4 py-3 text-sm border flex w-full">
                                 <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
-                                                        </td>
+                            </td>
 
                         </tr>
 

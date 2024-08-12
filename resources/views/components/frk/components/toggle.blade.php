@@ -1,8 +1,8 @@
 @props(['label'=>'','left'=>'Si','right'=>'No','attrib','disabled'])
 
-<div class="w-full flex-wrap border border-gray-500 rounded-lg shadow mx-1 px-1 pb-1 ">
-    <x-frk.components.label label="{{$label}}"  />
+<div class="w-full flex-wrap  rounded-lg mx-1 px-1 pb-1 ">
 
+    <x-frk.components.label label="{{$label}}"  class="font-semibold text-sm capitalize"  />
     @if ($disabled)
     <div class="flex items-center cursor-pointer cm-toggle-wrapper justify-center" {{$attributes}}     >
     @else

@@ -28,7 +28,7 @@ class ClienteController extends Component
 
     public $disabledCodigo=true,
     $codigo_interno=null,
-    $codigo_mayorista=null,
+    $codigo_mayorista="N/A",
     $nombre_empresa='',
     $nombres_cliente='',
     $tipo_cliente_id=null,
@@ -75,7 +75,7 @@ class ClienteController extends Component
       public $delete_nombre=null;
 
     protected $rules = [
-        'nit' => 'required',
+
         'tipo_cliente_id' => 'required',
         'nombres_cliente' => 'required',
         'apellidos_cliente' => 'required',

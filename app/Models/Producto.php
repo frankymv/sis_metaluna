@@ -17,7 +17,7 @@ class Producto extends Model
     'tipo_diametro',
     'peso',
     'tipo_peso',
-    'divisible','existencia','precio_venta','estado','marca_id','tipo_id','material_id','precio_venta_base','precio_venta_mayorista','precio_venta_minorista','disenio_id','created_at','updated_at' ];
+    'divisible','existencia','precio_venta','estado','marca_id','tipo_id','material_id','precio_venta_producto','disenio_id','created_at','updated_at' ];
 
     public function Marca(){
         return $this->belongsTo(Marca::class);

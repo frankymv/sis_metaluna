@@ -39,14 +39,18 @@
 
             </div>
             <div class="flex w-full">
+
                 <div class="flex w-full md:w-1/12">
-                    <x-frk.components.label-input label="nit" :disabled="$disabledInput" wire:model="nit" />
+                    <x-frk.components.label-input label="cod. inter" :disabled="$disabledInput" wire:model="codigo_interno" />
                 </div>
                 <div class="flex w-full md:w-1/12">
-                    <x-frk.components.label-input label="codigo" :disabled="$disabledInput" wire:model="codigo" />
+                    <x-frk.components.label-input label="cod. mayor" :disabled="$disabledInput" wire:model="codigo_mayorista" />
                 </div>
                 <div class="flex w-full md:w-2/12">
                     <x-frk.components.label-input label="tipo cliente" :disabled="$disabledInput"  wire:model="tipo_cliente" />
+                </div>
+                <div class="flex w-full md:w-1/12">
+                    <x-frk.components.label-input label="nit" :disabled="$disabledInput" wire:model="nit" />
                 </div>
                 <div class="flex w-full md:w-4/12">
                     <x-frk.components.label-input label="nombre" error="nombres_cliente" :disabled="$disabled" wire:model="nombres_cliente" />
@@ -65,6 +69,9 @@
                 <div class="flex flex-wrap md:w-1/2">
                     <x-frk.components.button label="Buscar Producto" wire:click="buscarProducto()" />
                 </div>
+            </div>
+            <div class="flex w-full md:w-1/3">
+                <x-frk.components.error error="contadorProductos" />
             </div>
             <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full table-auto  text-sm text-left text-gray-500 dark:text-gray-400">
@@ -155,20 +162,28 @@
 
         <div class="flex w-full">
             <div class="w-full  flex-wrap md:w-3/12">
+                <x-frk.components.subtitle font_size="text-base"  label="Detalle Credito" />
+                <div class="flex w-full">
+                    <div class="flex w-full md:w-2/5">
+                        <x-frk.components.label-input label="Limite Credito" error="limite_credito" :disabled="$disabledInput" wire:model.live="limite_credito" />
+                    </div>
+                    <div class="flex w-full md:w-2/5">
+                        <x-frk.components.label-input label="Dias " error="dias_ultimo_credito"  wire:model.live="dias_ultimo_credito" />
+                    </div>
+                </div>
                 <x-frk.components.subtitle font_size="text-base"  label="Historial Credito" />
 
+
                     <div class="flex w-full">
-                        <div class="flex w-full md:w-2/5">
+                        <div class="flex w-full md:w-2/6">
                             <x-frk.components.label-input label="Anticipo" :disabled="$disabledInput" wire:model="abono_anticipado" />
                         </div>
-                        <div class="flex w-full md:w-2/5">
+                        <div class="flex w-full md:w-2/6">
                             <x-frk.components.label-input label="Saldo Cre." error="saldo_credito" :disabled="$disabledInput" wire:model.live="saldo_credito" />
                         </div>
-                        <div class="flex w-full md:w-1/5">
-                            <x-frk.components.label-input label="Dias " error="dias_ultimo_credito"  wire:model.live="dias_ultimo_credito" />
+                        <div class="flex w-full md:w-2/6">
+                            <x-frk.components.label-input label="Nuevo Saldo" :disabled="$disabledInput" wire:model.live="nuevo_saldo" />
                         </div>
-
-
                     </div>
                 @if ($id_forma_pago=='CREDI')
                     <div class="flex w-full">
@@ -196,16 +211,7 @@
                         <x-frk.components.subtitle font_size="text-base"  label="Credito" />
                     </div>
                     <div class="flex w-full">
-                        <div class="flex w-full md:w-1/6">
-                            <x-frk.components.label-input label="no credito" :disabled="$disabledInput"  wire:model.live="no_credito" />
-                        </div>
-
-                        <div class="flex w-full md:w-1/6">
-                            <x-frk.components.label-input label="Nuevo Saldo" :disabled="$disabledInput" wire:model.live="nuevo_saldo" />
-                        </div>
-                        <div class="flex w-full md:w-4/6">
-                            <x-frk.components.label-input label="Observaciones credito"  wire:model="observaciones_credito" />
-                        </div>
+                        <x-frk.components.label-input label="Observaciones credito"  wire:model="observaciones_credito" />
                     </div>
                 @endif
             </div>
