@@ -34,14 +34,16 @@ public function Clientes(){
      return $this->hasMany(Cliente::class);
  }
 
+
 public function Departamentos(){
     return $this->belongsToMany(Departamento::class)
-    ->withPivot('observaciones','nombre_departamento','nombre_municipio');
+    ->withPivot('observaciones');
 }
+
 
 public function Municipios(){
     return $this->belongsToMany(Municipio::class)
-    ->withPivot('observaciones','nombre_departamento','nombre_municipio');
+    ->withPivot('observaciones');
 }
 
 protected function estado(): Attribute {

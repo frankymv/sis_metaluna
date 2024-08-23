@@ -3,11 +3,16 @@
 namespace App\Livewire;
 
 use App\Models\Servicio;
+use App\Models\User;
 use App\Models\Vehiculo;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ServicioController extends Component
 {
+    use LivewireAlert;
     public $title='Servicio';
     public $data, $id_data, $id=null;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
@@ -22,16 +27,25 @@ class ServicioController extends Component
     public $disabledInput=false;
     ////////////////////
 
-
+    public $filtroNoServicio=null;
+    Public $filtroFechaServicio=null;
+    public $filtroVehiculo=null;
+    public $filtroDescricion=null;
     public $servicios=[];
+    public $users=[];
+
+
+      //////DELETE///
+      public $delete_no=null;
+      public $delete_nombre=null;
 
     ////////////////////
     protected $rules = [
-        'no_servico'=>'required',
+        'no_servicio'=>'required',
         'fecha_servicio'=>'required',
         'total_servicio'=>'required',
         'descripcion'=>'required',
-        'nombre' => 'required',
+
     ];
     ////////////////////
 
@@ -40,13 +54,20 @@ class ServicioController extends Component
     public function render()
     {
         //dd(Servicio::find(1));
+        $this->users=User::all();
+        $this->vehiculos=Vehiculo::all();
+        $this->servicios=Servicio::with('vehiculo')
+        ->where('no_servicio','LIkE',"%{$this->filtroNoServicio}%")
+        ->where('vehiculo_id','LIkE',"%{$this->filtroVehiculo}%")
+        ->where('fecha_servicio','LIkE',"%{$this->filtroFechaServicio}%")
+        ->get();
 
-        $this->servicios=Servicio::with('vehiculo')->get();
         return view('livewire.pages.servicio.index');
 
     }
 
     public function create(){
+
         $data=Servicio::latest()->first();
         if ( $data) {
             $this->id=$data->id+1;
@@ -78,7 +99,7 @@ class ServicioController extends Component
             'estado'=>$this->estado]
         );
 
-
+        $this->alertaNotificacion("store");
         $this->cancel();
 
     }
@@ -120,7 +141,6 @@ class ServicioController extends Component
 
         $data = Servicio::find($rowId);
         $data->update([
-            'no_servicio'=>$this->no_servicio,
             'fecha_servicio'=>$this->fecha_servicio,
             'total_servicio'=>$this->total_servicio,
             'vehiculo_id'=>$this->vehiculo_id,
@@ -129,23 +149,52 @@ class ServicioController extends Component
             'estado'=>$this->estado
         ]);
 
-
+        $this->alertaNotificacion("update");
         $this->cancel();
     }
 
-    public function delete($rowId){
-        $data = Servicio::find($rowId);
+    public function delete($id){
+        $data = Servicio::find($id);
         $this->id_data=$data->id;
-
+        $this->delete_no=$data->no_servicio;
+        $this->delete_nombre=$data->total_servicio;
         $this->isDelete = true;
+
     }
 
-    public function destroy($rowId)
+    public function destroy($id)
     {
-        Servicio::find($rowId)->delete();
-
+        Servicio::find($id)->delete();
         $this->isDelete = false;
+        $this->alertaNotificacion("destroy");
         $this->cancel();
+    }
+
+
+
+
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfServicioGeneral',['servicios' => $this->servicios]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    public function exportarFila($id)
+    {
+        $dato=Servicio::with('vehiculo')
+        ->find($id);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfServicio',['dato'=>$dato]);
+        /*return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");*/
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
     }
 
     public function cancel(){
@@ -165,6 +214,42 @@ class ServicioController extends Component
         'estado']);
         ////////////////////
     }
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
+        ]);
+    }
+
 
 
 }

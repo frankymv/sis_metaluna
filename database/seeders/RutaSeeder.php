@@ -20,10 +20,16 @@ class RutaSeeder extends Seeder
         DB::table('rutas')->insert(['codigo'=>'0002','nombre'=>'Ruta Interior','descripcion'=>'descripcion ruta interior de totonicapan','estado'=>1]);
 
 
-        DB::table('departamento_ruta')->insert(['id'=>'1','ruta_id'=>'2','departamento_id'=>'8','municipio_id'=>'104','nombre_departamento'=>'Totonicapan','nombre_municipio'=>'Totonicapan','observaciones'=>'']);
-        DB::table('departamento_ruta')->insert(['id'=>'2','ruta_id'=>'2','departamento_id'=>'8','municipio_id'=>'105','nombre_departamento'=>'Totonicapan','nombre_municipio'=>'San Cristobal Totonicapan','observaciones'=>'']);
-        DB::table('departamento_ruta')->insert(['id'=>'3','ruta_id'=>'3','departamento_id'=>'14','municipio_id'=>'229','nombre_departamento'=>'Quiche','nombre_municipio'=>'Chiché','observaciones'=>'por le interior']);
-        DB::table('departamento_ruta')->insert(['id'=>'4','ruta_id'=>'2','departamento_id'=>'14','municipio_id'=>'229','nombre_departamento'=>'Quiche','nombre_municipio'=>'Chiché','observaciones'=>'por le interior']);
+        DB::table('departamento_ruta')->insert(['ruta_id'=>'2','departamento_id'=>'8','observaciones'=>'']);
+        DB::table('departamento_ruta')->insert(['ruta_id'=>'2','departamento_id'=>'8','observaciones'=>'']);
+        DB::table('departamento_ruta')->insert(['ruta_id'=>'3','departamento_id'=>'14','observaciones'=>'por le interior']);
+        DB::table('departamento_ruta')->insert(['ruta_id'=>'2','departamento_id'=>'14','observaciones'=>'por le interior']);
+
+
+        DB::table('municipio_ruta')->insert(['ruta_id'=>'2','municipio_id'=>'104','observaciones'=>'']);
+        DB::table('municipio_ruta')->insert(['ruta_id'=>'2','municipio_id'=>'105','observaciones'=>'']);
+        DB::table('municipio_ruta')->insert(['ruta_id'=>'3','municipio_id'=>'229','observaciones'=>'por le interior']);
+        DB::table('municipio_ruta')->insert(['ruta_id'=>'2','municipio_id'=>'229','observaciones'=>'por le interior']);
 
 
     }

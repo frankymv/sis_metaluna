@@ -5,6 +5,8 @@ namespace App\Livewire;
 
 use App\Models\Vehiculo;
 use App\Constantes\VehiculoData;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class VehiculoController extends Component
@@ -22,6 +24,7 @@ class VehiculoController extends Component
     public $tipos=null,$placas=null,$marcas=null,$modelos=null, $estado=true;
     public $codigo=null, $tipo_vehiculo_id=null, $tipo_placa_id=null, $numero_placa=null, $marca_vehiculo_id=null, $modelo_vehiculo_id=null, $linea=null,$alias=null;
 
+    public $vehiculos;
     protected $rules = [
         'codigo' => 'required',
         'tipo_vehiculo_id' => 'required',
@@ -31,10 +34,19 @@ class VehiculoController extends Component
         'modelo_vehiculo_id' => 'required',
     ];
 
+    public $filtroCodigo=null, $filtroNumeroPlaca=null, $filtroAlias=null;
+
     protected $listeners=['edit', 'delete','show'];
 
     public function render()
     {
+
+        $this->vehiculos=Vehiculo::where('codigo','LIkE',"%{$this->filtroCodigo}%")
+        ->where('numero_placa','LIkE',"%{$this->filtroNumeroPlaca}%")
+        ->where('alias','LIkE',"%{$this->filtroAlias}%")
+        ->get();
+
+
 
 
         return view('livewire.pages.vehiculo.index');
@@ -169,6 +181,26 @@ class VehiculoController extends Component
         $this->id_data=$data->id;
         $this->alias=$data->alias;
         $this->isDelete = true;
+    }
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVehiculoGeneral',['vehiculos' => $this->vehiculos]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    public function exportarFila($id)
+    {
+        $dato=Vehiculo::find($id);
+
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVehiculo',['dato'=>$dato]);
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
     }
 
     public function destroy($rowId)

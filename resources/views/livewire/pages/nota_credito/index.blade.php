@@ -5,14 +5,13 @@
                 <x-frk.components.title label="{{$title}}" />
                 <x-frk.components.button color="red" label="Exportar PDF" wire:click="exportarGeneral()" />
                 <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
-                </div>
+            </div>
             <div class="flex w-full">
 
                 <x-frk.components.label-input label="No Nota Credito" wire:model.live="filtroNoNotaCredito"/>
                 <x-frk.components.label-input label="No Venta" wire:model.live="filtroNoVenta"/>
                 <x-frk.components.label-input label="Nombre Cliente" wire:model.live="filtroNombreCliente"/>
                 <x-frk.components.label-input label="Codigo Cliente" wire:model.live="filtroCodigoCliente"/>
-
                 <x-frk.components.date-picker    label="Fecha Abono" wire:model.live="filtroFechaNotaCredito" />
             </div>
         </div>

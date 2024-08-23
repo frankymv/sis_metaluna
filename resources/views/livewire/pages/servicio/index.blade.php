@@ -1,7 +1,22 @@
 <x-frk.components.template-index>
     <x-slot:head>
-        <x-frk.components.title label="{{$title}}" />
-        <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+        <div class="w-full">
+            <div class="flex w-full">
+                <x-frk.components.title label="{{$title}}" />
+                <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+                <x-frk.components.button-icon label="exportar" color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
+                </div>
+            <div class="flex w-full">
+                <x-frk.components.label-input label="No Viatico" wire:model.live="filtroNoServicio"/>
+                <x-frk.components.selectFiltro label="Vehiculo" wire:model.live="filtroVehiculo">
+                    @foreach ($this->vehiculos as $data)
+                    <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">{{ $data->alias }} {{ $data->apellidos }}</option>
+                    @endforeach
+                </x-forms.select>
+
+                <x-frk.components.date-picker    label="Fecha Venta" wire:model.live="filtroFechaServicio" />
+            </div>
+        </div>
     </x-slot:head>
     <x-slot:body>
 
@@ -34,12 +49,6 @@
                         <td class="px-4 py-3 text-sm border">{{$data->total_servicio}}</td>
                         <td class="px-4 py-3 text-sm border">{{$data->vehiculo->numero_placa}} / {{$data->vehiculo->alias}}</td>
                         <td class="px-4 py-3 text-sm border">{{$data->descripcion}}</td>
-
-
-
-
-
-
                          <td class="px-4 py-3 text-sm border flex w-full">
                             <x-frk.components.button-icon color="yellow" icon="fa-solid fa-eye" wire:click="exportarFila({{$data->id}})" />
                             <x-frk.components.button-icon color="green" icon="fa-solid fa-pencil" wire:click="edit({{$data->id}})" />

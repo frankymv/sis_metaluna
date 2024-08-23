@@ -5,7 +5,14 @@
         </x-slot>
         <x-slot:body>
             <x-frk.components.label label="Desea borrar el siguiente registro?" />
-            <x-frk.components.label-input   wire:model="nombre" disabled  />
+            <div class="flex w-full">
+                <div class="w-full md:w-1/2">
+                    <x-frk.components.label-input   wire:model="delete_no" disabled  />
+                </div>
+                <div class="flex w-full md:w-1/2">
+                    <x-frk.components.label-input   wire:model="delete_nombre" disabled  />
+                </div>
+            </div>
         </x-slot>
         <x-slot:footer>
             <x-frk.components.button label="borrar" wire:click="destroy({{$id_data}})"/>
@@ -13,33 +20,3 @@
         </x-slot>
    </x-frk.components.template-crud>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!--<form>
-    <div class="form-group">
-        <input type="hidden" wire:model="post_id">
-        <label for="exampleFormControlInput1">Title</label>
-        <input type="text" class="form-control" wire:model="title" id="exampleFormControlInput1" placeholder="Enter Title">
-        @error('title') <span class="text-danger">{{ $message }}</span>@enderror
-    </div>
-    <div class="form-group">
-        <label for="exampleFormControlInput2">Description</label>
-        <input type="text" class="form-control" wire:model="description" id="exampleFormControlInput2" placeholder="Enter Description">
-        @error('description') <span class="text-danger">{{ $message }}</span>@enderror
-    </div>
-    <button wire:click.prevent="update()" class="btn btn-dark">Update</button>
-    <button wire:click.prevent="cancel()" class="btn btn-danger">Cancel</button>
-</form>
-
-->

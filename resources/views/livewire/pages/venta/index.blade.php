@@ -56,9 +56,13 @@
                         <th class="px-4 py-3">Envio</th>
                         <th class="px-4 py-3">Fecha Venta</th>
                         <th class="px-4 py-3">Total Venta</th>
+                        <th class="px-4 py-3">Nota Credito</th>
+                        <th class="px-4 py-3">Total Venta con Nota Credito</th>
                         <th class="px-4 py-3">Credito</th>
                         <th class="px-4 py-3">Abono</th>
                         <th class="px-4 py-3">Saldo</th>
+
+
                         <th class="px-4 py-3">Acciones</th>
                         </tr>
                     </thead>
@@ -71,14 +75,31 @@
                             </td>
                             <td class="px-4 py-3 text-sm border">{{$data->nombre}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->tipo_cliente}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->forma_pago}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->forma_pago_venta}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->envio}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->fecha_venta}}</td>
+                            <td class="px-4 py-3 text-sm font-semibold border">{{$data->total_venta}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->total_nota_credito}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->total_venta-$data->total_nota_credito}}</td>
 
-                            <td class="px-4 py-3 text-sm border">{{$data->total_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->total_credito}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->total_credito-$data->saldo_total_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->saldo_total_venta}}</td>
+
+
+                            @if (($data->total_credito-$data->total_nota_credito)<=0)
+                            <td class="px-4 py-3 text-sm border"> 0</td>
+                            @else
+                            <td class="px-4 py-3 text-sm border"> {{$data->total_credito-$data->total_nota_credito}}</td>
+                            @endif
+
+                            <td class="px-4 py-3 text-sm border">{{$data->total_abono}}</td>
+
+
+
+
+                            @if ((($data->total_credito-$data->total_nota_credito)-$data->total_abono)<=0)
+                            <td class="px-4 py-3 text-sm border"> 0</td>
+                            @else
+                            <td class="px-4 py-3 text-sm border"> {{($data->total_credito-$data->total_nota_credito)-$data->total_abono}}</td>
+                            @endif
                             <td class="px-4 py-3 text-sm border flex w-full">
                                 <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
                                                         </td>

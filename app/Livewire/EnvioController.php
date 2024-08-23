@@ -43,7 +43,10 @@ class EnvioController extends Component
     public $inputs=[];
 
     public $ventaDetalle=[];
-    public $idDetalle=[];
+    public $idVenta=[];
+    public $noVenta=[];
+    public $totalVenta=[];
+    public $nombreCliente=[];
 
     public $user_id=null;
     public $inputsUsuario=[];
@@ -54,7 +57,9 @@ class EnvioController extends Component
     public $vehiculo_id=null;
     public $inputsVehiculo=[];
     public $vehiculoDetalle=[];
+    public $aliasVehiculo=[];
     public $idDetalleVehiculo=[];
+    public $codigoVehiculo=[];
 
     public $estados,$procesos;
 
@@ -86,17 +91,6 @@ class EnvioController extends Component
 
 public $disabled_venta=true,$disabled_user=true,$disabled_vehiculo=true;
 public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obserbacion=false,$disabled_estado_fecha=false;
-
-public $array = array(
-   /* "clave1"  => "valor1",
-    "clave2"  => "valor2",
-    "clave3"  => "valor3",
-    "clave4"  => "valor4",*/
-);
-
-
-
-
 
 
     protected $listeners=['edit', 'delete','show','finalizar','pdfExportar'];
@@ -144,12 +138,14 @@ public $array = array(
         $this->store();
     }
 
-    public function addDetalleRuta(){
+    public function addDetalleVenta(){
         foreach ($this->ventas as $key => $value) {
             if($value['id']===intval($this->venta_id)){
                 array_push($this->inputs,$this->i);
-                array_push($this->ventaDetalle,$value['no_venta']);
-                array_push($this->idDetalle,$value['id']);
+                array_push($this->noVenta,$value['no_venta']);
+                array_push($this->totalVenta,$value['total_venta']);
+                array_push($this->nombreCliente,$value->cliente['nombres_cliente']);
+                array_push($this->idVenta,$value['id']);
                 $this->i +=1;
             }
         }
@@ -172,7 +168,8 @@ public $array = array(
             if($value['id']===intval($this->vehiculo_id)){
 
                 array_push($this->inputsVehiculo,$this->k);
-                array_push($this->vehiculoDetalle,$value['alias']);
+                array_push($this->codigoVehiculo,$value['codigo']);
+                array_push($this->aliasVehiculo,$value['alias']);
                 array_push($this->idDetalleVehiculo,$value['id']);
                 $this->k +=1;
             }

@@ -25,10 +25,9 @@ class Municipio extends Model
          return $this->hasMany(Proveedor::class);
      }
 
-     public function Ruta(){
-        // $this->belongsTo('App\Models\Rol');
-         return $this->hasMany(Ruta::class)
-         ->withPivot('observaciones','nombre_departamento','nombre_municipio');
-     }
+     public function Rutas(){
+        return $this->belongsToMany(Ruta::class)
+        ->withPivot('observaciones');
+    }
 
 }

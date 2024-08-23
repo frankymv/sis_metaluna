@@ -60,31 +60,6 @@ class ViaticoController extends Component
     public function render()
     {
 
-        /*
-        $this->abonos = DB::table('abonos')
-        ->rightJoin('ventas','abonos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-        ->where('abonos.no_abono','LIKE',"%{$this->filtroNoAbono}%")
-        ->where('ventas.no_venta','LIKE',"%{$this->filtroNoVenta}%")
-        ->where('abonos.fecha_abono','LIKE',"%{$this->filtroFechaAbono}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->get();
-
-
-        $this->total_abonos = DB::table('abonos')
-        ->rightJoin('ventas','abonos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-        ->where('abonos.no_abono','LIKE',"%{$this->filtroNoAbono}%")
-        ->where('ventas.no_venta','LIKE',"%{$this->filtroNoVenta}%")
-        ->where('abonos.fecha_abono','LIKE',"%{$this->filtroFechaAbono}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->sum('abonos.total_abono');
-
-
-*/
-
     $this->viaticos=Viatico::with('user')
     ->where('no_viatico','LIkE',"%{$this->filtroNoViatico}%")
     ->where('fecha_viatico','LIkE',"%{$this->filtroFechaViatico}%")
@@ -182,18 +157,18 @@ class ViaticoController extends Component
     {
 
         $dato=Viatico::with('user')
-        ->where('no_viatico','LIkE',"%{$this->filtroNoViatico}%")
-        ->where('fecha_viatico','LIkE',"%{$this->filtroFechaViatico}%")
-        ->whereRelation('user','codigo','LIKE',"%{$this->filtroCodigoUsuario}%")
-        ->whereRelation('user','nombres','LIKE',"%{$this->filtroNombreUsuario}%")
-        ->whereRelation('user','apellidos','LIKE',"%{$this->filtroApellidoUsuario}%")
+        ->where('no_viatico',1)
+
         ->first();
 
         $fecha_reporte=Carbon::now()->toDateTimeString();
         $pdf = Pdf::loadView('/livewire/pdf/pdfViatico',['dato'=>$dato]);
-        return response()->streamDownload(function () use ($pdf) {
+        /*return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter')->stream();
-            }, "$this->title-$fecha_reporte.pdf");
+            }, "$this->title-$fecha_reporte.pdf");*/
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter', 'landscape')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
     }
 
     public function cancel(){

@@ -7,11 +7,14 @@ use App\Models\Municipio;
 use App\Models\Ruta;
 
 
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
 class RutaController extends Component
 {
+    use LivewireAlert;
     public $title='Ruta';
     public $data, $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
@@ -40,39 +43,41 @@ class RutaController extends Component
     public $disabled_departamento=false;
     public $disabled_municipio=false;
     public $i=0;
+    public $rutas=[];
+
+            /////
+
+            public $delete_no=null,$delete_nombre=null;
+
+    public $filtroCodigo=null, $filtroNombre=null;
 
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
     public function render()
     {
-
+        $this->rutas=Ruta::with('municipios')->with('departamentos')->get();
         return view('livewire.pages.ruta.index');
     }
 
     public function create(){
-
         $this->departamentos=Departamento::all();
         $this->isCreate=true;
     }
+
     public function updatedDepartamentoId($value){
         $this->reset('municipio_id');
             $this->municipios = Municipio::where('departamento_id',$value)->get();
     }
 
-
-
     public function addDetalle(){
         $this->disabled_departamento=true;
         $this->disabled_municipio=true;
-
-
         foreach ($this->departamentos as $key => $value) {
             if($value['id']===intval($this->departamento_id)){
                 array_push($this->inputs,$this->i);
                 array_push($this->idDepartamento ,$value['id']);
                 array_push($this->nombreDepartamento ,$value['nombre']);
                 array_push($this->observacionDetalle ,$this->observaciones);
-
             }
         }
 
@@ -89,10 +94,6 @@ class RutaController extends Component
 
     public function removeDetalle($i)
     {
-
-        //dd($this->idMunicipio[$i]);
-
-
         unset($this->inputs[$i]);
         unset($this->idDepartamento[$i]);
         unset($this->nombreDepartamento[$i]);
@@ -118,10 +119,11 @@ class RutaController extends Component
         ]
         );
         foreach ($this->inputs as $key => $value) {
-            $data->departamentos()->attach($value,['departamento_id' => $this->idDepartamento[$key],'municipio_id' => $this->idMunicipio[$key],'nombre_departamento' => $this->nombreDepartamento[$key],'nombre_municipio' => $this->nombreMunicipio[$key],'observaciones' => 'obbbbbbbbbb']);
+            $data->departamentos()->attach($value,['departamento_id' => $this->idDepartamento[$key]]);
+            $data->municipios()->attach($value,['municipio_id' => $this->idMunicipio[$key],'observaciones' => 'obbbbbbbbbb']);
         }
 
-
+        $this->alertaNotificacion("store");
         $this->cancel();
 
 
@@ -137,32 +139,77 @@ class RutaController extends Component
         $this->codigo=$data->codigo;
         $this->nombre=$data->nombre;
         $this->descripcion=$data->descripcion;
-        $datos=$data->productos()->get();
+        $departamentos_temp=$data->departamentos()->get();
+        $municipios_temp=$data->municipios()->get();
 
-        foreach ($datos as $key => $value) {
+        foreach ($departamentos_temp as $key => $value) {
             array_push($this->inputs ,$key);
-            array_push($this->nombresDetalle ,$value->nombre);
-            array_push($this->productosDetalle ,$value->id);
-            array_push($this->cantidadesDetalle ,$value->pivot->cantidad);
+            array_push($this->idDepartamento ,$value->id);
+            array_push($this->nombreDepartamento ,$value->nombre);
+            array_push($this->idMunicipio ,$municipios_temp[$key]['id']);
+            array_push($this->nombreMunicipio ,$municipios_temp[$key]['nombre']);
+            array_push($this->observacionDetalle ,$value->id);
         }
         $this->created_at = $data->created_at;
         $this->updated_at = $data->updated_at;
         $this->isEdit=true;
     }
 
+    public function update($id){
 
-    public function pdfExportar($id){
-        return redirect()->route('pdfExportarRuta',$id);
+        $data = Ruta::find($id);
+        $data->update([
+            'codigo'=>$this->codigo,
+            'nombre'=>$this->nombre,
+            'descripcion'=>$this->descripcion,
+
+            'estado'=>$this->estado
+        ]);
+
+        $data->departamentos()->detach();
+        $data->municipios()->detach();
+        foreach ($this->inputs as $key => $value) {
+            $data->departamentos()->attach(['departamento_id' => $this->idDepartamento[$key]]);
+            $data->municipios()->attach(['municipio_id' => $this->idMunicipio[$key]]);
+        }
+        $this->alertaNotificacion("store");
+        $this->cancel();
     }
 
-    public function pdfExportarRuta($id)
+    public function delete($id){
+        $data = Ruta::find($id);
+        $this->isDelete = true;
+        $this->delete_no=$data->codigo;
+        $this->delete_nombre=$data->nombre;
+        $this->id_data=$data->id;
+    }
+
+    public function destroy($id)
     {
-        $ruta=Ruta::with('departamentos')->find($id)->toArray();
+        $data = Ruta::find($id);
+        $data->delete();
+        $this->alertaNotificacion("destroy");
+        $this->cancel();
+    }
 
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfRutaGeneral',['rutas' => $this->rutas]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
 
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfRuta ',['ruta'=>$ruta]);
-        return $pdf->stream();
+    public function exportarFila($id)
+    {
+        $data=Ruta::find($id);
 
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfRuta',['data'=>$data]);
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
     }
 
 
@@ -171,6 +218,42 @@ class RutaController extends Component
         $this->reset();
         $this->resetValidation();
     }
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
+        ]);
+    }
+
 
 
 

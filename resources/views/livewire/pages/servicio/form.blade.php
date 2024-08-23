@@ -10,7 +10,7 @@
         <x-frk.components.date-picker :disabled="$disabledInput" error="fecha_servicio" wire:model="fecha_servicio" label="Fecha Servicio"/>
     </div>
     <div class="flex w-full md:w-1/4">
-        <x-frk.components.input-money label="Costo del servicio" error="total_servicio" :disabled="$disabled" wire:model="total_servicio" />
+        <x-frk.components.input-money label="Costo del servicio" error="total_servicio"  wire:model="total_servicio" />
     </div>
 
 
@@ -31,15 +31,6 @@
     </div>
 
 
-
-
-
-    @if ($isShow)
-        <div class="flex w-full ">
-            <x-frk.components.label-input label="created_at" :disabled="$disabled" wire:model="created_at" />
-            <x-frk.components.label-input label="updated_at" :disabled="$disabled" wire:model="updated_at" />
-        </div>
-    @endif
 </div>
 
 

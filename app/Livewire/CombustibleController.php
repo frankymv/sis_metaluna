@@ -76,31 +76,7 @@ class CombustibleController extends Component
 
         $this->users=User::all();
         $this->vehiculos=Vehiculo::all();
-        /*
 
-        $this->abonos = DB::table('abonos')
-        ->rightJoin('ventas','abonos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-        ->where('abonos.no_abono','LIKE',"%{$this->filtroNoAbono}%")
-        ->where('ventas.no_venta','LIKE',"%{$this->filtroNoVenta}%")
-        ->where('abonos.fecha_abono','LIKE',"%{$this->filtroFechaAbono}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->get();
-
-
-        $this->total_abonos = DB::table('abonos')
-        ->rightJoin('ventas','abonos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-        ->where('abonos.no_abono','LIKE',"%{$this->filtroNoAbono}%")
-        ->where('ventas.no_venta','LIKE',"%{$this->filtroNoVenta}%")
-        ->where('abonos.fecha_abono','LIKE',"%{$this->filtroFechaAbono}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->sum('abonos.total_abono');
-
-
-*/
 
     $this->combustibles=Combustible::with('user')
     ->with('vehiculo')

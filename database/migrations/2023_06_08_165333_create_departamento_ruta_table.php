@@ -14,21 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('departamento_ruta', function (Blueprint $table) {
-            $table->id()->autoIncrement();
-
             $table->unsignedBigInteger('ruta_id');
-            $table->foreign('ruta_id')->references('id')->on('rutas');
-
+            $table->foreign('ruta_id')->references('id')->on('rutas')->onDelete('cascade');
             $table->unsignedBigInteger('departamento_id');
             $table->foreign('departamento_id')->references('id')->on('departamentos');
-
-            $table->unsignedBigInteger('municipio_id');
-            $table->foreign('municipio_id')->references('id')->on('municipios');
-
-            $table->string('nombre_departamento')->nullable(true);
-            $table->string('nombre_municipio')->nullable(true);
             $table->string('observaciones')->nullable(true);
-            $table->timestamps();
         });
     }
 

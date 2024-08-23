@@ -30,7 +30,7 @@ class Departamento extends Model
      public function Rutas(){
 
          return $this->belongsToMany(Ruta::class)
-         ->withPivot('observaciones','nombre_departamento','nombre_municipio');
+         ->withPivot('observaciones');
      }
 
 
