@@ -1,7 +1,7 @@
 <x-frk.components.template-index>
     <x-slot:head>
         <x-frk.components.title label="{{$title}}" />
-        <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+        <x-frk.components.button label="agregar" wire:click="create()" />
     </x-slot:head>
     <x-slot:body>
         <livewire:power-grid.user-table/>

@@ -4,8 +4,6 @@
     <a
       href="#"
       @click="$event.preventDefault(); open = !open"
-
-
       class="flex items-center px-1  text-white transition-colors rounded-md dark:text-light hover:bg-cuartoColor dark:hover:bg-blue-600"
       :class="{'text-black bg-secondaryColor  dark:bg-blue-600': isActive || open}"
       role="button"
@@ -28,7 +26,7 @@
             </svg>
         </span>
     </a>
-    <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" aria-label="Authentication">
+    <div x-show="open" class="mt-1 space-y-2 px-3" role="menu" aria-label="Authentication">
         {{$slot}}
     </div>
 </div>

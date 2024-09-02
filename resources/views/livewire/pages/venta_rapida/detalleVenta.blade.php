@@ -27,8 +27,14 @@
         </x-slot>
         <x-slot:footer>
 
-            <x-frk.components.button-icon label="exportar" color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral({{$no_venta_detalle}})" />
-            <x-frk.components.button label="Continuar" wire:click.prevent="cancel()" />
+                <div class="flex w-full justify-center">
+                    <a href="{{ route("pdfVentaRapida","1") }}" target="_blank">
+
+                        <x-frk.components.button color="red" label="Imprimir" />
+                    </a>
+                <x-frk.components.button label="Continuar" wire:click.prevent="cancel()" />
+
+                </div>
         </x-slot>
    </x-frk.components.template-crud>
 </div>

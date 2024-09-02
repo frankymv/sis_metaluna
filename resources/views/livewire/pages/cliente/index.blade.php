@@ -3,13 +3,13 @@
     <div class="w-full">
         <div class="flex w-full">
             <x-frk.components.title label="{{$title}}" />
-            <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+            <x-frk.components.button label="agregar" wire:click="create()" />
             <x-frk.components.button-icon label="exportar" color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
         </div>
         <div class="flex w-full">
             <x-frk.components.label-input label="Codigo Interno" wire:model.live="filtroCodigoInterno"/>
             <x-frk.components.label-input label="Codigo Mayorista" wire:model.live="filtroCodigMayorista"/>
-            <x-frk.components.selectFiltro label="Tipo Cliente" wire:model.live="filtroTipoCliente">
+            <x-frk.components.select label="Tipo Cliente" wire:model.live="filtroTipoCliente">
                 @foreach ($this->tipo_clientes as $data)
                 <option value="{{ $data['valor'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
                 @endforeach
@@ -17,7 +17,7 @@
             <x-frk.components.label-input label="Nombres Cliente" wire:model.live="filtroNombresCliente"/>
             <x-frk.components.label-input label="Apellidos Cliente" wire:model.live="filtroApellidosCliente"/>
 
-            <x-frk.components.selectFiltro label="Ruta" wire:model.live="filtroRuta">
+            <x-frk.components.select label="Ruta" wire:model.live="filtroRuta">
                 @foreach ($this->rutas as $data)
                 <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}"> {{ $data->nombre }}</option>
                 @endforeach
@@ -27,12 +27,12 @@
     </x-slot:head>
     <x-slot:body>
 
-    <section class="container mx-auto p-6 font-mono">
-        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <section class="container mx-auto ">
+        <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class="w-full">
+            <table class=" table-fixed">
                 <thead>
-                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                         <th class="px-4 py-3">Codigo Interno</th>
                     <th class="px-4 py-3">Codigo Mayorista</th>
                     <th class="px-4 py-3">Tipo Cliente</th>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Models\Compra;
 use App\Models\Producto;
@@ -9,7 +10,8 @@ use App\Models\Sucursal;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class CompraController extends Component
 {
@@ -30,14 +32,92 @@ class CompraController extends Component
     public $disabled_producto=false;
     public $disabled_cantidad=false;
 
+    public $compras=null;
+    public $sucursales=null;
+
+
+
+    public $filtroNoCompra=null;
+    public $filtroReciboCompra=null;
+    public $filtroFechaCompra=null;
+    public $filtroProveedor=null;
+    public $filtroSucursal=null;
+
 
 
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
+
+
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+
     public function render()
     {
+
+
+
+        $this->proveedores=Proveedor::all();
+        $this->sucursales=Sucursal::all();
+
+        $this->compras=Compra::with('productos')->with('sucursal')->with('proveedor')
+        ->where('compra_no','LIKE',"%{$this->filtroNoCompra}%")
+        ->whereDate('compra_fecha', '>=', $this->filtroFechaInicio)
+        ->whereDate('compra_fecha', '<=', $this->filtroFechaFin)
+        ->where('no_recibo_compra','LIKE',"%{$this->filtroReciboCompra}%")
+        ->where('proveedor_id','LIKE',"%{$this->filtroProveedor}%")
+        ->where('sucursal_id','LIKE',"%{$this->filtroSucursal}%")
+
+        ->get();
+
+
         return view('livewire.pages.compra.index');
     }
+
+
+    public function exportarGeneral()
+{
+    $fecha_reporte=Carbon::now()->toDateTimeString();
+    $pdf = Pdf::loadView('/livewire/pdf/pdfCompraGeneral',['data' => $this->compras]);
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->setPaper('leter', 'landscape')->stream();
+        }, "$this->title-$fecha_reporte.pdf");
+}
+
+
+
+public function exportarFila($id)
+{
+
+
+    $data=Compra::with('productos')->with('sucursal')->with('proveedor')->find($id);
+
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfCompra',['data'=>$data]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+}
+
+
+
 
     public function create(){
         $data=Compra::latest()->first();
@@ -95,7 +175,7 @@ class CompraController extends Component
     public function pdfExportarCompra($id)
     {
         $compra=Compra::with('productos')->find($id)->toArray();
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfCompra ',['compra'=>$compra]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfCompra ',['compra'=>$compra]);
         return $pdf->stream();
 
     }
@@ -170,11 +250,11 @@ class CompraController extends Component
     }
 
 
-    public function edit($rowId){
+    public function edit($id){
         $this->proveedores=Proveedor::all();
         $this->productos=Producto::all();
         $this->sucursals=Sucursal::where('bodega','1')->get();
-        $data = Compra::find($rowId);
+        $data = Compra::find($id);
 
         $this->compra_no=$data->compra_no;
         $this->compra_fecha=$data->compra_fecha;
@@ -192,11 +272,11 @@ class CompraController extends Component
         $this->isEdit=true;
     }
 
-    public function show($rowId){
+    public function show($id){
         $this->sucursals=Sucursal::where('bodega','1')->get();
         $this->proveedores=Proveedor::all();
         $this->productos=Producto::all();
-        $data = Compra::find($rowId);
+        $data = Compra::find($id);
 
         $this->no_recibo_compra=$data->no_recibo_compra;
 
@@ -218,17 +298,17 @@ class CompraController extends Component
         ////////////////////
             }
 
-    public function delete($rowId){
-            $data = Compra::find($rowId);
+    public function delete($id){
+            $data = Compra::find($id);
             $this->compra_no=$data->compra_no;
             $this->id_data=$data->id;
             $this->compra_no = $data->compra_no;
             $this->isDelete = true;
     }
 
-    public function destroy($rowId)
+    public function destroy($id)
     {
-        $data=Compra::find($rowId);
+        $data=Compra::find($id);
         $datos=$data->productos()->get();
         foreach ($datos as $key => $value) {
             array_push($this->inputs ,$key);

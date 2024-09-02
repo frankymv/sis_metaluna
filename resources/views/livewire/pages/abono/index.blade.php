@@ -5,7 +5,7 @@
         <div class="flex w-full">
             <x-frk.components.title label="{{$title}}" />
             <x-frk.components.button color="red" label="Exportar PDF" wire:click="exportarGeneral()" />
-            <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+            <x-frk.components.button label="agregar" wire:click="create()" />
             <x-frk.components.button label="Abono anticipado" wire:click="abonoAnticipado()" />
             <x-frk.components.button label="Asignar Abono anticipado" wire:click="abonoAnticipadoAsignar()" />
         </div>
@@ -25,14 +25,14 @@
 
 
 
-    <section class="container mx-auto p-6 font-mono">
-        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <section class="container mx-auto ">
+        <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class="w-full">
+            <table class=" table-fixed">
                 <thead>
 
 
-                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                         <th class="px-4 py-3">Fecha Abono</th>
                     <th class="px-4 py-3">No Abono</th>
                     <th class="px-4 py-3">Total Abono</th>

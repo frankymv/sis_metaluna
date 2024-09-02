@@ -1,6 +1,6 @@
 <div class="flex w-full flex-wrap m-4">
     <div class="flex w-full md:w-1/4">
-        <x-frk.components.label-input label="Ajuste Inventario No."  :disabled="$disabled" wire:model="ajuste_inventario_no" />
+        <x-frk.components.label-input label="Ajuste Inventario No."  error="ajuste_inventario_no" :disabled="$disabled" wire:model="ajuste_inventario_no" />
     </div>
 
     <div class="flex w-full md:w-1/4">

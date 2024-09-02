@@ -2,7 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Constantes\DataSistema;
 use App\Models\Tipo;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class TipoController extends Component
@@ -19,6 +22,11 @@ class TipoController extends Component
     public $nombre, $descripcion, $estado=true;
     ////////////////////
 
+    public $tipos=null;
+    public $estados=null;
+    public $filtroNombre=null;
+    public $filtroEstado=null;
+
 
     protected $rules = [
         'nombre' => 'required',
@@ -28,6 +36,12 @@ class TipoController extends Component
 
     public function render()
     {
+        $this->estados=DataSistema::$estados;
+
+
+        $this->tipos=Tipo::where('nombre','LIKE',"%{$this->filtroNombre}%")
+        ->where('estado','LIKE',"%{$this->filtroEstado}%")
+        ->get();
         return view('livewire.pages.tipo.index');
     }
 
@@ -103,6 +117,25 @@ class TipoController extends Component
         $this->isDelete = false;
         session()->flash('message', 'Post Deleted Successfully.');
         $this->cancel();
+    }
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfTipoGeneral',['data' => $this->tipos]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    public function exportarFila($id)
+    {
+        $data=Tipo::find($id);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfTipo',['data'=>$data]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
     }
 
     public function cancel(){

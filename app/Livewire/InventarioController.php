@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Models\Disenio;
 use App\Models\Marca;
@@ -41,13 +42,13 @@ class InventarioController extends Component
     public $sucursal_asignada;
 
 
-        /////////filtros
-        public $filtroCodigoProducto=null;
-        public $filtroNombreProducto=null;
-        public $filtroTipo=null;
-        Public $filtroMarca=null;
-        Public $filtroDisenio=null;
-        Public $filtroMaterial=null;
+    /////////filtros
+    public $filtroCodigoProducto=null;
+    public $filtroNombreProducto=null;
+    public $filtroTipo=null;
+    Public $filtroMarca=null;
+    Public $filtroDisenio=null;
+    Public $filtroMaterial=null;
 
 
 
@@ -57,6 +58,9 @@ class InventarioController extends Component
 
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
+
+
+
     public function render()
     {
 
@@ -65,10 +69,6 @@ class InventarioController extends Component
         $this->disenios=Disenio::all();
         $this->materiales=Material::all();
 
-
-
-
-        //$this->productos=Sucursal::with('productos')->find(2);
         $this->productos=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
         ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
         ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
@@ -80,8 +80,14 @@ class InventarioController extends Component
 
         return view('livewire.pages.inventario.index');
 
-
     }
+
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+    }
+
 
 
 

@@ -18,17 +18,16 @@
 
 
 
-    <section class="container mx-auto p-6 font-mono">
-        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <section class="container mx-auto ">
+        <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class="w-full">
+            <table class=" table-fixed">
                 <thead>
-                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                         <th class="px-4 py-3">No Venta</th>
                     <th class="px-4 py-3">Cliente</th>
 
                     <th class="px-4 py-3">Forma Pago</th>
-                    <th class="px-4 py-3">Envio</th>
                     <th class="px-4 py-3">Fecha Venta</th>
                     <th class="px-4 py-3">Total Venta</th>
                     <th class="px-4 py-3">Nota Credito</th>
@@ -50,7 +49,6 @@
                                 <p class="text-xs text-gray-600">Codigo Cliente Mayorista: {{$data->cliente->codigo_mayorista}} Nombres: {{$data->cliente->nombres_cliente}}</p>
                             </td>
                             <td class="px-4 py-3 text-sm border">{{$data->forma_pago_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->envio}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->fecha_venta}}</td>
                             <td class="px-4 py-3 text-sm font-semibold border">{{$data->total_venta}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->total_nota_credito}}</td>

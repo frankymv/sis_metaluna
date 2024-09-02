@@ -32,6 +32,13 @@ public static $estados_envio = [
 
 ];
 
+public static $estados = [
+
+    ['id'=>'1','nombre'=>'Activo','valor'=>'1'],
+    ['id'=>'0','nombre'=>'Inactivo','valor'=>'0'],
+
+];
+
 
 
 public static $forma_pago = [

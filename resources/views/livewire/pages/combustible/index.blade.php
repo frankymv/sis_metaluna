@@ -4,19 +4,19 @@
             <div class="flex w-full">
                 <x-frk.components.title label="{{$title}}" />
                 <x-frk.components.button color="red" label="Exportar PDF" wire:click="exportarGeneral()" />
-                <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+                <x-frk.components.button label="agregar" wire:click="create()" />
             </div>
             <div class="flex w-full">
                 <x-frk.components.label-input label="No Combustible" wire:model.live="filtroNoCombustible"/>
 
 
-                <x-frk.components.selectFiltro label="Usuario" wire:model.live="filtroUsuario">
+                <x-frk.components.select label="Usuario" wire:model.live="filtroUsuario">
                     @foreach ($this->users as $data)
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">{{ $data->nombres }} {{ $data->apellidos }}</option>
                     @endforeach
                 </x-forms.select>
 
-                <x-frk.components.selectFiltro label="Vehiculo" wire:model.live="filtroVehiculo">
+                <x-frk.components.select label="Vehiculo" wire:model.live="filtroVehiculo">
                     @foreach ($this->vehiculos as $data)
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">Placa:{{ $data->numero_placa }} - Alias{{ $data->alias }}</option>
                     @endforeach
@@ -27,14 +27,14 @@
         </div>
     </x-slot:head>
     <x-slot:body>
-    <section class="container mx-auto p-6 font-mono">
-        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <section class="container mx-auto ">
+        <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class="w-full">
+            <table class=" table-fixed">
                 <thead>
 
 
-                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                     <th class="px-4 py-3">No Combustible</th>
                     <th class="px-4 py-3">Codigo Usuario</th>
                     <th class="px-4 py-3">Nombre Usuario</th>

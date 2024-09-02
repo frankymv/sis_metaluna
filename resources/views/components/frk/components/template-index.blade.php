@@ -1,14 +1,14 @@
-<div class="lg:flex gap-4 items-stretch ">
+<div class="flex gap-4">
     <div class="flex w-full rounded-lg bg-white p-2 m-2">
-        <div class="w-full shadow-sm sm:rounded-lg">
-            <div class="flex flex-row items-center mx-8 mt-8">
+        <div class="w-full shadow-sm rounded-lg">
+            <div class=" my-2">
                 {{$head}}
             </div>
-            <div class="mx-8">
+            <div >
                 {{$body}}
             </div>
-            <div class="mb-8">
-                    {{$footer}}
+            <div >
+                {{$footer}}
             </div>
 
     </div>

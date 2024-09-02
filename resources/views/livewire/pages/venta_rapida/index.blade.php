@@ -153,7 +153,7 @@
                     <x-frk.components.label-input label="Observaciones venta"  wire:model="observaciones_venta" />
                 </div>
                 <div class="flex w-full justify-between">
-                    <x-frk.components.button icon="fa-solid fa-eraser" color="red" wire:click="borrarTodo()" />
+                    <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarTodo()" />
                     <x-frk.components.button label="Finalizar Venta" wire:click="store()" />
                 </div>
             </div>
@@ -233,8 +233,12 @@
             @include('livewire.pages.venta_rapida.searchProduct')
         @endif
         @if($isDetalleVenta)
-        @include('livewire.pages.venta_rapida.detalleVenta')
-    @endif
+            @include('livewire.pages.venta_rapida.detalleVenta')
+        @endif
+
+        @if($isPrintVenta)
+            @include('livewire.pages.venta_rapida.printVenta')
+        @endif
 
 
     </x-slot:footer>

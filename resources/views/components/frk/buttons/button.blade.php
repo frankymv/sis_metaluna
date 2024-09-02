@@ -1,24 +1,9 @@
-@props(['label'=>'','icon'=>''])
+@props(['label'=>'','color'=>'gray'])
 
-@php
-if ($icon=='') {
-    $sec_icon=false;
-}else{
-    $sec_icon=true;
-}
-@endphp
-
-
-
-<div class="flex w-full justify-center">
-<button {{  $attributes->merge(['type' => 'submit', 'class' => "text-white text-base capitalize py-1 mx-4 my-1 px-3 rounded "]) }}>
-    {{ $label }}
-    @if ($sec_icon)
-    <i class="{{$icon}}"></i>
-
-
-    @endif
-</button>
+<div class="flex">
+    <button {{  $attributes->merge(['type' => 'submit', 'class' => "bg-$color-500 hover:bg-$color-800 text-white text-base capitalize py-0.5 mx-4 my-0.5 px-3 rounded "]) }} >
+        {{ $label }}
+    </button>
 </div>
 
 

@@ -41,7 +41,7 @@
         </div>
         <div class="flex w-full  flex-wrap md:w-1/6">
             <x-frk.components.label label="Accion"  />
-            <x-frk.components.button label="agregar {{$title}}" wire:click.prevent="addDetalle()" />
+            <x-frk.components.button label="agregar" wire:click.prevent="addDetalle()" />
         </div>
     </div>
     @endif

@@ -20,14 +20,14 @@
 
 
 
-    <section class="container mx-auto p-6 font-mono">
-        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <section class="container mx-auto ">
+        <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class="w-full">
+            <table class=" table-fixed">
                 <thead>
 
 
-                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                     <th class="px-4 py-3">No Credito</th>
                     <th class="px-4 py-3">Fecha Credito</th>
                     <th class="px-4 py-3">Fecha Limite Credito</th>

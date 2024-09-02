@@ -82,8 +82,9 @@ class VentaController extends Component
         $this->rutas=Ruta::all();
 
         $this->ventas = DB::table('ventas')
+            ->leftJoin('envios','ventas.id','=','envios.id')
             ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-            ->leftJoin('rutas','clientes.ruta_id','=','rutas.id')
+            ->rightJoin('rutas' ,'clientes.ruta_id','=','rutas.id')
             ->where('no_venta','LIKE',"%{$this->filtroNoVenta}%")
             ->where('nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
             ->where('codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
@@ -91,9 +92,14 @@ class VentaController extends Component
             ->where('forma_pago_venta','LIKE',"%{$this->filtroFormaPago}%")
             ->where('envio','LIKE',"%{$this->filtroEnvio}%")
             ->where('tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
-            ->where('ruta_id','LIKE',"%{$this->filtroRutaCliente}%")
+            ->where('clientes.ruta_id','LIKE',"%{$this->filtroRutaCliente}%")
+
             ->get();
 
+
+
+
+/*
         $this->total_ventas = DB::table('ventas')
             ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
             ->leftJoin('rutas','clientes.ruta_id','=','rutas.id')
@@ -106,7 +112,7 @@ class VentaController extends Component
             ->where('tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
             ->where('ruta_id','LIKE',"%{$this->filtroRutaCliente}%")
             ->sum('total_venta');
-
+*/
 
 
 
@@ -119,9 +125,11 @@ class VentaController extends Component
     public function showDetalle($value){
         $this->isShow=true;
         $this->disabledInput=true;
-        $this->venta=Venta::where('no_venta',$value['no_venta'])->with('cliente')->with('productos')->first();
+        $this->venta=Venta::where('no_venta',$value['no_venta'])->with('cliente')->with('productos')->with('envios')->first();
 
-       // dd($this->venta);
+
+
+        dd($this->venta);
         $this->codigo=$this->venta->cliente->codigo;
         $this->nit=$this->venta->cliente->nit;
         $this->nombres_cliente=$this->venta->cliente->nombres_cliente;
@@ -199,9 +207,10 @@ class VentaController extends Component
         $no_venta=$venta['no_venta'];
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
         //$user=User::find(1)->toArray();
-        $saldo_anterior=$venta['saldo_credito_cliente'];
 
-        if ($venta['forma_pago']==='CREDI') {
+
+
+        if ($venta['forma_pago_venta']==='CREDI') {
             $data=EstadoCuenta::where('cliente_id','=',$venta['cliente_id'])->get();
 
             $saldo_actual=$saldo_anterior+$venta['total_venta'];
@@ -210,7 +219,7 @@ class VentaController extends Component
             $saldo_actual=$venta['total_venta'];
         }
 
-        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter')->stream();
             }, "$this->title-$fecha_reporte.pdf");

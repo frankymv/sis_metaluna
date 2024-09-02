@@ -12,24 +12,24 @@
                 <x-frk.components.label-input label="Nombre Cliente" wire:model.live="filtroNombreCliente"/>
 
                 <x-frk.components.date-picker   wire:model.live="filtroFechaVenta" label="Fecha Venta"/>
-                <x-frk.components.selectFiltro label="Forma Pago" wire:model.live="filtroFormaPago">
+                <x-frk.components.select label="Forma Pago" wire:model.live="filtroFormaPago">
                     @foreach ($this->forma_pagos as $data)
                     <option value="{{ $data['valor'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
                     @endforeach
                 </x-forms.select>
-                <x-frk.components.selectFiltro label="Envio" wire:model.live="filtroEnvio">
+                <x-frk.components.select label="Envio" wire:model.live="filtroEnvio">
                     @foreach ($this->envios as $data)
                     <option value="{{ $data['valor'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
                     @endforeach
                 </x-forms.select>
 
-                <x-frk.components.selectFiltro label="Tipo Cliente" wire:model.live="filtroTipoCliente">
+                <x-frk.components.select label="Tipo Cliente" wire:model.live="filtroTipoCliente">
                     @foreach ($this->tipo_clientes as $data)
                     <option value="{{ $data['valor'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
                     @endforeach
                 </x-forms.select>
 
-                <x-frk.components.selectFiltro label="Ruta" wire:model.live="filtroRutaCliente">
+                <x-frk.components.select label="Ruta" wire:model.live="filtroRutaCliente">
                     @foreach ($this->rutas as $data)
                     <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
                     @endforeach
@@ -42,12 +42,12 @@
 
 
     <!-- component -->
-<section class="container mx-auto p-6 font-mono">
-    <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+<section class="container mx-auto >
+    <div class="w-full  rounded-lg shadow-lg">
       <div class="w-full overflow-x-auto">
         <table class="w-full">
             <thead>
-                <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                     <th class="px-4 py-3">No Venta</th>
                 <th class="px-4 py-3">Cliente</th>
                 <th class="px-4 py-3">Ruta</th>

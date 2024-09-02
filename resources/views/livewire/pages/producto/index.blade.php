@@ -3,32 +3,32 @@
         <div class="w-full">
             <div class="flex w-full">
                 <x-frk.components.title label="{{$title}}" />
-                <x-frk.components.button label="agregar {{$title}}" wire:click="create()" />
+                <x-frk.components.button label="agregar" wire:click="create()" />
                 <x-frk.components.button color="red" label="Exportar PDF" wire:click="exportarGeneral()" />
             </div>
             <div class="flex w-full">
 
                 <x-frk.components.label-input label="Codigo Producto" wire:model.live="filtroCodigoProducto"/>
                 <x-frk.components.label-input label="Nombre Producto" wire:model.live="filtroNombreProducto"/>
-                <x-frk.components.selectFiltro label="Tipo" wire:model.live="filtroTipo">
+                <x-frk.components.select label="Tipo" wire:model.live="filtroTipo">
                     @foreach ($this->tipos as $data)
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">{{ $data->nombre }}</option>
                     @endforeach
                 </x-forms.select>
 
-                <x-frk.components.selectFiltro label="Marca" wire:model.live="filtroMarca">
+                <x-frk.components.select label="Marca" wire:model.live="filtroMarca">
                     @foreach ($this->marcas as $data)
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">{{ $data->nombre }}</option>
                     @endforeach
                 </x-forms.select>
 
-                <x-frk.components.selectFiltro label="Diseño" wire:model.live="filtroDisenio">
+                <x-frk.components.select label="Diseño" wire:model.live="filtroDisenio">
                     @foreach ($this->disenios as $data)
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">{{ $data->nombre }}</option>
                     @endforeach
                 </x-forms.select>
 
-                <x-frk.components.selectFiltro label="Material" wire:model.live="filtroMaterial">
+                <x-frk.components.select label="Material" wire:model.live="filtroMaterial">
                     @foreach ($this->materiales as $data)
                     <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}">{{ $data->nombre }}</option>
                     @endforeach
@@ -42,12 +42,12 @@
     <x-slot:body>
 
 
-    <section class="container mx-auto p-6 font-mono">
-        <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
+    <section class="container mx-auto ">
+        <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class="w-full">
+            <table class=" table-fixed">
                 <thead>
-                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                     <th class="px-4 py-3">Codigo Producto</th>
                     <th class="px-4 py-3">Nombre Producto</th>
                     <th class="px-4 py-3">Tipo</th>

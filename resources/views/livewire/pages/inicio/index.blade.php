@@ -208,7 +208,7 @@
                 </tbody>
             </table>
         </div>
-
+<!--
         <div class="w-full bg-white rounded-lg p-4 shadow-md m-2">
             <x-frk.components.subtitle label="creditos activos" />
             <table class="table-auto w-full">
@@ -264,7 +264,7 @@
                 </tbody>
             </table>
         </div>
-
+    -->
     </div>
 
 

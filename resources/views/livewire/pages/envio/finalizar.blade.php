@@ -4,22 +4,20 @@
     </x-slot>
     <x-slot:body>
         <div class="flex flex-wrap w-full">
-
             <div class="flex w-full">
                 <div class="flex w-full md:w-1/3">
-                    <x-frk.components.label-input label="no envio" :disabled="$disabled_envio_no" wire:model="no_envio" />
+                    <x-frk.components.label-input label="no envio" :disabled=true wire:model="envio_no" />
                 </div>
                 <div class="flex w-full md:w-1/3">
-                    <x-frk.components.date-picker wire:model="envio_fecha" :disabled="$disabled" label="envio_fecha"/>
+                    <x-frk.components.date-picker wire:model="envio_fecha" :disabled=true label="envio_fecha"/>
                 </div>
                 <div class="flex w-full md:w-1/3">
-                    <x-frk.components.select label="ruta_id" error="ruta_id" :disabled="$disabled" wire:model="ruta_id" >
+                    <x-frk.components.select label="ruta_id" error="ruta_id" :disabled=true wire:model="ruta_id" >
                         @foreach ($this->rutas as $data)
                             <option value="{{ $data->id }}" wire:key="data-{{ $data->id }}">{{ $data->nombre }}</option>
                         @endforeach
                     </x-frk.components.select>
                 </div>
-
             </div>
 
         <!-- //////////Ventas/////////////-->
@@ -30,69 +28,36 @@
                             <x-frk.components.subtitle label="Ventas Asignadas"  />
                         </div>
                     </div>
-
-                    <div class="w-full bg-white rounded-lg p-4 shadow-md m-2">
-                        <table class="table-auto w-full">
-                            <thead>
-                                <tr class="border-b w-full">
-                                    <th class="">
-                                        <h2 class="text-ml font-bold text-gray-600">No Venta</h2>
-                                    </th>
-                                    <th class="">
-                                        <h2 class="text-ml font-bold text-gray-600">Fecha Venta</h2>
-                                    </th>
-                                    <th class="">
-                                        <h2 class="text-ml font-bold text-gray-600">Nit</h2>
-                                    </th>
-                                    <th class="">
-                                        <h2 class="text-ml font-bold text-gray-600">Nombres cliente</h2>
-                                    </th>
-                                    <th class="">
-                                        <h2 class="text-ml font-bold text-gray-600">Apellidos cliente</h2>
-                                    </th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($this->envio->ventas as $key => $value)
-                                    <tr class="border-b w-full">
-                                        <td class="px-4 py-2 text-left align-top ">
-                                            <div>
-                                                <h2>{{$value->no_venta}}</h2>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-2 text-left align-top ">
-                                            <div>
-                                                <h2>{{$value->fecha_venta}}</h2>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-2 text-right ">
-                                            <p><span>{{$value->cliente->nit}}</span></p>
-                                        </td>
-                                        <td class="px-4 py-2 text-right ">
-                                            <p><span>{{$value->cliente->nombres_cliente}}</span></p>
-                                        </td>
-                                        <td class="px-4 py-2 text-right ">
-                                            <p><span>{{$value->cliente->apellidos_cliente}}</span></p>
-                                        </td>
-
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="flex w-full flex-wrap md:w-3/9">
+                        <div class="flex w-full flex-col">
+                            <div class="w-full   shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
+                                            <th class="px-4 py-1">No Venta</th>
+                                            <th class="px-4 py-1">Fecha Venta</th>
+                                            <th class="px-4 py-1">NIT</th>
+                                            <th class="px-4 py-1">Nombres Cliente</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white">
+                                        @foreach ($envio->ventas as $data)
+                                        <tr class="text-gray-700">
+                                            <td class="px-4 py-1 text-ms font-semibold border">{{$data->no_venta}}</td>
+                                            <td class="px-4 py-1 text-ms font-semibold border">{{$data->fecha_venta}}</td>
+                                            <td class="px-4 py-1 text-ms font-semibold border">{{$data->cliente->nit}}</td>
+                                            <td class="px-4 py-1 border">
+                                                <p class="text-xs text-gray-600">{{$data->cliente->nombres_cliente}} {{$data->cliente->apellidos_cliente}} </p>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-
-
                 </div>
             </div>
-
-
-
-
-        <!-- //////////Ventas/////////////-->
-
-
 
 
 
@@ -106,54 +71,35 @@
                     </div>
                 </div>
 
-                <div class="w-full bg-white rounded-lg p-4 shadow-md m-2">
-                    <table class="table-auto w-full">
-                        <thead>
-                            <tr class="border-b w-full">
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">codigo</h2>
-                                </th>
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">nombres</h2>
-                                </th>
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">apellidos</h2>
-                                </th>
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">telefono principal</h2>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($this->envio->users as $key => $value)
-                                <tr class="border-b w-full">
-                                    <td class="px-4 py-2 text-left align-top ">
-                                        <div>
-                                            <h2>{{$value->codigo}}</h2>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-2 text-left align-top ">
-                                        <div>
-                                            <h2>{{$value->nombres}}</h2>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-2 text-right ">
-                                        <p><span>{{$value->apellidos}}</span></p>
-                                    </td>
-                                    <td class="px-4 py-2 text-right ">
-                                        <p><span>{{$value->telefono_principal}}</span></p>
-                                    </td>
+                <div class="flex w-full flex-wrap md:w-3/9">
+                    <div class="flex w-full flex-col">
+                        <div class="w-full   shadow-md sm:rounded-lg">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
+                                        <th class="px-4 py-1">Codigo</th>
+                                        <th class="px-4 py-1">Usuario</th>
+                                        <th class="px-4 py-1">Telefono</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    @foreach ($envio->users as $data)
+                                    <tr class="text-gray-700">
+                                        <td class="px-4 py-1 text-ms font-semibold border">{{$data->codigo}}</td>
+                                        <td class="px-4 py-1 border">
+                                            <p class="text-xs text-gray-600">{{$data->nombres}} {{$data->apellidos}} </p>
+                                        </td>
+                                        <td class="px-4 py-1 text-ms font-semibold border">{{$data->telefono_principal}}</td>
 
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
-        <!-- //////////Usuarios/////////////-->
-
 
         <!-- //////////vehiculos/////////////-->
         <div class="flex w-full ">
@@ -164,45 +110,32 @@
                     </div>
                 </div>
 
+                <div class="flex w-full flex-wrap md:w-3/9">
+                    <div class="flex w-full flex-col">
+                        <div class="w-full   shadow-md sm:rounded-lg">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
+                                        <th class="px-4 py-1">Codigo</th>
+                                        <th class="px-4 py-1">Alias</th>
+                                        <th class="px-4 py-1">Placa</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    @foreach($this->envio->vehiculos as $key => $data)
+                                    <tr class="text-gray-700">
+                                        <td class="px-4 py-1 text-ms font-semibold border">{{$data->codigo}}</td>
+                                        <td class="px-4 py-1 border">
+                                            <p class="text-xs text-gray-600">{{$data->alias}} </p>
+                                        </td>
+                                        <td class="px-4 py-1 text-ms font-semibold border">{{$data->numero_placa}}</td>
 
-                <div class="w-full bg-white rounded-lg p-4 shadow-md m-2">
-                    <table class="table-auto w-full">
-                        <thead>
-                            <tr class="border-b w-full">
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">codigo</h2>
-                                </th>
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">alias</h2>
-                                </th>
-                                <th class="">
-                                    <h2 class="text-ml font-bold text-gray-600">Placa</h2>
-                                </th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($this->envio->vehiculos as $key => $value)
-                                <tr class="border-b w-full">
-                                    <td class="px-4 py-2 text-left align-top ">
-                                        <div>
-                                            <h2>{{$value->codigo}}</h2>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-2 text-left align-top ">
-                                        <div>
-                                            <h2>{{$value->alias}}</h2>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-2 text-right ">
-                                        <p><span>{{$value->numero_placa}}</span></p>
-                                    </td>
-
-
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
 

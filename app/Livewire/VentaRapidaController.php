@@ -26,7 +26,7 @@ class VentaRapidaController extends Component
     ///sistema
     public $title='Venta';
     public $data, $id_data,$ultima_venta,$id=null;
-    public $isCreate=false, $isAddProduct=false, $isSearchProduct=false, $isDetalleVenta=false;
+    public $isCreate=false, $isAddProduct=false, $isSearchProduct=false, $isDetalleVenta=false,$isPrintVenta=false;
     ////venta
     public $no_venta=null,$fecha_venta=null, $total_venta=0,$observaciones_venta=null,$forma_pago=null,$saldo_venta=0;
     //cliente
@@ -118,6 +118,7 @@ public $email_edit=null, $codigo_edit=null;
     public $apellidos_cliente_detalle=null;
 
     public function render(){
+
 
 
 
@@ -630,6 +631,17 @@ public $email_edit=null, $codigo_edit=null;
 
     }
 
+
+    public function pdfImprimir($id){
+
+
+        $this->cancel();
+        return redirect()->away('https://www.google.com');
+
+
+
+    }
+
     public function exportarGeneral($id)
     {
 
@@ -664,6 +676,45 @@ public $email_edit=null, $codigo_edit=null;
             echo $pdf->setPaper('leter')->stream();
             }, "$this->title-$fecha_reporte.pdf");
             $this->reset();
+    }
+
+    public function pdfVentaRapida($id)
+    {
+
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $saldo_actual=0;
+        $saldo_anterior=0;
+
+        $venta=Venta::with('productos')->find($id)->toArray();
+        $no_venta=$venta['no_venta'];
+        $cliente=Cliente::find($venta['cliente_id'])->toArray();
+        //$user=User::find(1)->toArray();
+
+
+
+        if ($venta['forma_pago_venta']==='CREDI') {
+            $data=EstadoCuenta::where('cliente_id','=',$venta['cliente_id'])->get();
+
+            $saldo_actual=$saldo_anterior+$venta['total_venta'];
+        }else{
+            $saldo_anterior=0;
+            $saldo_actual=$venta['total_venta'];
+        }
+
+/*
+
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+            $this->reset();
+
+*/
+
+        $pdf = PDF::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual]);
+
+        return $pdf->stream('ventaaa.pdf',array("Attachment" => false));
     }
 
     public function cancelarBuscarProducto(){

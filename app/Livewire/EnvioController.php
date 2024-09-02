@@ -2,27 +2,25 @@
 
 namespace App\Livewire;
 
-use App\Constantes\DataSistema;
-use Constantes\DepartamentoMunicipio;
 use App\Models\Envio;
-use App\Models\EstadoEnvio;
 use App\Models\Ruta;
 use App\Models\User;
 use App\Models\Vehiculo;
 use App\Models\Venta;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
-use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
 class EnvioController extends Component
 {
+    use LivewireAlert;
     public $title='Envio';
     public $data, $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isFinalizar=false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false,$disabled_observaciones_inicio_envio=false,$disabled_observaciones_final_envio=false;
-    public $rutas=[], $municipios=[],$ventas=[],$vehiculos=[],$ventass=[];
+    public $rutas=[], $municipios=[],$ventas=null,$vehiculos=null,$ventass=[];
     ////////////////
 
 
@@ -32,7 +30,7 @@ class EnvioController extends Component
 
 
     public $fecha;
-    public $no_envio=1;
+
 
     public $usuarios=[];
 
@@ -40,16 +38,19 @@ class EnvioController extends Component
     public $envio_id=null;
 
     public $venta_id=null;
-    public $inputs=[];
+    public $inputsVenta=[];
+    public $ventaContador=null;
 
     public $ventaDetalle=[];
-    public $idVenta=[];
+    public $idDetalleVenta=[];
     public $noVenta=[];
+
     public $totalVenta=[];
     public $nombreCliente=[];
 
     public $user_id=null;
     public $inputsUsuario=[];
+    public $usuarioContador=null;
     public $usuarioDetalle=[];
     public $idDetalleUsuario=[];
 
@@ -58,6 +59,7 @@ class EnvioController extends Component
     public $inputsVehiculo=[];
     public $vehiculoDetalle=[];
     public $aliasVehiculo=[];
+    public $vehiculoContador=null;
     public $idDetalleVehiculo=[];
     public $codigoVehiculo=[];
 
@@ -92,14 +94,15 @@ class EnvioController extends Component
 public $disabled_venta=true,$disabled_user=true,$disabled_vehiculo=true;
 public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obserbacion=false,$disabled_estado_fecha=false;
 
+//////////////delete/////////
+public $delete_no=null,$delete_nombre=null;
+
 
     protected $listeners=['edit', 'delete','show','finalizar','pdfExportar'];
 
     public function render()
     {
-
-
-        $this->envios=Envio::find(1);
+        $this->envios=Envio::all();
         return view('livewire.pages.envio.index');
     }
 
@@ -139,16 +142,18 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
     }
 
     public function addDetalleVenta(){
+
         foreach ($this->ventas as $key => $value) {
             if($value['id']===intval($this->venta_id)){
-                array_push($this->inputs,$this->i);
+                array_push($this->inputsVenta,$this->i);
                 array_push($this->noVenta,$value['no_venta']);
                 array_push($this->totalVenta,$value['total_venta']);
                 array_push($this->nombreCliente,$value->cliente['nombres_cliente']);
-                array_push($this->idVenta,$value['id']);
-                $this->i +=1;
+                array_push($this->idDetalleVenta,$value['id']);
+                $this->i++;
             }
         }
+        $this->reset(['venta_id','user_id','vehiculo_id']);
     }
 
 
@@ -158,9 +163,10 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
                 array_push($this->inputsUsuario,$this->j);
                 array_push($this->usuarioDetalle,$value['nombres']);
                 array_push($this->idDetalleUsuario,$value['id']);
-                $this->j +=1;
+                $this->j++;
             }
         }
+        $this->reset(['venta_id','user_id','vehiculo_id']);
     }
 
     public function addDetalleVehiculo(){
@@ -171,9 +177,10 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
                 array_push($this->codigoVehiculo,$value['codigo']);
                 array_push($this->aliasVehiculo,$value['alias']);
                 array_push($this->idDetalleVehiculo,$value['id']);
-                $this->k +=1;
+                $this->k++;
             }
         }
+        $this->reset(['venta_id','user_id','vehiculo_id']);
     }
 
     public function pdfExportar($id){
@@ -202,23 +209,26 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
 
 
     public function store(){
-    $data=Envio::create(
-        [
-        'envio_no'=>$this->envio_no,
-        'envio_fecha'=>$this->envio_fecha,
-        'ruta_id'=>$this->ruta_id,
-        'estado_envio'=>"PROCESO",
-        'observaciones_inicio_envio'=>$this->observaciones_inicio_envio,
-        'visible'=>'1',
-        'finalizado'=>'0',
-        ]);
 
-        $data->ventas()->attach($this->idDetalle);
+        $this->validate(['envio_no'=>'required','envio_fecha'=>'required','ruta_id'=>'required',
+        'i'=>'numeric|min:1','j'=>'numeric|min:1','k'=>'numeric|min:1']);
+        $data=Envio::create(
+            [
+                'envio_no'=>$this->envio_no,
+                'envio_fecha'=>$this->envio_fecha,
+                'ruta_id'=>$this->ruta_id,
+                'estado_envio'=>"PROCESO",
+                'observaciones_inicio_envio'=>$this->observaciones_inicio_envio,
+                'visible'=>'1',
+                'finalizado'=>'0',
+            ]);
+
+        $data->ventas()->attach($this->idDetalleVenta);
         $data->users()->attach($this->idDetalleUsuario);
         $data->vehiculos()->attach($this->idDetalleVehiculo);
 
 
-        foreach ($this->idDetalle as $key => $value) {
+        foreach ($this->idDetalleVenta as $key => $value) {
             $data=Venta::find($value);
             $data->update([
                 'estado_envio'=>"PROCESO"
@@ -226,26 +236,17 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
         }
 
     ////////////////////
-
+    $this->alertaNotificacion("store");
         $this->reset();
     }
 
     public function finalizar($id){
-
         $this->isFinalizar=true;
         $this->disabled=true;
         $this->disabled_observaciones_inicio_envio=true;
         $this->rutas=Ruta::all();
-        $this->envio=Envio::find($id)->with('ventas')->with('vehiculos')->with('users')->first();
-
+        $this->envio=Envio::where('id','=',$id)->with('ventas')->with('vehiculos')->with('users')->first();
         $this->disabled_observaciones_inicio_envio=true;
-
-        foreach ($this->envio->ventas  as $key => $value) {
-            $dataa=array("{$value['id']}"=>true);
-            $this->array = array_merge($dataa,$this->array);
-            //$this->array['clave4'];
-        }
-
         $this->envio_id=$this->envio->id;
         $this->envio_no=$this->envio->envio_no;
         $this->envio_fecha=$this->envio->envio_fecha;
@@ -256,10 +257,7 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
         ////////////////////
     }
 
-    public function cancel(){
-        $this->resetInputFields();
-        $this->resetValidation();
-    }
+
 
     public function store_finish(){
             ////////////////////
@@ -270,38 +268,89 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
                 'finalizado'=>true
             ]);
 
-
-
             foreach ($data->ventas  as $key => $value) {
-
                 $data = Venta::find($value['id']);
                 $data->update([
                     'estado_envio'=>"FINALIZADO"
                 ]);
-
-
-
             }
-
-
         ////////////////////
-
+        $this->alertaNotificacion("store");
             $this->cancel();
-
     }
 
-    private function resetInputFields(){
-        $this->reset(['isCreate','isEdit','isShow','isFinalizar','isDelete','disabled','created_at','updated_at']);
-        ///////////////////
-        $this->reset(['no_envio','envio_id','fecha','estado','idDetalle','ventaDetalle','inputs','i','j','k',
-        'diabled_proceso_id',
-        'disabled_estado_id',
-        'disabled_estado_obserbacion',
-        'disabled_estado_fecha',
+    public function delete($id){
+        $data = Envio::find($id);
+        $this->id_data= $data->id;
+        $this->isDelete = true;
+        $this->delete_no=$data->envio_no;
+        $this->delete_nombre=$data->envio_fecha;
+    }
+
+    public function destroy($id){
+
+        $data = Envio::find($id)->with('ventas')->first();
+
+        foreach ($data->ventas as $key => $value) {
+            Venta::find($value->id)
+            ->update(['estado_envio' => 'SIN ASIGNAR']);
+        }
+        $data->ventas()->detach();
+        $data->users()->detach();
+        $data->vehiculos()->detach();
+
+        $data->delete();
+
+        $this->alertaNotificacion("destroy");
+/*
+
+
+*/
+
+
+        $this->isDelete = false;
+        $this->cancel();
+    }
+
+
+
+    public function cancel(){
+        $this->reset();
+        $this->resetValidation();
+    }
+
+    public function alertaNotificacion($tipo){
+        $alerta="";
+        $title="";
+        $texto="";
+        if($tipo==="store"){
+
+            $title="Agregar";
+            $texto="Registro agregado";
+            $alerta="success";
+
+        }elseif($tipo==="update"){
+            $title="Editar";
+            $texto="Registro editado";
+            $alerta="success";
+
+        }elseif($tipo==="destroy"){
+            $title="Borrar";
+            $texto="Registro borrado";
+            $alerta="success";
+        }elseif($tipo==="error"){
+            $title="Error";
+            $texto="No se completo la operación";
+            $alerta="error";
+        }
+        return $this->alert("$alerta", "$title", [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => "$texto"
         ]);
-
-        ////////////////////
     }
-
-
 }

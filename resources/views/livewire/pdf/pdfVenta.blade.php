@@ -61,7 +61,7 @@
     <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Tipo Pago:</p>
     </td>
     <td style="width:111pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="padding-left: 25pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$venta['forma_pago']}}</p>
+    <p class="s3" style="padding-left: 25pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$venta['forma_pago_venta']}}</p>
     </td>
     <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
     <p class="s3" style="padding-left: 13pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Envio:</p>
@@ -192,7 +192,7 @@
 <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Saldo anterior:</p>
 </td>
 <td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$saldo_anterior}}</p>
+<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. </p>
 </td>
 
 </tr>

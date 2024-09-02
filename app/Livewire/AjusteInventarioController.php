@@ -1,18 +1,25 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Constantes\DataSistema;
 use App\Models\AjusteInventario;
 use App\Models\Producto;
 use App\Models\Sucursal;
+use App\Models\Traslado;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Barryvdh\DomPDF\Facade\Pdf ;
+use Carbon\Carbon;
 use Livewire\Component;
+use Livewire\Volt\Compilers\Mount;
+use Livewire\WithPagination;
 
 class AjusteInventarioController extends Component
 {
+
+    use WithPagination;
     public $title='Ajuste Inventario';
     public $data, $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
@@ -25,7 +32,7 @@ class AjusteInventarioController extends Component
 
     ////////////////////
     public $ajuste_inventario_no=null;
-    public $productos,$producto_id=null, $descripcion=null, $estado=1,$cantidad_traslado=null,$tipo_ajuste=null,$sucursal_id=null;
+    public $productos,$producto_id=null, $descripcion=null, $estado=1,$cantidad_traslado=0,$tipo_ajuste=null,$sucursal_id=null;
     public $tipos_ajustes=null;
     ////////////////////
 
@@ -34,16 +41,67 @@ class AjusteInventarioController extends Component
 
     ////////////////////
 
+    public $ajustes=null;
+
+    public $estados=null;
+    public $filtroNoAjuste=null;
+
+    public $filtroTipoAjuste=null;
+
+
+
+    public $fecha_rango=null;
+
+    public $variablePrueba=null;
+
+    public $anio=null;
+
+
     protected $listeners=['edit', 'delete','show','pdfExportar'];
+
+
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+$this->mount();
+
+    }
+
 
     public function render()
     {
-
-        //dd($this->tipo_ajustes);
-    ////////////////////
+        $this->tipos_ajustes=DataSistema::$tipo_ajuste_invetario;
+        $this->ajustes=AjusteInventario::where('ajuste_inventario_no','LIkE',"%{$this->filtroNoAjuste}%")
+        ->where('tipo_ajuste','LIkE',"%{$this->filtroTipoAjuste}%")
+        ->whereDate('fecha_ajuste_inventario', '>=', $this->filtroFechaInicio)
+        ->whereDate('fecha_ajuste_inventario', '<=', $this->filtroFechaFin)
+        ->get();
         return view('livewire.pages.ajuste_inventario.index');
-    ////////////////////
     }
+
+
+
+
 
     public function create(){
         $this->tipos_ajustes=DataSistema::$tipo_ajuste_invetario;
@@ -68,6 +126,7 @@ class AjusteInventarioController extends Component
 
 
         $this->validate([
+            'ajuste_inventario_no'=>'required',
             'fecha_ajuste_inventario' => 'required',
             'producto_id' => 'required',
             'tipo_ajuste' => 'required',
@@ -174,6 +233,26 @@ public function destroy($rowId)
 }
 
 
+public function exportarGeneral()
+{
+    $fecha_reporte=Carbon::now()->toDateTimeString();
+    $pdf = Pdf::loadView('/livewire/pdf/pdfAjusteGeneral',['data' => $this->ajustes]);
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->setPaper('leter', 'landscape')->stream();
+        }, "$this->title-$fecha_reporte.pdf");
+}
+
+public function exportarFila($id)
+{
+    $data=AjusteInventario::find($id);
+    $fecha_reporte=Carbon::now()->toDateTimeString();
+    $pdf = Pdf::loadView('/livewire/pdf/pdfAjuste',['data'=>$data]);
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->setPaper('leter')->stream();
+        }, "$this->title-$fecha_reporte.pdf");
+}
+
+
 
 
     public function cancel(){
@@ -198,13 +277,8 @@ public function destroy($rowId)
 
     public function pdfExportarAjusteInventario($id)
     {
-
-
         $ajuste_inventario=AjusteInventario::find($id)->toArray();
-
-
         $producto = Producto::find($ajuste_inventario['producto_id'])->toArray();
-
         $sucursal = Sucursal::find($ajuste_inventario['sucursal_id'])->toArray();
 
 
@@ -217,7 +291,7 @@ public function destroy($rowId)
 
 
 
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfAjusteInventario',['ajuste_inventario' => $ajuste_inventario,'producto'=>$producto,'sucursal'=>$sucursal]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfAjusteInventario',['ajuste_inventario' => $ajuste_inventario,'producto'=>$producto,'sucursal'=>$sucursal]);
 
         //$pdf = Pdf::loadView('pdf.invoice', $data);
        // return $pdf->download("venta_$no_venta.pdf");

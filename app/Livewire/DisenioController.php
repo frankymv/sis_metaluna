@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Constantes\DataSistema;
 use App\Models\Disenio;
 use App\Models\Material;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class DisenioController extends Component
@@ -19,6 +22,13 @@ class DisenioController extends Component
     public $nombre, $descripcion, $estado=true;
     ////////////////////
 
+
+    public $estados=null;
+    public $disenios=null;
+    public $filtroNombre=null;
+    public $filtroEstado=null;
+
+
     ////////////////////
     protected $rules = [
         'nombre' => 'required',
@@ -29,7 +39,12 @@ class DisenioController extends Component
 
     public function render()
     {
-    ////////////////////
+        $this->estados=DataSistema::$estados;
+
+
+        $this->disenios=Disenio::where('nombre','LIKE',"%{$this->filtroNombre}%")
+        ->where('estado','LIKE',"%{$this->filtroEstado}%")
+        ->get();
         return view('livewire.pages.disenio.index');
     ////////////////////
     }
@@ -112,6 +127,33 @@ class DisenioController extends Component
         $this->cancel();
 
     }
+
+
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfDisenioGeneral',['data' => $this->disenios]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+
+
+    public function exportarFila($id)
+    {
+
+
+        $data=Disenio::find($id);
+
+            $fecha_reporte=Carbon::now()->toDateTimeString();
+            $pdf = Pdf::loadView('/livewire/pdf/pdfDisenio',['data'=>$data]);
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->setPaper('leter')->stream();
+                }, "$this->title-$fecha_reporte.pdf");
+    }
+
 
     public function cancel(){
         $this->resetInputFields();

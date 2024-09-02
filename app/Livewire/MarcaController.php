@@ -2,7 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Constantes\DataSistema;
 use App\Models\Marca;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class MarcaController extends Component
@@ -17,7 +20,10 @@ class MarcaController extends Component
     ////////////////////
     public $nombre, $descripcion, $estado=true;
     ////////////////////
-
+    public $marcas=null;
+    public $estados=null;
+    public $filtroNombre=null;
+    public $filtroEstado=null;
     ////////////////////
     protected $rules = [
         'nombre' => 'required',
@@ -28,7 +34,12 @@ class MarcaController extends Component
 
     public function render()
     {
-        //dd(Marca::find(1));
+        $this->estados=DataSistema::$estados;
+
+
+        $this->marcas=Marca::where('nombre','LIKE',"%{$this->filtroNombre}%")
+        ->where('estado','LIKE',"%{$this->filtroEstado}%")
+        ->get();
         return view('livewire.pages.marca.index');
     }
 
@@ -101,6 +112,27 @@ class MarcaController extends Component
         $this->isDelete = false;
         $this->cancel();
     }
+
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfMarcaGeneral',['data' => $this->marcas]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    public function exportarFila($id)
+    {
+        $data=Marca::find($id);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfMarca',['data'=>$data]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
 
     public function cancel(){
         $this->resetInputFields();

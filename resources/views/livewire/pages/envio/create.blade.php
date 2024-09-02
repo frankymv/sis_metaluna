@@ -1,4 +1,4 @@
-<x-frk.components.template-create>
+<x-frk.components.template-create maxWidth="7xl">
     <x-slot:title>
         <x-frk.components.title label="Nuevo {{$title}}" />
     </x-slot>

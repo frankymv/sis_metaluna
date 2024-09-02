@@ -153,7 +153,7 @@ Route::view('/', 'welcome');
 
 
         Route::get('pdf-venta-rapida/{id?}}', [VentaRapidaController::class, 'pdfVentaRapida'])->name('pdfVentaRapida');
-
+/*
         Route::get('pdf-exportar-abono/{id?}}', [AbonoController::class, 'pdfExportarAbono'])->name('pdfExportarAbono');
         Route::get('pdf-exportar-nota-credito/{id?}}', [NotaCreditoController::class, 'pdfExportarNotaCredito'])->name('pdfExportarNotaCredito');
 
@@ -181,5 +181,5 @@ Route::view('/', 'welcome');
 
         Route::get('pdf-exportar-estado-cuenta/{id}', [EstadoCuentaController::class, 'pdfExportarEstadoCuenta'])->name('pdfExportarEstadoCuenta');
 
-
+*/
 require __DIR__.'/auth.php';

@@ -1,11 +1,7 @@
 @props(['label'=>'','color'=>'blue','icon'=>'fa-solid fa-question'])
 
-@php
-
-@endphp
-
-<div class="flex w-full">
-    <button  {{ $attributes->merge(['type' => 'submit', 'class' => "text-white bg-$color-500 text-base capitalize py-1 mx-1 my-1 px-1 rounded lg:px-2    md:px-1 sm:px-1"]) }}  >
+<div class="flex">
+    <button  {{ $attributes->merge(['type' => 'submit', 'class' => "bg-$color-500 hover:bg-$color-800 text-white text-base capitalize py-0.5 px-1 mx-0.5 my-0.5 rounded "]) }} >
         {{$label}} <i class="{{$icon}}"></i>
     </button>
 </div>

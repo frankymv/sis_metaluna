@@ -1,14 +1,13 @@
 <?php
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
-use App\Models\Compra;
-use App\Models\Inventario;
 use App\Models\Producto;
 use App\Models\Sucursal;
 use App\Models\Traslado;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 class TrasladoController extends Component
@@ -46,9 +45,53 @@ class TrasladoController extends Component
     public $id=null;
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
+    public $traslados=null;
+    public $sucursales=null;
+    public $estados=null;
+    public $filtroNoTraslado=null;
+    public $filtroFechaTraslado=null;
+    public $filtroEstado=null;
+    public $filtroSucursalOrigen=null;
+    public $filtroSucursalDestino=null;
+
+
+
+
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
 
     public function render()
     {
+
+        $this->sucursales=Sucursal::all();
+        $this->traslados=Traslado::with('productos')
+        ->where('traslado_no','LIkE',"%{$this->filtroNoTraslado}%")
+
+        ->whereDate('traslado_fecha', '>=', $this->filtroFechaInicio)
+        ->whereDate('traslado_fecha', '<=', $this->filtroFechaFin)
+        ->where('sucursal_origen_id','LIkE',"%{$this->filtroSucursalOrigen}%")
+        ->where('sucursal_destino_id','LIkE',"%{$this->filtroSucursalDestino}%")
+        ->get();
+
+
+
 
 
         return view('livewire.pages.traslado.index');
@@ -96,12 +139,32 @@ class TrasladoController extends Component
 
     }
 
-    public function pdfExportar($id){
-        return redirect()->route('pdfExportarTraslado',$id);
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfTrasladoGeneral',['data' => $this->traslados]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
     }
 
-    public function pdfExportarTraslado($id)
+    public function exportarFila($id)
     {
+        $data=Traslado::with('productos')->find($id);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfTraslado',['data'=>$data]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    /*pdf original
+        public function pdfExportar($id){
+            return redirect()->route('pdfExportarTraslado',$id);
+        }
+
+        public function pdfExportarTraslado($id)
+        {
 
         $traslado=Traslado::with('productos')->find($id)->toArray();
         $sucursal_origen=Sucursal::find($traslado['sucursal_origen_id'])->toArray();
@@ -128,7 +191,7 @@ class TrasladoController extends Component
         }else{
             $saldo_anterior=0;
             $saldo_actual=$venta['total_venta'];
-        }*/
+        }
 
 
 
@@ -143,7 +206,9 @@ class TrasladoController extends Component
         //return $pdf->stream();
         //return $pdf->download('itsolutionstuff.pdf');
 
-    }
+        }
+
+    */
 
 
 

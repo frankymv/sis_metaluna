@@ -2,7 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Constantes\DataSistema;
 use App\Models\Material;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class MaterialController extends Component
@@ -20,6 +23,10 @@ class MaterialController extends Component
 
 
     public $nombre, $descripcion, $estado=true;
+    public $materiales=null;
+    public $estados=null;
+    public $filtroNombre=null;
+    public $filtroEstado=null;
 
     protected $rules = [
         'nombre' => 'required',
@@ -29,6 +36,12 @@ class MaterialController extends Component
 
     public function render()
     {
+        $this->estados=DataSistema::$estados;
+
+
+        $this->materiales=Material::where('nombre','LIKE',"%{$this->filtroNombre}%")
+        ->where('estado','LIKE',"%{$this->filtroEstado}%")
+        ->get();
         return view('livewire.pages.material.index');
     }
 
@@ -112,6 +125,33 @@ class MaterialController extends Component
         //session()->flash('message', 'Post Deleted Successfully.');
         $this->cancel();
     }
+
+
+    public function exportarGeneral()
+    {
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfMaterialGeneral',['data' => $this->materiales]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+    public function exportarFila($id)
+    {
+        $data=Material::find($id);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfMaterial',['data'=>$data]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+    }
+
+
+
+
+
+
+
     public function cancel(){
         $this->resetInputFields();
         $this->resetValidation();
