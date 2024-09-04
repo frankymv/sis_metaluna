@@ -91,6 +91,12 @@ class CompraController extends Component
         return view('livewire.pages.compra.index');
     }
 
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
 
     public function exportarGeneral()
 {

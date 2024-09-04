@@ -83,8 +83,7 @@ class AjusteInventarioController extends Component
     public function borrarFiltros()
     {
         $this->reset();
-$this->mount();
-
+        $this->mount();
     }
 
 

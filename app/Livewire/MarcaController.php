@@ -47,6 +47,13 @@ class MarcaController extends Component
         $this->isCreate=true;
     }
 
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+
+    }
+
     public function store(){
         $this->validate();
         Marca::create(

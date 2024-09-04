@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Constantes\UnidadMedida;
 use App\Models\Disenio;
@@ -65,6 +66,34 @@ class ProductoController extends Component
     Public $filtroDisenio=null;
     Public $filtroMaterial=null;
 
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
+
+
     public function render()
     {
 
@@ -86,6 +115,9 @@ class ProductoController extends Component
 
         return view('livewire.pages.producto.index');
     }
+
+
+
 
     public function create(){
 

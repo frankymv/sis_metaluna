@@ -27,7 +27,7 @@
 
     </div>
 
-    {{$filtroCodigoProducto}}
+
 
     <section class="container mx-auto ">
         <div class="w-full  rounded-lg shadow-lg">

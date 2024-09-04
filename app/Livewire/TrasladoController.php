@@ -83,19 +83,23 @@ class TrasladoController extends Component
         $this->sucursales=Sucursal::all();
         $this->traslados=Traslado::with('productos')
         ->where('traslado_no','LIkE',"%{$this->filtroNoTraslado}%")
-
         ->whereDate('traslado_fecha', '>=', $this->filtroFechaInicio)
         ->whereDate('traslado_fecha', '<=', $this->filtroFechaFin)
         ->where('sucursal_origen_id','LIkE',"%{$this->filtroSucursalOrigen}%")
         ->where('sucursal_destino_id','LIkE',"%{$this->filtroSucursalDestino}%")
         ->get();
 
-
-
-
-
         return view('livewire.pages.traslado.index');
     }
+
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
+
     public function create(){
 
         $this->sucursal_origen_id=Auth::user()->sucursal_id;

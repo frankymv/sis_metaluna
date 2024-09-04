@@ -1,19 +1,13 @@
 <x-frk.components.template-index>
     <x-slot:head>
-        <div class="w-full">
-            <div class="flex w-full">
-                <x-frk.components.title label="{{$title}}" />
-                <x-frk.components.button label="agregar" wire:click="create()" />
-                <x-frk.components.button-icon label="exportar" color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
-                </div>
-            <div class="flex w-full">
-                <x-frk.components.label-input label="Nombre" wire:model.live="filtroNombre"/>
-
-                <x-frk.components.select label="Estado" wire:model.live="filtroEstado">
-                    @foreach ($this->estados as $data)
-                    <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre']  }}</option>
-                    @endforeach
-                </x-forms.select>
+        <div class="flex w-full">
+            <div class="flex w-full justify-center">
+                <x-frk.components.title   label="{{$title}}" />
+            </div>
+            <div class="flex w-full justify-center">
+                <x-frk.components.button color="blue" label="agregar" wire:click="create()" />
+                <x-frk.components.button-icon  color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
+                <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
             </div>
         </div>
     </x-slot:head>
@@ -25,9 +19,17 @@
                     <thead>
                         <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                             <th class="px-4 py-3 text-ms font-semibold border">Id</th>
-                            <th class="px-4 py-3">Nombre</th>
+                            <th class="px-4 py-3">Nombre
+                                <x-frk.components.filtro-input  wire:model.live="filtroNombre"/>
+                            </th>
                             <th class="px-4 py-3">Descripcion</th>
-                            <th class="px-4 py-3">Estado</th>
+                            <th class="px-4 py-3">Estado
+                                <x-frk.components.filtro-select label="Estado" wire:model.live="filtroEstado">
+                                    @foreach ($this->estados as $data)
+                                    <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre']  }}</option>
+                                    @endforeach
+                                </x-forms.select>
+                            </th>
                             <th class="px-4 py-3">Accion</th>
 
 

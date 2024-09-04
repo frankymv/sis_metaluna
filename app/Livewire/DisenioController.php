@@ -49,6 +49,12 @@ class DisenioController extends Component
     ////////////////////
     }
 
+    public function borrarFiltros()
+    {
+        $this->reset();
+
+    }
+
     public function create(){
         $this->isCreate=true;
     }

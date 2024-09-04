@@ -49,6 +49,11 @@ class MaterialController extends Component
         $this->isCreate=true;
     }
 
+    public function borrarFiltros()
+    {
+        $this->reset();
+
+    }
 
     public function store(){
 
