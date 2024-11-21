@@ -8,14 +8,18 @@ use App\Constantes\VehiculoData;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class VehiculoController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
 
 
 
     public $title='Vehiculo';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -24,7 +28,6 @@ class VehiculoController extends Component
     public $tipos=null,$placas=null,$marcas=null,$modelos=null, $estado=true;
     public $codigo=null, $tipo_vehiculo_id=null, $tipo_placa_id=null, $numero_placa=null, $marca_vehiculo_id=null, $modelo_vehiculo_id=null, $linea=null,$alias=null;
 
-    public $vehiculos;
     protected $rules = [
         'codigo' => 'required',
         'tipo_vehiculo_id' => 'required',
@@ -41,15 +44,18 @@ class VehiculoController extends Component
     public function render()
     {
 
-        $this->vehiculos=Vehiculo::where('codigo','LIkE',"%{$this->filtroCodigo}%")
+        $data_temp=Vehiculo::where('codigo','LIkE',"%{$this->filtroCodigo}%")
         ->where('numero_placa','LIkE',"%{$this->filtroNumeroPlaca}%")
         ->where('alias','LIkE',"%{$this->filtroAlias}%")
-        ->get();
+        ->paginate($this->per_page);
 
 
 
 
-        return view('livewire.pages.vehiculo.index');
+        return view('livewire.pages.vehiculo.index', [
+            'vehiculos' => $data_temp,
+        ]);
+
     }
 
     public function create(){
@@ -185,8 +191,13 @@ class VehiculoController extends Component
 
     public function exportarGeneral()
     {
+        $data_temp=Vehiculo::where('codigo','LIkE',"%{$this->filtroCodigo}%")
+        ->where('numero_placa','LIkE',"%{$this->filtroNumeroPlaca}%")
+        ->where('alias','LIkE',"%{$this->filtroAlias}%")
+        ->paginate($this->per_page);
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfVehiculoGeneral',['vehiculos' => $this->vehiculos]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVehiculoGeneral',['vehiculos' => $data_temp]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

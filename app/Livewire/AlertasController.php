@@ -3,10 +3,14 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class AlertasController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     use LivewireAlert;
 
 

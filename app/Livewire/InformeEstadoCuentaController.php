@@ -7,9 +7,13 @@ use App\Models\Cliente;
 use App\Models\Ruta;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class InformeEstadoCuentaController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Estado Cuenta';
     public $ventas=[];
 

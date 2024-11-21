@@ -61,15 +61,7 @@
 <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
     <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Total Venta</p>
 </td>
-<td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Credito</p>
-</td>
-<td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Abono</p>
-</td>
-<td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Saldo</p>
-</td>
+
 </tr>
     @foreach ($ventas as $data)
     <tr style="height:13pt">
@@ -77,16 +69,16 @@
         <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->no_venta}}</p>
         </td>
         <td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->nombres_cliente}}</p>
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->cliente->nombres_cliente}}</p>
         </td>
         <td style="width:75pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->nombre}}</p>
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
         </td>
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->tipo_cliente}}</p>
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->cliente->tipo_cliente}}</p>
         </td>
         <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->forma_pago}}</p>
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->forma_pago_venta}}</p>
         </td>
         <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->envio}}</p>
@@ -97,15 +89,7 @@
         <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->total_venta}}</p>
         </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->total_credito}}</p>
-        </td>
-        <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->total_credito-$data->saldo_total_venta}}</p>
-        </td>
-        <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->saldo_total_venta}}</p>
-        </td>
+
     </tr>
 
     @endforeach
@@ -134,15 +118,7 @@
         <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$total_ventas}}</p>
         </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
-        <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
-        <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
+
     </tr>
 </table>
 </body>

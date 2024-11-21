@@ -12,11 +12,15 @@ use Livewire\Component;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class CompraController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Compra';
-    public $data, $id_data,$id_last,$id=null;
+    public $data, $per_page=10,  $id_data,$id_last,$id=null;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -32,7 +36,6 @@ class CompraController extends Component
     public $disabled_producto=false;
     public $disabled_cantidad=false;
 
-    public $compras=null;
     public $sucursales=null;
 
 
@@ -68,29 +71,6 @@ class CompraController extends Component
             $this->filtroFechaFin=Str::substr($id, 13, 25);
         }
     }
-
-    public function render()
-    {
-
-
-
-        $this->proveedores=Proveedor::all();
-        $this->sucursales=Sucursal::all();
-
-        $this->compras=Compra::with('productos')->with('sucursal')->with('proveedor')
-        ->where('compra_no','LIKE',"%{$this->filtroNoCompra}%")
-        ->whereDate('compra_fecha', '>=', $this->filtroFechaInicio)
-        ->whereDate('compra_fecha', '<=', $this->filtroFechaFin)
-        ->where('no_recibo_compra','LIKE',"%{$this->filtroReciboCompra}%")
-        ->where('proveedor_id','LIKE',"%{$this->filtroProveedor}%")
-        ->where('sucursal_id','LIKE',"%{$this->filtroSucursal}%")
-
-        ->get();
-
-
-        return view('livewire.pages.compra.index');
-    }
-
     public function borrarFiltros()
     {
         $this->reset();
@@ -98,34 +78,62 @@ class CompraController extends Component
     }
 
 
+    public function render()
+    {
+        $this->proveedores=Proveedor::all();
+        $this->sucursales=Sucursal::all();
+        $data_temp=Compra::with('productos')->with('sucursal')->with('proveedor')
+        ->where('compra_no','LIKE',"%{$this->filtroNoCompra}%")
+        ->where('no_recibo_compra','LIKE',"%{$this->filtroReciboCompra}%")
+        ->where('proveedor_id','LIKE',"%{$this->filtroProveedor}%")
+        ->where('sucursal_id','LIKE',"%{$this->filtroSucursal}%")->latest();
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('compra_fecha',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+        $data_temp=$data_temp->paginate($this->per_page);
+
+
+        return view('livewire.pages.compra.index', [
+            'compras' => $data_temp,
+        ]);
+    }
+
+
+
+
     public function exportarGeneral()
 {
+    $data_temp=Compra::with('productos')->with('sucursal')->with('proveedor')
+    ->where('compra_no','LIKE',"%{$this->filtroNoCompra}%")
+    ->where('no_recibo_compra','LIKE',"%{$this->filtroReciboCompra}%")
+    ->where('proveedor_id','LIKE',"%{$this->filtroProveedor}%")
+    ->where('sucursal_id','LIKE',"%{$this->filtroSucursal}%")->latest();
+
+    if(!empty($this->filtroFecha)){
+        $data_temp->whereBetween('compra_fecha',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+    }
+    $data_temp=$data_temp->paginate($this->per_page);
     $fecha_reporte=Carbon::now()->toDateTimeString();
-    $pdf = Pdf::loadView('/livewire/pdf/pdfCompraGeneral',['data' => $this->compras]);
+    $pdf = Pdf::loadView('/livewire/pdf/pdfCompraGeneral',['data' => $data_temp]);
     return response()->streamDownload(function () use ($pdf) {
         echo $pdf->setPaper('leter', 'landscape')->stream();
         }, "$this->title-$fecha_reporte.pdf");
 }
 
-
-
 public function exportarFila($id)
 {
-
-
     $data=Compra::with('productos')->with('sucursal')->with('proveedor')->find($id);
 
-        $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfCompra',['data'=>$data]);
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->setPaper('leter')->stream();
-            }, "$this->title-$fecha_reporte.pdf");
+    $fecha_reporte=Carbon::now()->toDateTimeString();
+    $pdf = Pdf::loadView('/livewire/pdf/pdfCompra',['data'=>$data]);
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->setPaper('leter')->stream();
+        }, "$this->title-$fecha_reporte.pdf");
 }
 
-
-
-
     public function create(){
+        $this->compra_fecha= Carbon::now()->toDateString();
         $data=Compra::latest()->first();
         if ( $data) {
             $this->id=$data->id+1;

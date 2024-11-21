@@ -69,7 +69,7 @@
                                             {{$value->existencia}}
                                         </td>
                                         <td class="px-2 py-1">
-                                            <x-frk.buttons.plus-button label="agregar producto" wire:click="agregarCantidadProducto({{$value['id']}})" />
+                                            <x-frk.buttons.plus-button label="agregar" color="blue" wire:click="agregarCantidadProducto({{$value['id']}})" />
                                         </td>
                                     </tr>
                                     @endforeach

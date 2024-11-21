@@ -32,7 +32,7 @@
 <table style="border-collapse:collapse;margin-left:5.93pt" cellspacing="0">
 <tr style="height:13pt">
 
-    <td style="width:900 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" bgcolor="#F9E1D4">
+    <td style="width:536pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" bgcolor="#F9E1D4">
         <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: center;">ESTADO DE CUENTA VENTA</p>
     </td>
 </tr>
@@ -81,20 +81,20 @@
 <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Código:</p>
 </td>
 <td style="width:71pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s4" style="text-indent: 0pt;text-align: center;">{{$cliente['codigo_interno']}}</p>
+<p class="s4" style="text-indent: 0pt;text-align: center;">{{$venta->cliente['codigo_interno']}}</p>
 </td>
 <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
 <p class="s3" style="padding-left: 10pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Telefono:</p>
 </td>
 <td style="width:78pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s4" style="padding-left: 18pt;text-indent: 0pt;text-align: left;">{{$cliente['telefono_principal']}}</p>
+<p class="s4" style="padding-left: 18pt;text-indent: 0pt;text-align: left;">{{$venta->cliente['telefono_principal']}}</p>
 </td>
 <td style="width:70pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
 <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Correo elec.:</p>
 </td>
 <td style="width:103pt;border-top-style:solid;border-top-width:1pt; border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
 <p style="padding-left: 10pt;text-indent: 0pt;line-height: 12pt;text-align: left;">
-<a href="mailto:pedro@gmail.com" class="s5">{{$cliente['correo_electronico']}}</a>
+<a href="mailto:pedro@gmail.com" class="s5">{{$venta->cliente['correo_electronico']}}</a>
 </p>
 </td>
 </tr>
@@ -103,7 +103,7 @@
 <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Empresa:</p>
 </td>
 <td style="width:402pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
-<p class="s3" style="padding-left: 67pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$cliente['nombre_empresa']}}</p>
+<p class="s3" style="padding-left: 67pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$venta->cliente['nombre_empresa']}}</p>
 </td>
 
 </tr>
@@ -112,228 +112,88 @@
 <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Dirección:</p>
 </td>
 <td style="width:465pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
-<p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$cliente['direccion_fisica']}}</p>
+<p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$venta->cliente['direccion_fisica']}}</p>
 </td>
+</tr>
+<tr style="height:13pt">
+    <td style="width:71pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
+    <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Total venta:</p>
+    </td>
+    <td style="width:465pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
+    <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Q. {{$venta['total_venta']}}</p>
+    </td>
 </tr>
 </table>
 <p style="padding-top: 2pt;text-indent: 0pt;text-align: left;">
 <br/>
 </p>
-<table style="border-collapse:collapse;margin-left:5.93pt" cellspacing="0">
-<tr style="height:13pt">
-<td style="width:900 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5" bgcolor="#F9E1D4">
-<p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: center;">DETALLE VENTA</p>
-</td>
-</tr>
-<tr style="height:13pt">
-<td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Código</p>
-</td>
-<td style="width:36pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Cant.</p>
-</td>
-<td style="width:298pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Descripción</p>
-</td>
-<td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Precio</p>
-</td>
-<td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s3" style="padding-left: 27pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Subtotal</p>
-</td>
-</tr>
-@foreach ($venta['productos'] as $data)
-<tr style="height:13pt">
-    <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">{{$data['codigo']}}</p>
-    </td>
-    <td style="width:36pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">{{$data['producto_venta']['cantidad']}}</p>
-    </td>
-    <td style="width:298pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data['nombre']}}</p>
-    </td>
-    <td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$data['producto_venta']['precio_venta']}}</p>
-    </td>
-    <td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$data['producto_venta']['sub_total']}}</p>
-    </td>
-</tr>
-@endforeach
-
-<tr style="height:13pt">
-<td style="width:500pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="4" bgcolor="#F9E1D4">
-<p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Total venta:</p>
-</td>
-<td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$venta['total_venta']}}</p>
-</td>
-</tr>
-
-<tr style="height:13pt">
-<td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="2" bgcolor="#F9E1D4">
-<p class="s3" style="padding-left: 25pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Abono:</p>
-</td>
-<td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p style="text-indent: 0pt;text-align: left;">
-<br/>
-</p>
-</td>
-<!--
-<td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt" rowspan="2">
-<p style="text-indent: 0pt;text-align: left;">
-<br/>
-</p>
-</td>
--->
-
-<td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Saldo anterior:</p>
-</td>
-<td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$saldo_anterior}}</p>
-</td>
-
-</tr>
-<tr style="height:13pt">
-<td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="2" bgcolor="#F9E1D4">
-<p class="s3" style="padding-left: 13pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Nuevo saldo:</p>
-</td>
-<td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p style="text-indent: 0pt;text-align: left;">
-<br/>
-</p>
-</td>
-<td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-<p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Total:</p>
-</td>
-<td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$saldo_actual}}</p>
-</td>
-</tr>
-</table>
-<p style="padding-top: 1pt;text-indent: 0pt;text-align: left;">
-<br/>
-</p>
 
 
+
+
+
+</br>
 <table style="border-collapse:collapse;margin-left:5.93pt" cellspacing="0">
     <tr style="height:13pt">
-        <td style="width:570 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" bgcolor="#F9E1D4">
+        <td style="width:536pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" bgcolor="#F9E1D4">
             <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: center;">DETALLE OPERACIONES</p>
         </td>
     </tr>
 
+    @if ($data_nota=$venta['credito'])
+
+
+        <tr style="height:13pt">
+            <td style="width:71pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
+            <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Credito:</p>
+            </td>
+            <td style="width:465pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No.: {{$data_nota['no_credito']}} Fecha:{{$data_nota['fecha_credito']}} Fecha Limite:{{$data_nota['fecha_limite_credito']}} Total: Q. {{$data_nota['total_credito']}}</p>
+            </td>
+        </tr>
+
+    @endif
+
+
     @for ($i = 1; $i <= $correl; $i++)
-        @foreach ($nota_credito as $data_nota)
+        @foreach ($venta['notacreditos'] as $data_nota)
             @if ($data_nota['correlativo']===$i)
+
                 <tr style="height:13pt">
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">No. Nota Credito</p>
+                    <td style="width:71pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
+                    <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Nota Credito:</p>
                     </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Fecha Nota Credito</p>
-                    </td>
-                    <td style="width:95pt;bord  er-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">No Venta   </p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Total Venta</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Total Nota Credito</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="padding-left: 27pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Nuevo saldo</p>
+                    <td style="width:465pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
+                    <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No.: {{$data_nota['no_nota_credito']}} Fecha: {{$data_nota['fecha_nota_credito']}}  Total Nota Credito : Q. {{$data_nota['total_nota_credito']}}</p>
                     </td>
                 </tr>
-                <tr style="height:13pt">
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="text-indent: 0pt;text-align: center;">{{$data_nota['no_nota_credito']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="text-indent: 0pt;text-align: center;">{{$data_nota['fecha_nota_credito']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="padding-left: 5pt;text-indent: 0pt;text-align: center;">{{$data_nota['venta_id']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                        <p class="s3" style="text-indent: 0pt;text-align: center;">{{$data_nota['total_venta']}}</p>
-                        </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="padding-right: 4pt;text-indent: 0pt;text-align: center;">Q. {{$data_nota['total_nota_credito']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s2" style="padding-right: 4pt;text-indent: 0pt;text-align: center;">Q. {{$data_nota['total_saldo']}}</p>
-                    </td>
-                </tr>
-                <tr style="height:13pt">
-                    <td style="width:570 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" >
-                        <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: star;">Observaciones: {{$data_nota['observaciones']}}</p>
-                    </td>
-                </tr>
+
             @endif
         @endforeach
-
-
-
-
-        @foreach ($abono as $data_abono)
+        @foreach ($venta['abonos'] as $data_abono)
             @if ($data_abono['correlativo']===$i)
-                <tr style="height:13pt">
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">No. Abono</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Fecha Abono</p>
-                    </td>
-                    <td style="width:95pt;bord  er-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">No Venta   </p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Saldo credito</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Total Abono</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-                        <p class="s3" style="padding-left: 27pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Nuevo saldo</p>
-                    </td>
-                </tr>
-                <tr style="height:13pt">
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="text-indent: 0pt;text-align: center;">{{$data_abono['no_abono']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="text-indent: 0pt;text-align: center;">{{$data_abono['fecha_abono']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="padding-left: 5pt;text-indent: 0pt;text-align: center;">{{$data_abono['venta_id']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                        <p class="s3" style="text-indent: 0pt;text-align: center;">{{$data_abono['saldo_credito']}}</p>
-                        </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s3" style="padding-right: 4pt;text-indent: 0pt;text-align: center;">Q. {{$data_abono['total_abono']}}</p>
-                    </td>
-                    <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                    <p class="s2" style="padding-right: 4pt;text-indent: 0pt;text-align: center;">Q. {{$data_abono['total_saldo']}}</p>
-                    </td>
-                </tr>
-                <tr style="height:13pt">
-                    <td style="width:570 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" >
-                        <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: star;">Observaciones: {{$data_abono['observaciones']}}</p>
-                    </td>
-                </tr>
+            <tr style="height:13pt">
+                <td style="width:71pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
+                <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Abono:</p>
+                </td>
+                <td style="width:465pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
+                <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No.: {{$data_abono['no_abono']}} Fecha: {{$data_abono['fecha_abono']}} Total: Q. {{$data_abono['total_abono']}}</p>
+                </td>
+            </tr>
             @endif
         @endforeach
     @endfor
+
+    <tr style="height:13pt">
+        <td style="width:71pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
+        <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Saldo Actual:</p>
+        </td>
+        <td style="width:465pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="5">
+        <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Q {{$venta['total_credito']-$venta['total_abono']}}</p>
+        </td>
+    </tr>
+
 </table>
-
-
-
-
 
 </body>
 </html>

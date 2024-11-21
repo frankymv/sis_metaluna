@@ -11,6 +11,7 @@ class Venta extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'no_venta',
         'fecha_venta',
         'total_venta',
@@ -20,8 +21,10 @@ class Venta extends Model
         'cancelado_total_venta',
         'fecha_cancelado_total_venta',
         /////credito///////////
-        'credito',
+        'credi',
         'total_credito',
+
+
         /////anulado///////////
         'anulado',
         'fecha_anulado',
@@ -82,9 +85,15 @@ class Venta extends Model
         ->withPivot('entregado','observaciones');
     }
 
-    public function Creditos(){
-        return $this->hasMany(Credito::class);
+    public function Credito(){
+        return $this->hasOne(Credito::class);
     }
+
+
+    public function Rutas(){
+        return $this->hasMany(Ruta::class);
+    }
+
 
 
     public function Departamentos(){

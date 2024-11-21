@@ -1,7 +1,24 @@
 <x-frk.components.template-index>
     <x-slot:head>
-        <x-frk.components.title label="{{$title}}" />
-        <x-frk.components.button label="agregar" wire:click="create()" />
+        <div class="flex w-full">
+            <div class="flex w-full justify-center">
+                <x-frk.components.title   label="{{$title}}" />
+            </div>
+            <div class="flex w-full justify-center">
+                <x-frk.components.button color="blue" label="agregar" wire:click="create()" />
+                <x-frk.components.button-icon  color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
+                <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
+                <div class="flex   justify-center">
+                    <select wire:model.live="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="">Todo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </x-slot:head>
     <x-slot:body>
 
@@ -9,16 +26,47 @@
     <section class="container mx-auto ">
         <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class=" table-fixed">
+            <table class="w-full">
                 <thead>
                     <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
-                    <th class="px-4 py-3 text-ms font-semibold border">No Envio</th>
-                    <th class="px-4 py-3">Fecha Envio</th>
-                    <th class="px-4 py-3">Estado Envio</th>
-                    <th class="px-4 py-3">Ruta Codigo</th>
+                    <th class="px-4 py-3 text-ms font-semibold border">No Envio
+                        <x-frk.components.filtro-input  wire:model.live="filtroNoEnvio"/>
+
+                    </th>
+                    <th class="px-4 py-3">Fecha Envio
+                        <x-frk.components.filtro-date-picker-range  label="Fecha"  />
+                    </th>
+                    <th class="px-4 py-3">Estado Envio
+                        <x-frk.components.filtro-select label="Estado" wire:model.live="filtroEstadoEnvio">
+                            @foreach ($this->estados as $data)
+                            <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre']  }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </th>
+                    <th class="px-4 py-3">Ruta Codigo
+                        <x-frk.components.filtro-select label="Rutas" wire:model.live="filtroRuta">
+                            @foreach ($this->rutas as $data)
+                            <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre']  }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </th>
                     <th class="px-4 py-3">Ventas</th>
-                    <th class="px-4 py-3">Usuario</th>
-                    <th class="px-4 py-3">Vehiculo</th>
+                    <th class="px-4 py-3">Usuario
+                        <x-frk.components.filtro-select label="Usuarios" wire:model.live="filtroUsuario">
+                            @foreach ($this->usuarios as $data)
+                            <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombres']  }}</option>
+                            @endforeach
+                        </x-forms.select>
+
+                    </th>
+                    <th class="px-4 py-3">Vehiculo
+
+                        <x-frk.components.filtro-select label="Vehiculos" wire:model.live="filtroVehiculo">
+                            @foreach ($this->vehiculos as $data)
+                            <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['alias']  }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </th>
                     <th class="px-4 py-3">Accion</th>
 
                     </tr>
@@ -46,7 +94,7 @@
                         @endforeach
                     </td>
 
-                        <td class="px-4 py-3 text-sm border flex w-full">
+                        <td class="px-4 py-3 text-sm border flex">
 
                             <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
                             <x-frk.components.button-icon color="blue" icon="fa-solid fa-flag-checkered" wire:click="finalizar({{$data->id}})" />
@@ -59,6 +107,7 @@
 
                 </tbody>
             </table>
+            {{ $envios->withQueryString()->links()}}
           </div>
         </div>
     </section>

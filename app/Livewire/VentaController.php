@@ -10,17 +10,21 @@ use App\Models\Venta;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 
 class VentaController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+    use LivewireAlert;
 
     public $title='Ventas';
-    public $data, $id_data,$id_last;
+    public $data, $per_page=10,  $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isAddProduct=false,$disabled_nombre_producto=false,$disabled_existencia_producto=false,$disabled_codigo_producto=false,$disabled_subtotal_producto=false,$tipo_cliente;
     public $disabledInput=false,$disabledInputPasswordAdmin=false;
 
@@ -52,26 +56,52 @@ class VentaController extends Component
 
     ///////////filtradooo
 
-    public $ventas=[];
 
 
 
     public $filtroNoVenta;
     public $filtroCodigoCliente=NULL;
     public $filtroNombreCliente;
-    public $filtroFechaVenta;
+
     public $filtroRuta;
     public $filtroFormaPago;
     public $filtroEnvio;
     public $filtroTipoCliente;
     public $filtroRutaCliente=null;
 
-    public $forma_pagos,$envios,$tipo_clientes,$rutas,$total_ventas=0;
+    public $forma_pagos,$envios,$tipo_clientes,$rutas,$total_ventas;
 
     /////////////////////
 
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
 
-    protected $listeners=['edit', 'delete','showDetalle','pdfExportar','envio'];
+
+    protected $listeners=['edit', 'delete','showDetalle','pdfExportar','Envio'];
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+
+
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+
+    }
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
 
     public function render()
     {
@@ -81,46 +111,50 @@ class VentaController extends Component
         $this->tipo_clientes=DataSistema::$tipo_cliente;
         $this->rutas=Ruta::all();
 
-        $this->ventas = DB::table('ventas')
-            ->leftJoin('envios','ventas.id','=','envios.id')
-            ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-            ->rightJoin('rutas' ,'clientes.ruta_id','=','rutas.id')
+        $data_temp = Venta::with('envios')->with('cliente')
             ->where('no_venta','LIKE',"%{$this->filtroNoVenta}%")
-            ->where('nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-            ->where('codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-            ->where('fecha_venta','LIKE',"%{$this->filtroFechaVenta}%")
+            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
             ->where('forma_pago_venta','LIKE',"%{$this->filtroFormaPago}%")
             ->where('envio','LIKE',"%{$this->filtroEnvio}%")
-            ->where('tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
-            ->where('clientes.ruta_id','LIKE',"%{$this->filtroRutaCliente}%")
+            ->whereRelation('cliente','tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
+            ->latest();
 
-            ->get();
+            if(!empty($this->filtroFecha)){
+                $data_temp->whereBetween('fecha_venta',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+            }
+
+
+
+        $data_temp=$data_temp->paginate($this->per_page);
 
 
 
 
-/*
-        $this->total_ventas = DB::table('ventas')
-            ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-            ->leftJoin('rutas','clientes.ruta_id','=','rutas.id')
-            ->where('codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+        $this->total_ventas = Venta::with('envios')->with('cliente')
             ->where('no_venta','LIKE',"%{$this->filtroNoVenta}%")
-            ->where('nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-            ->where('fecha_venta','LIKE',"%{$this->filtroFechaVenta}%")
+            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
             ->where('forma_pago_venta','LIKE',"%{$this->filtroFormaPago}%")
             ->where('envio','LIKE',"%{$this->filtroEnvio}%")
-            ->where('tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
-            ->where('ruta_id','LIKE',"%{$this->filtroRutaCliente}%")
+            ->whereRelation('cliente','tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
+
+
             ->sum('total_venta');
-*/
 
 
 
 
 
+        return view('livewire.pages.venta.index', [
+            'ventas' => $data_temp,
+        ]);
 
-        return view('livewire.pages.venta.index');
+
+
     }
+
+
 
     public function showDetalle($value){
         $this->isShow=true;
@@ -129,7 +163,7 @@ class VentaController extends Component
 
 
 
-        dd($this->venta);
+
         $this->codigo=$this->venta->cliente->codigo;
         $this->nit=$this->venta->cliente->nit;
         $this->nombres_cliente=$this->venta->cliente->nombres_cliente;
@@ -150,7 +184,6 @@ class VentaController extends Component
 
 
     public function Envio($id){
-
 
 
         $data=Venta::find($id);
@@ -190,8 +223,24 @@ class VentaController extends Component
 
     public function exportarGeneral()
     {
+        $data_temp = Venta::with('envios')->with('cliente')
+        ->where('no_venta','LIKE',"%{$this->filtroNoVenta}%")
+        ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+        ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
+        ->where('forma_pago_venta','LIKE',"%{$this->filtroFormaPago}%")
+        ->where('envio','LIKE',"%{$this->filtroEnvio}%")
+        ->whereRelation('cliente','tipo_cliente','LIKE',"%{$this->filtroTipoCliente}%")
+        ->latest();
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('fecha_venta',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+
+
+    $data_temp=$data_temp->paginate($this->per_page);
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfVentaGeneral',['ventas' => $this->ventas,'total_ventas'=>$this->total_ventas]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVentaGeneral',['ventas' => $data_temp,'total_ventas'=>$this->total_ventas]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

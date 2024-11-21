@@ -14,14 +14,18 @@ use Barryvdh\DomPDF\Facade\Pdf ;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Volt\Compilers\Mount;
+
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithPagination;
 
 class AjusteInventarioController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
 
     use WithPagination;
     public $title='Ajuste Inventario';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -41,21 +45,16 @@ class AjusteInventarioController extends Component
 
     ////////////////////
 
-    public $ajustes=null;
+
 
     public $estados=null;
     public $filtroNoAjuste=null;
 
     public $filtroTipoAjuste=null;
 
-
-
     public $fecha_rango=null;
-
     public $variablePrueba=null;
-
     public $anio=null;
-
 
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
@@ -90,12 +89,21 @@ class AjusteInventarioController extends Component
     public function render()
     {
         $this->tipos_ajustes=DataSistema::$tipo_ajuste_invetario;
-        $this->ajustes=AjusteInventario::where('ajuste_inventario_no','LIkE',"%{$this->filtroNoAjuste}%")
-        ->where('tipo_ajuste','LIkE',"%{$this->filtroTipoAjuste}%")
-        ->whereDate('fecha_ajuste_inventario', '>=', $this->filtroFechaInicio)
-        ->whereDate('fecha_ajuste_inventario', '<=', $this->filtroFechaFin)
-        ->get();
-        return view('livewire.pages.ajuste_inventario.index');
+
+
+        $data_temp=AjusteInventario::where('ajuste_inventario_no','LIkE',"%{$this->filtroNoAjuste}%")
+            ->where('tipo_ajuste','LIkE',"%{$this->filtroTipoAjuste}%")->latest();
+
+            if(!empty($this->filtroFecha)){
+                $data_temp->whereBetween('fecha_ajuste_inventario',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+            }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+
+        return view('livewire.pages.ajuste_inventario.index', [
+            'ajustes' => $data_temp,
+        ]);
+
     }
 
 
@@ -103,6 +111,7 @@ class AjusteInventarioController extends Component
 
 
     public function create(){
+        $this->fecha_ajuste_inventario= Carbon::now()->toDateString();
         $this->tipos_ajustes=DataSistema::$tipo_ajuste_invetario;
         $data=AjusteInventario::latest()->first();
 
@@ -234,8 +243,17 @@ public function destroy($rowId)
 
 public function exportarGeneral()
 {
+    $data_temp=AjusteInventario::where('ajuste_inventario_no','LIkE',"%{$this->filtroNoAjuste}%")
+            ->where('tipo_ajuste','LIkE',"%{$this->filtroTipoAjuste}%")->latest();
+
+            if(!empty($this->filtroFecha)){
+                $data_temp->whereBetween('fecha_ajuste_inventario',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+            }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+
     $fecha_reporte=Carbon::now()->toDateTimeString();
-    $pdf = Pdf::loadView('/livewire/pdf/pdfAjusteGeneral',['data' => $this->ajustes]);
+    $pdf = Pdf::loadView('/livewire/pdf/pdfAjusteGeneral',['data' => $data_temp]);
     return response()->streamDownload(function () use ($pdf) {
         echo $pdf->setPaper('leter', 'landscape')->stream();
         }, "$this->title-$fecha_reporte.pdf");
@@ -245,7 +263,7 @@ public function exportarFila($id)
 {
     $data=AjusteInventario::find($id);
     $fecha_reporte=Carbon::now()->toDateTimeString();
-    $pdf = Pdf::loadView('/livewire/pdf/pdfAjuste',['data'=>$data]);
+    $pdf = Pdf::loadView('/livewire/pdf/pdfAjusteInventario',['data'=>$data]);
     return response()->streamDownload(function () use ($pdf) {
         echo $pdf->setPaper('leter')->stream();
         }, "$this->title-$fecha_reporte.pdf");

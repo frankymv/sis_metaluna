@@ -1,93 +1,77 @@
 <x-frk.components.template-index>
     <x-slot:head>
+    <div class="flex w-full">
+        <div class="flex w-full justify-center">
+            <x-frk.components.title   label="{{$title}}" />
+        </div>
+        <div class="flex w-full justify-center">
 
-
-        <div class="w-full">
-            <div class="flex w-full">
-                <x-frk.components.title label="{{$title}}" />
-                <x-frk.components.button color="red" label="Exportar PDF" wire:click="exportarGeneral()" />
-            </div>
-            <div class="flex w-full">
-
-
-                <x-frk.components.label-input label="Codigo Cliente" wire:model.live="filtroCodigoCliente"/>
-                <x-frk.components.label-input label="Nombre Cliente" wire:model.live="filtroNombreCliente"/>
-                <x-frk.components.select label="Listado Clientes" wire:model.live="filtroClientes">
-                    @foreach ($this->clientes as $data)
-                    <option value="{{ $data['codigo_interno'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombres_cliente'] }}</option>
-                    @endforeach
-                </x-forms.select>
-                <x-frk.components.select label="Tipo Cliente" wire:model.live="filtroTipoCliente">
-                    @foreach ($this->tipo_clientes as $data)
-                    <option value="{{ $data['valor'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
-                    @endforeach
-                </x-forms.select>
-
-                <x-frk.components.select label="Ruta" wire:model.live="filtroRutaCliente">
-                    @foreach ($this->rutas as $data)
-                    <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
-                    @endforeach
-                </x-forms.select>
+            <x-frk.components.button-icon  color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
+            <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
+            <div class="flex   justify-center">
+                <select wire:model.live="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="">Todo</option>
+                </select>
             </div>
         </div>
-    </x-slot:head>
-    <x-slot:body>
+        <div class="flex w-full">
 
+
+            <x-frk.components.label-input label="Codigo Cliente" wire:model.live="filtroCodigoCliente"/>
+            <x-frk.components.label-input label="Nombre Cliente" wire:model.live="filtroNombreCliente"/>
+
+
+
+            <x-frk.components.select label="Ruta" wire:model.live="filtroRutaCliente">
+                @foreach ($this->rutas as $data)
+                <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
+                @endforeach
+            </x-forms.select>
+        </div>
+    </div>
+
+
+
+
+</x-slot:head>
+    <x-slot:body>
 
     <section class="container mx-auto ">
         <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class=" table-fixed">
+            <table class="w-full">
                 <thead>
                     <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
-                    <th class="px-4 py-3">Codigo Interno</th>
-                    <th class="px-4 py-3">Codigo Mayorista</th>
-                    <th class="px-4 py-3">Nombre Cliente</th>
-                    <th class="px-4 py-3">Direccion Cliente</th>
-                    <th class="px-4 py-3">Tipo Cliente</th>
-                    <th class="px-4 py-3">Ruta</th>
-                    <th class="px-4 py-3">Credito</th>
-                    <th class="px-4 py-3">Abono</th>
-                    <th class="px-4 py-3">Saldo</th>
-                    <th class="px-4 py-3">Acciones</th>
-
-
+                        <th class="px-4 py-3">No.</th>
+                        <th class="px-4 py-3">Detalle Cliente</th>
+                        <th class="px-4 py-3">Credito</th>
+                        <th class="px-4 py-3">Abono</th>
+                        <th class="px-4 py-3">Saldo</th>
+                        <th class="px-4 py-3">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
                     @foreach ($estado_cuentas as $data)
                     <tr class="text-gray-700">
-                        <td class="px-4 py-3 text-ms font-semibold border">{{$data->codigo_interno}}</td>
-                        <td class="px-4 py-3 text-sm border">{{$data->codigo_mayorista}}</td>
-                        <td class="px-4 py-3 border">
-                            <p class="text-xs text-gray-600">{{$data->nombres_cliente}} Telefono {{$data->telefono_principal}}</p>
+                        <td class="px-4 py-3 border">{{$data->id}}</td>
+                        <td class="px-4 py-3 text-sm border">
+                            <p class="text-xs text-gray-600">Codigo Cliente Mayorista:{{$data->cliente->codigo_interno}}</p>
+                            <p class="text-xs text-gray-600">{{$data->cliente->nombres_cliente}} {{$data->cliente->apellidos_cliente}}</p>
+                            <p class="text-xs text-gray-600">{{$data->cliente->nombre_empresa}}</p>
+                            <p class="text-xs text-gray-600"></p>
                         </td>
-                        <td class="px-4 py-3 text-sm border">{{$data->direccion_fisica}}</td>
-                        <td class="px-4 py-3 text-sm border">{{$data->tipo_cliente}}</td>
-                        <td class="px-4 py-3 text-sm border">{{$data->nombre}}</td>
-
-                        <td class="px-4 py-3 text-sm border">{{$data->total_credito}}</td>
-                        <td class="px-4 py-3 text-sm border">{{$data->total_abono}}</td>
-                        <td class="px-4 py-3 text-sm border">{{$data->total_credito-$data->total_abono}} </td>
-
-                        <td class="px-4 py-3 text-sm border flex w-full">
-                            <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->codigo_interno}})" />
+                        <td class="px-4 py-3 text-sm border">Q. {{$data->total_credito}}</td>
+                        <td class="px-4 py-3 text-sm border">Q. {{$data->total_abono}}</td>
+                        <td class="px-4 py-3 text-sm border">Q. {{$data->total_credito-$data->total_abono}} </td>
+                        <td class="px-4 py-3 text-sm border">
+                            <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->cliente_id}})" />
                         </td>
-
-
                     </tr>
                     @endforeach
-                    <tr>
-                        <td class="px-4 py-3 text-sm border"></td>
-                        <td class="px-4 py-3 text-sm border"></td>
-                        <td class="px-4 py-3 text-sm border"></td>
-                        <td class="px-4 py-3 text-sm border"></td>
-                        <td class="px-4 py-3 text-sm border"></td>
-
-
-                        <td class="px-4 py-3 text-sm border">{{$total_ventas}}</td>
-                    </tr>
-
                 </tbody>
             </table>
           </div>

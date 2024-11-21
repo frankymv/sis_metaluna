@@ -10,11 +10,16 @@ use App\Models\Producto;
 use App\Models\Tipo;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
+
 
 use Carbon\Carbon;
 
 class InventarioController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     //
 
 
@@ -22,7 +27,7 @@ class InventarioController extends Component
 
     //
     public $title='Inventario';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false;
     public $isEdit = false;
     public $isShow = false;
@@ -31,7 +36,7 @@ class InventarioController extends Component
 
     public $dataa;
 
-    public $productos=[];
+    protected $productos=[];
     public $marcas=[];
     public $tipos=[];
 
@@ -69,16 +74,17 @@ class InventarioController extends Component
         $this->disenios=Disenio::all();
         $this->materiales=Material::all();
 
-        $this->productos=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
+        $temp_data=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
         ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
         ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
         ->whereRelation('marca','id','LIKE',"%{$this->filtroMarca}%")
         ->whereRelation('tipo','id','LIKE',"%{$this->filtroTipo}%")
         ->whereRelation('disenio','id','LIKE',"%{$this->filtroDisenio}%")
         ->whereRelation('material','id','LIKE',"%{$this->filtroMaterial}%")
-        ->get();
+        ->paginate($this->per_page);
 
-        return view('livewire.pages.inventario.index');
+
+        return view('livewire.pages.inventario.index',['productos'=>$temp_data]);
 
     }
 
@@ -88,13 +94,20 @@ class InventarioController extends Component
         $this->reset();
     }
 
-
-
-
     public function exportarGeneral()
     {
+        $temp_data=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
+        ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
+        ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
+        ->whereRelation('marca','id','LIKE',"%{$this->filtroMarca}%")
+        ->whereRelation('tipo','id','LIKE',"%{$this->filtroTipo}%")
+        ->whereRelation('disenio','id','LIKE',"%{$this->filtroDisenio}%")
+        ->whereRelation('material','id','LIKE',"%{$this->filtroMaterial}%")
+        ->paginate($this->per_page);
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfInventarioGeneral',['productos'=>$this->productos]);
+
+        $pdf = Pdf::loadView('/livewire/pdf/pdfInventarioGeneral',['productos'=>$temp_data]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

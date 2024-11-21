@@ -11,11 +11,15 @@ use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class EstadoCuentaVentaController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Estado Cuenta Venta';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -72,18 +76,22 @@ class EstadoCuentaVentaController extends Component
 
 
             $this->ventas=Venta::with('productos')
-            ->with('creditos')
+            ->with('credito')
             ->with('abonos')
             ->with('notacreditos')
             ->with('cliente')
             ->where('no_venta','LIkE',"%{$this->filtroNoVenta}%")
             ->where('fecha_venta','LIkE',"%{$this->filtroFechaVenta}%")
             ->whereRelation('cliente','nombres_cliente','LIkE',"%{$this->filtroNombreCliente}%")
-            ->whereRelation('cliente','codigo_interno','LIkE',"%{$this->filtroCodigoCliente}%")->get();
+            ->whereRelation('cliente','codigo_interno','LIkE',"%{$this->filtroCodigoCliente}%")
+            ->orderBy('id', 'DESC')
+            ->get();
 
 
 
-        //dd($this->ventas[0]->cliente->nombres_cliente);
+
+
+
 
 
         return view('livewire.pages.estado_cuenta_venta.index');
@@ -105,15 +113,21 @@ class EstadoCuentaVentaController extends Component
     public function exportarFila($id)
     {
 
-
-
         $correl=0;
-
         $saldo_actual=0;
         $saldo_anterior=0;
 
-        $venta=Venta::with('productos')->find($id)->toArray();
+        //$venta=Venta::with('productos')->find($id)->toArray();
+
+        $venta=Venta::with('productos')
+        ->with('credito')
+        ->with('abonos')
+        ->with('notacreditos')
+        ->with('cliente')
+        ->where('no_venta',$id)
+        ->first();
         $correl=$venta['correlativo'];
+        /*
 
         $abono=Abono::where('venta_id','=',$id)->get()->toArray();
 
@@ -136,9 +150,13 @@ class EstadoCuentaVentaController extends Component
             $saldo_anterior=0;
             $saldo_actual=$venta['total_venta'];
         }
+*/
+
 
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfEstadoCuentaVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual,'venta' => $venta,'cliente'=>$cliente,'abono'=>$abono,'nota_credito'=>$nota_credito,'correl'=>$correl]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfEstadoCuentaVenta',['venta' => $venta,'correl'=>$correl]);
+
+        //$pdf = Pdf::loadView('/livewire/pdf/pdfEstadoCuentaVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual,'venta' => $venta,'cliente'=>$cliente,'abono'=>$abono,'nota_credito'=>$nota_credito,'correl'=>$correl]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter')->stream();
             }, "$this->title-$fecha_reporte.pdf");

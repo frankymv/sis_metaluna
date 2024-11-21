@@ -29,6 +29,7 @@ use App\Livewire\InformeVentaController;
 use App\Livewire\NotaCreditoController;
 use App\Livewire\ProveedorController;
 use App\Livewire\RoleController;
+use App\Livewire\RolesController;
 use App\Livewire\RutaController;
 use App\Livewire\ServicioController;
 use App\Livewire\SucursalController;
@@ -146,7 +147,7 @@ Route::view('/', 'welcome');
         Route::get('combustible', CombustibleController::class)->name('combustible');
         Route::get('viatico', ViaticoController::class)->name('viatico');
 
-
+        Route::get('roles', RolesController::class)->name('roles');
 
 
     });

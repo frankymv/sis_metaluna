@@ -9,12 +9,16 @@ use App\Models\User;
 use Constantes\DepartamentoMunicipio;
 use Spatie\Permission\Models\Role;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class UsuarioController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
 
     public $title='Usuario';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;

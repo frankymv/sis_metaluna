@@ -6,6 +6,8 @@ use Livewire\Component;
 
 class Counter extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public function render()
     {
         return view('livewire.pages.counter');

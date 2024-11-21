@@ -6,11 +6,15 @@ use App\Models\Cliente;
 use App\Models\Cotizacion;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class HistorialCotizacionController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Cotizaciones';
-    public $data, $id_data,$id_last;
+    public $data, $per_page=10,  $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isAddProduct=false,$disabled_nombre_producto=false,$disabled_existencia_producto=false,$disabled_codigo_producto=false,$disabled_subtotal_producto=false,$tipo_cliente;
     public $disabledInput=false,$disabledInputPasswordAdmin=false;
 

@@ -56,6 +56,7 @@
 
         <x-frk.components.item_expanded_drawer label="Administracion" icon="fa-solid fa-screwdriver-wrench"  >
             <x-frk.components.subitem_drawer label="usuario" route="usuario" />
+            <x-frk.components.subitem_drawer label="rol" route="roles" />
             <x-frk.components.subitem_drawer label="sucursal" route="sucursal" />
             <x-frk.components.subitem_drawer label="proveedor" route="proveedor" />
         </x-frk.components.item_expanded_drawer>

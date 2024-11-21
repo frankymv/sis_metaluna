@@ -8,12 +8,16 @@ use App\Models\Municipio;
 use App\Models\Sucursal;
 use Constantes\DepartamentoMunicipio;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class SucursalController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
 
     public $title='Sucursal';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;

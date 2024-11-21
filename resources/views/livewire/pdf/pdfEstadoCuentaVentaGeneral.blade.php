@@ -41,33 +41,28 @@
             <td style="width:47pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
         <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">No. Venta</p>
         </td>
-        <td style="width:167pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
+        <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
             <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Cliente</p>
         </td>
 
         <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
             <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Forma Pago</p>
         </td>
-        <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Envio</p>
-        </td>
         <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
             <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Fecha Venta</p>
         </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Total Venta</p>
-        </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Credito</p>
-        </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Abono</p>
-        </td>
-        <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
+        <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
             <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Saldo</p>
         </td>
+
+        <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
+            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Anulado</p>
+        </td>
+        <td style="width:100pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
+            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Detalle</p>
+        </td>
         <td style="width:45pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;"></p>
+            <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Cancelado</p>
         </td>
     </tr>
     @foreach ($ventas as $data)
@@ -75,42 +70,83 @@
         <td style="width:47pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
         <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->no_venta}}</p>
         </td>
-        <td style="width:167pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+        <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Codigo Cliente Mayorista: {{$data->cliente->codigo_mayorista}} Nombres: {{$data->cliente->nombres_cliente}}</p>
+        </td>
+        <td style="width:75pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->forma_pago_venta}}</p>
+        </td>
+        <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->fecha_venta}}</p>
+        </td>
+        <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="text-xs text-gray-600"> Total Venta:{{$data->total_venta}}</p>
+                <p class="text-xs text-gray-600"> Nota Credito: {{$data->total_nota_credito}}</p>
+                <p class="text-base text-gray-600 font-bold">Nuevo Saldo: {{$data->total_venta-$data->total_nota_credito}}</p>
+                <br>
+
+                @if ($data->credito)
+                <p class="text-xs text-gray-600">Saldo credito:
+                    @if (($data->total_credito-$data->total_nota_credito)<=0)
+                        0
+                    @else
+                        {{$data->total_credito-$data->total_nota_credito}}
+                    @endif
+                     </p>
+                     <p class="text-xs text-gray-600">Total abonos: {{$data->total_abono}}</p>
+                     <p class="text-base text-gray-600 font-bold">Credito actual:
+                        @if ((($data->total_credito-$data->total_nota_credito)-$data->total_abono)<=0)
+                            0
+                            @else
+                            {{($data->total_credito-$data->total_nota_credito)-$data->total_abono}}
+                        @endif
+                    </p>
+                @endif
+
+
+
+
+
+
+
+
+
+
+
+        </td>
+
+        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">
+
+            @if ($data->anulado==0)
+             NO
+            @else
+             SI
+        @endif
+        </p>
+
+
+        </td>
+
+        <td style="width:100pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
 
 
             @foreach ($data->abonos as $dataa)
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No_abono: {{$dataa->no_abono}} Fecha: {{$dataa->fecha_abono}}</p>
-        @endforeach
-        @foreach ($data->notacreditos as $dataa)
-        <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No Nota Credito: {{$dataa->no_nota_credito}} Fecha: {{$dataa->fecha_nota_credito}}</p>
-        @endforeach
+                <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No_abono: {{$dataa->no_abono}} Fecha: {{$dataa->fecha_abono}}</p>
+            @endforeach
+            @foreach ($data->notacreditos as $dataa)
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No Nota Credito: {{$dataa->no_nota_credito}} Fecha: {{$dataa->fecha_nota_credito}}</p>
+            @endforeach
+        </td>
+        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">
 
-        </td>
-        <td style="width:75pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->forma_pago}}</p>
-        </td>
-        <td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->envio}}</p>
-        </td>
-        <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->fecha_venta}}</p>
-        </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->total_venta}}</p>
-        </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->total_credito}}</p>
-        </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->total_credito-$data->saldo_total_venta}}</p>
-        </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->saldo_total_venta}}</p>
-        </td>
-
-        <td style="width:45pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
+                @if ($data->cancelado_total_venta==0)
+                NO
+               @else
+                SI
+           @endif
+           </p>
         </td>
     </tr>
 

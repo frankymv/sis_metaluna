@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Str;
+
 use App\Constantes\DataSistema;
 use App\Models\Cliente;
 use App\Models\Departamento;
@@ -11,12 +13,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class ClienteController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+    use LivewireAlert;
     public $title='Cliente';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -49,7 +54,7 @@ class ClienteController extends Component
     $estado=true,
     $id=0;
 
-    public $clientes;
+
     public $rutas;
     public $tipo_clientes=[];
 
@@ -74,6 +79,10 @@ class ClienteController extends Component
       public $delete_no=null;
       public $delete_nombre=null;
 
+      public $filtroFecha=null;
+      public $filtroFechaInicio=null;
+      public $filtroFechaFin=null;
+
     protected $rules = [
 
         'tipo_cliente_id' => 'required',
@@ -87,22 +96,51 @@ class ClienteController extends Component
 
     protected $listeners=['edit', 'delete','show'];
 
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+
+
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+
+    }
+
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
     public function render()
     {
+        $this->rutas=Ruta::all();
+        $this->tipo_clientes=DataSistema::$tipo_cliente;
 
-        $this->clientes=Cliente::with('ruta')
+        $data_temp=Cliente::with('ruta')
         ->where('codigo_interno','LIkE',"%{$this->filtroCodigoInterno}%")
         ->where('codigo_mayorista','LIkE',"%{$this->filtroCodigMayorista}%")
         ->where('tipo_cliente','LIkE',"%{$this->filtroTipoCliente}%")
         ->where('nombres_cliente','LIkE',"%{$this->filtroNombresCliente}%")
         ->where('apellidos_cliente','LIkE',"%{$this->filtroApellidosCliente}%")
         ->whereRelation('ruta','id','LIKE',"%{$this->filtroRuta}%")
-        ->get();
+        ->paginate($this->per_page);
 
 
-        $this->rutas=Ruta::all();
-        $this->tipo_clientes=DataSistema::$tipo_cliente;
-        return view('livewire.pages.cliente.index');
+
+
+        return view('livewire.pages.cliente.index', [
+            'clientes' => $data_temp,
+        ]);
+
     }
 
     public function create(){

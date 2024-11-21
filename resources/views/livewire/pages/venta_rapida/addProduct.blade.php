@@ -44,22 +44,24 @@
 
     </x-slot>
     <x-slot:footer>
-        <x-frk.components.button label="agregar " wire:click="agregarDetalle({{$this->id_producto}})" />
+        <x-frk.components.button label="agregar" color="blue" wire:click="agregarDetalle({{$this->id_producto}})" />
 
 
         <x-frk.components.button label="cancelar" wire:click="cancelProductQuantity()" />
 
 
 
-        <x-frk.buttons.unlock-icon-button class="bg-blue-500 hover:bg-blue-700" wire:click="actualizarPrecio()" />
-
         @if ($disabledInputPasswordAdmin)
 
             <x-frk.components.label-input wire:model="email_edit" placeholder="Email" />
             <x-frk.components.label-input type="password" wire:model="codigo_edit" placeholder="Contraseña" />
-            <x-frk.buttons.unlock-icon-button class="bg-red-500 hover:bg-red-700 label" wire:click="unlock()" />
+            <x-frk.buttons.unlock-icon-button class="bg-orange-500 hover:bg-orange-700 label" wire:click="unlock()" />
 
+        @else
+
+        <x-frk.buttons.unlock-icon-button class="bg-green-500 hover:bg-green-700" wire:click="actualizarPrecio()" />
         @endif
+
     </x-slot>
     <div class="flex w-full md:w-1/3">
         <x-frk.components.error error="menor_existencia" />

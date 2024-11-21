@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Str;
+
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Viatico;
@@ -9,14 +11,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 use Livewire\Component;
 
 class ViaticoController extends Component
 
 {
     use LivewireAlert;
+    use WithPagination;
     public $title='Viatico';
-    public $data, $id_venta=null,$id=null,$no_abono=0;
+    public $data, $per_page=10,  $id_venta=null,$id=null,$no_abono=0;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isCreateAnticipado = false,$isCreateAnticipadoAsignar = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -36,7 +40,7 @@ class ViaticoController extends Component
 
     public $no_viatico=0, $user_id=null, $fecha_viatico=null, $total_viatico=0, $observaciones=null;
 
-    public $viaticos="";
+
     public $users=[];
     public $id_data=null;
 
@@ -57,18 +61,55 @@ class ViaticoController extends Component
         'user_id'=>'required',
     ];
 
+
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+
+
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+
+    }
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
     public function render()
     {
 
-    $this->viaticos=Viatico::with('user')
+    $data_temp=Viatico::with('user')
     ->where('no_viatico','LIkE',"%{$this->filtroNoViatico}%")
     ->where('fecha_viatico','LIkE',"%{$this->filtroFechaViatico}%")
     ->whereRelation('user','codigo','LIKE',"%{$this->filtroCodigoUsuario}%")
     ->whereRelation('user','nombres','LIKE',"%{$this->filtroNombreUsuario}%")
     ->whereRelation('user','apellidos','LIKE',"%{$this->filtroApellidoUsuario}%")
-    ->get();
+    ->latest();
 
-        return view('livewire.pages.viatico.index');
+    if(!empty($this->filtroFecha)){
+        $data_temp->whereBetween('fecha_viatico',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+    }
+
+    $data_temp=$data_temp->paginate($this->per_page);
+
+        return view('livewire.pages.viatico.index', [
+            'viaticos' => $data_temp,
+        ]);
 
     }
 

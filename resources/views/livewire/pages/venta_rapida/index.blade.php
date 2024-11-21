@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="flex flex-wrap md:w-1/2">
-                    <x-frk.components.button label="Buscar Producto" wire:click="buscarProducto()" />
+                    <x-frk.components.button label="Buscar Producto" color="green" wire:click="buscarProducto()" />
                 </div>
             </div>
             <div class="flex w-full md:w-1/3">
@@ -188,7 +188,9 @@
                 @if ($id_forma_pago=='CREDI')
                     <div class="flex w-full">
                         <div class="flex w-full md:w-1/2">
-                            <x-frk.components.button icon="fa-solid fa-unlock" color="green" wire:click="liberarCredito()" />
+
+
+                            <x-frk.buttons.unlock-icon-button class="bg-orange-500 hover:bg-orange-700 label" wire:click="liberarCredito()" />
                         </div>
                         <div class="flex w-full md:w-1/2">
                             <x-frk.components.label-input label="Usuario"  wire:model="email_edit" />

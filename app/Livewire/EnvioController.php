@@ -1,22 +1,27 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
+use App\Constantes\DataSistema;
 use App\Models\Envio;
 use App\Models\Ruta;
 use App\Models\User;
 use App\Models\Vehiculo;
 use App\Models\Venta;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 use Livewire\Component;
 
 class EnvioController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+    use LivewireAlert;
     public $title='Envio';
-    public $data, $id_data,$id_last;
+    public $data, $per_page=10,  $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isFinalizar=false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false,$disabled_observaciones_inicio_envio=false,$disabled_observaciones_final_envio=false;
@@ -66,7 +71,7 @@ class EnvioController extends Component
     public $estados,$procesos;
 
     public $observaciones_inicio_envio=null, $observaciones_final_envio=null,$estado='Iniciado';
-    public $envios,$envio=null;
+    public $envio=null;
 
 
     public $envio_no=null;
@@ -98,12 +103,79 @@ public $diabled_proceso_id=false,$disabled_estado_id=false,$disabled_estado_obse
 public $delete_no=null,$delete_nombre=null;
 
 
+
+//////////////////
+
+public $filtroNoEnvio=null;
+
+public $filtroEstadoEnvio=null;
+public $filtroRuta=null;
+public $filtroNoVenta=null;
+public $filtroUsuario=null;
+public $filtroVehiculo=null;
+
+
+public $filtroFecha=null;
+public $filtroFechaInicio=null;
+public $filtroFechaFin=null;
+
+
+////////////////
+
+
     protected $listeners=['edit', 'delete','show','finalizar','pdfExportar'];
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
+
 
     public function render()
     {
-        $this->envios=Envio::all();
-        return view('livewire.pages.envio.index');
+
+        $this->estados=DataSistema::$estados_envio;
+        $this->usuarios=User::all();
+        $this->rutas=Ruta::all();
+        $this->vehiculos=Vehiculo::all();
+
+
+        $data_temp=Envio::where('envio_no','LIkE',"%{$this->filtroNoEnvio}%")->with('users')->with('vehiculos')
+            ->where('ruta_id','LIkE',"%{$this->filtroRuta}%")
+            ->whereRelation('users','id','LIKE',"%{$this->filtroUsuario}%")
+            ->whereRelation('vehiculos','id','LIKE',"%{$this->filtroVehiculo}%")
+
+            ->where('estado_envio','LIkE',"%{$this->filtroEstadoEnvio}%")
+            ->latest();
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('envio_fecha',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+
+
+
+
+        return view('livewire.pages.envio.index', [
+            'envios' => $data_temp,
+        ]);
     }
 
     public function create(){
@@ -187,25 +259,49 @@ public $delete_no=null,$delete_nombre=null;
         return redirect()->route('pdfExportarEnvio',$id);
     }
 
-    public function pdfExportarEnvio($id)
+    public function exportarGeneral()
     {
-        $ventas=[];
-        $envio=Envio::with('users')->with('ventas')->with('vehiculos')->with('ruta')->find($id)->toArray();
+        $data_temp=Envio::where('envio_no','LIkE',"%{$this->filtroNoEnvio}%")->with('users')->with('vehiculos')
+        ->where('ruta_id','LIkE',"%{$this->filtroRuta}%")
+        ->whereRelation('users','id','LIKE',"%{$this->filtroUsuario}%")
+        ->whereRelation('vehiculos','id','LIKE',"%{$this->filtroVehiculo}%")
 
+        ->where('estado_envio','LIkE',"%{$this->filtroEstadoEnvio}%")
+        ->latest();
 
-
-        foreach ($envio['ventas'] as $key => $value) {
-
-            $data=Venta::with('cliente')->find($value['id'])->toArray();
-            array_push($ventas ,$data);
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('envio_fecha',[$this->filtroFechaInicio,$this->filtroFechaFin]);
         }
 
-
-
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfEnvio ',['envio'=>$envio,'ventas'=>$ventas]);
-        return $pdf->stream();
-
+    $data_temp=$data_temp->paginate($this->per_page);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfEnvioGeneral',['data'=>$data_temp]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter', 'landscape')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
     }
+
+
+    public function exportarFila($id)
+{
+
+
+    $data=null;
+    $this->estados=DataSistema::$estados_envio;
+    $this->usuarios=User::all();
+    $this->rutas=Ruta::all();
+    $this->vehiculos=Vehiculo::all();
+
+
+    $data=Envio::with('users')->with('vehiculos')->find($id);
+
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $pdf = Pdf::loadView('/livewire/pdf/pdfEnvio',['data'=>$data]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
+}
+
 
 
     public function store(){

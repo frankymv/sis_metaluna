@@ -40,15 +40,13 @@
         <td style="width:47pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
     <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Codigo producto</p>
 </td>
-<td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
+<td style="width:200pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
     <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Nombre Producto</p>
 </td>
-<td style="width:75pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
+<td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
     <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Descripcion</p>
 </td>
-<td style="width:77pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;"></p>
-</td>
+
 <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
     <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Tipo</p>
 </td>
@@ -61,31 +59,19 @@
 <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
     <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Material</p>
 </td>
-<td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;"></p>
-</td>
-<td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;"></p>
-</td>
-<td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#FAE3D4">
-    <p class="s1" style="text-indent: 0pt;line-height: 12pt;text-align: center;"></p>
-</td>
+
 </tr>
     @foreach ($productos as $data)
     <tr style="height:13pt">
         <td style="width:47pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
         <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->codigo}}</p>
         </td>
-        <td style="width:92pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+        <td style="width:200pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->nombre}}</p>
         </td>
-        <td style="width:75pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+        <td style="width:150pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->descripcion}}</p>
         </td>
-        <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
-
         <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->tipo->nombre}}</p>
         </td>
@@ -98,15 +84,7 @@
         <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->material->nombre}}</p>
         </td>
-        <td style="width:67pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
-        <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
-        <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p>
-        </td>
+
     </tr>
 
     @endforeach

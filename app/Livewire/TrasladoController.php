@@ -10,10 +10,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
+
+
 class TrasladoController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Traslado';
-    public $data, $id_data,$id_last;
+    public $data, $per_page=10,  $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -45,7 +51,7 @@ class TrasladoController extends Component
     public $id=null;
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
-    public $traslados=null;
+
     public $sucursales=null;
     public $estados=null;
     public $filtroNoTraslado=null;
@@ -81,15 +87,22 @@ class TrasladoController extends Component
     {
 
         $this->sucursales=Sucursal::all();
-        $this->traslados=Traslado::with('productos')
-        ->where('traslado_no','LIkE',"%{$this->filtroNoTraslado}%")
-        ->whereDate('traslado_fecha', '>=', $this->filtroFechaInicio)
-        ->whereDate('traslado_fecha', '<=', $this->filtroFechaFin)
-        ->where('sucursal_origen_id','LIkE',"%{$this->filtroSucursalOrigen}%")
-        ->where('sucursal_destino_id','LIkE',"%{$this->filtroSucursalDestino}%")
-        ->get();
 
-        return view('livewire.pages.traslado.index');
+
+        $data_temp=Traslado::with('productos')
+            ->where('traslado_no','LIkE',"%{$this->filtroNoTraslado}%")
+            ->where('sucursal_origen_id','LIkE',"%{$this->filtroSucursalOrigen}%")
+            ->where('sucursal_destino_id','LIkE',"%{$this->filtroSucursalDestino}%")->latest();
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('traslado_fecha',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+
+        return view('livewire.pages.traslado.index', [
+            'traslados' => $data_temp,
+        ]);
     }
 
 
@@ -101,6 +114,7 @@ class TrasladoController extends Component
 
 
     public function create(){
+        $this->traslado_fecha= Carbon::now()->toDateString();
 
         $this->sucursal_origen_id=Auth::user()->sucursal_id;
 
@@ -145,8 +159,20 @@ class TrasladoController extends Component
 
     public function exportarGeneral()
     {
+
+        $data_temp=Traslado::with('productos')
+            ->where('traslado_no','LIkE',"%{$this->filtroNoTraslado}%")
+            ->where('sucursal_origen_id','LIkE',"%{$this->filtroSucursalOrigen}%")
+            ->where('sucursal_destino_id','LIkE',"%{$this->filtroSucursalDestino}%")->latest();
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('traslado_fecha',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfTrasladoGeneral',['data' => $this->traslados]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfTrasladoGeneral',['data' => $data_temp]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

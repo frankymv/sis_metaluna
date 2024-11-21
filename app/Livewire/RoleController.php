@@ -5,16 +5,20 @@ namespace App\Livewire;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 
 
 class RoleController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     //use LivewireAlert;
     public $nombre, $estado=1,$created_at,$updated_at,$roles;
     //
     public $permisson;
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false;
     public $isEdit = false;
     public $isShow = false;

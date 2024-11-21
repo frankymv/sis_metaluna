@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Models\Cliente;
 use App\Models\EstadoCuenta;
@@ -10,15 +11,17 @@ use App\Models\Producto;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
 class NotaCreditoController extends Component
 {
+    use WithPagination;
     use LivewireAlert;
     public $title='Nota de Credito';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false,$disabledTotalNotaCredito=false;
@@ -65,6 +68,11 @@ class NotaCreditoController extends Component
 
         public $delete_no=null,$delete_nombre=null;
 
+        public $filtroFecha=null;
+        public $filtroFechaInicio=null;
+        public $filtroFechaFin=null;
+
+
 
     protected $rules = [
         'venta_id' => 'required',
@@ -76,30 +84,64 @@ class NotaCreditoController extends Component
 
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+
+
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
     public function render()
     {
 
 
-        $this->nota_creditos=NotaCredito::with('venta')->with('cliente')
+        $data_temp=NotaCredito::with('venta')->with('cliente')
         ->where('no_nota_credito','LIkE',"%{$this->filtroNoNotaCredito}%")
-        ->where('fecha_nota_credito','LIkE',"%{$this->filtroFechaNotaCredito}%")
         ->whereRelation('venta','no_venta','LIKE',"%{$this->filtroNoVenta}%")
         ->whereRelation('cliente','codigo_interno','LIKE',"%{$this->filtroCodigoCliente}%")
         ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
+        ->latest();
 
-        ->get();
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('fecha_nota_credito',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
 
-        $this->total_total_nota_credito=NotaCredito::with('venta')->with('cliente')
+        $data_temp=$data_temp->paginate($this->per_page);
+
+
+        $total_notas=NotaCredito::with('venta')->with('cliente')
         ->where('no_nota_credito','LIkE',"%{$this->filtroNoNotaCredito}%")
-        ->where('fecha_nota_credito','LIkE',"%{$this->filtroFechaNotaCredito}%")
         ->whereRelation('venta','no_venta','LIKE',"%{$this->filtroNoVenta}%")
         ->whereRelation('cliente','codigo_interno','LIKE',"%{$this->filtroCodigoCliente}%")
         ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->sum('total_nota_credito');
+        ->latest();
+
+        if(!empty($this->filtroFecha)){
+            $total_notas->whereBetween('fecha_nota_credito',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $this->total_total_nota_credito=$total_notas->sum('total_nota_credito');
 
 
 
-        return view('livewire.pages.nota_credito.index');
+        return view('livewire.pages.nota_credito.index', [
+            'notass' => $data_temp,'total_notas'=>$total_notas
+        ]);
     }
 
     public function create()
@@ -273,8 +315,39 @@ class NotaCreditoController extends Component
 
 public function exportarGeneral()
 {
+
+
+    $data_temp=NotaCredito::with('venta')->with('cliente')
+    ->where('no_nota_credito','LIkE',"%{$this->filtroNoNotaCredito}%")
+    ->whereRelation('venta','no_venta','LIKE',"%{$this->filtroNoVenta}%")
+    ->whereRelation('cliente','codigo_interno','LIKE',"%{$this->filtroCodigoCliente}%")
+    ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
+    ->latest();
+
+    if(!empty($this->filtroFecha)){
+        $data_temp->whereBetween('fecha_nota_credito',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+    }
+
+    $data_temp=$data_temp->paginate($this->per_page);
+
+
+    $total_notas=NotaCredito::with('venta')->with('cliente')
+    ->where('no_nota_credito','LIkE',"%{$this->filtroNoNotaCredito}%")
+    ->whereRelation('venta','no_venta','LIKE',"%{$this->filtroNoVenta}%")
+    ->whereRelation('cliente','codigo_interno','LIKE',"%{$this->filtroCodigoCliente}%")
+    ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
+    ->latest();
+
+    if(!empty($this->filtroFecha)){
+        $total_notas->whereBetween('fecha_nota_credito',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+    }
+
+    $total_notas->sum('total_nota_credito');
+
+
+
     $fecha_reporte=Carbon::now()->toDateTimeString();
-    $pdf = Pdf::loadView('/livewire/pdf/pdfNotaCreditoGeneral',['nota_creditos' => $this->nota_creditos,'total_nota_creditos'=>$this->total_nota_creditos]);
+    $pdf = Pdf::loadView('/livewire/pdf/pdfNotaCreditoGeneral',['notass' => $data_temp,'total_notas'=>$total_notas]);
     return response()->streamDownload(function () use ($pdf) {
         echo $pdf->setPaper('leter', 'landscape')->stream();
         }, "$this->title-$fecha_reporte.pdf");

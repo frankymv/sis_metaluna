@@ -39,7 +39,6 @@ class Envio extends Model
     }
 
     public function Ruta(){
-        // $this->belongsTo('App\Models\Rol');
          return $this->belongsTo(Ruta::class);
      }
 

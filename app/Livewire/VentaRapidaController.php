@@ -19,13 +19,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class VentaRapidaController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+    use LivewireAlert;
     ///sistema
     public $title='Venta';
-    public $data, $id_data,$ultima_venta,$id=null;
+    public $data, $per_page=10,  $id_data,$ultima_venta,$id=null;
     public $isCreate=false, $isAddProduct=false, $isSearchProduct=false, $isDetalleVenta=false,$isPrintVenta=false;
     ////venta
     public $no_venta=null,$fecha_venta=null, $total_venta=0,$observaciones_venta=null,$forma_pago=null,$saldo_venta=0;
@@ -536,7 +539,7 @@ public $email_edit=null, $codigo_edit=null;
                         'forma_pago_venta'=>$this->id_forma_pago,
 
                         /////credito///////////
-                        'credito'=>true,
+                        'credi'=>true,
                         'total_credito'=>$this->total_venta,
                         /////si requiere envio o traslado a la ubicacion del cliente
                         'envio'=>$this->id_envio,
@@ -566,6 +569,7 @@ public $email_edit=null, $codigo_edit=null;
                     'fecha_limite_credito'=>Carbon::createFromFormat('Y-m-d', $this->fecha_venta)->addDay((int)$this->dias_ultimo_credito)->toDateString(),
                     'total_credito'=>$this->total_venta,
                     'cliente_id'=>$this->cliente_id,
+                    'activo'=>TRUE,
                     'correlativo'=>$data->correlativo+1,
                     'observaciones'=>$this->observaciones_credito,
                 ]);

@@ -10,13 +10,16 @@ use App\Models\Ruta;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 use Livewire\Component;
 
 class RutaController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+
     public $title='Ruta';
-    public $data, $id_data,$id_last;
+    public $data, $per_page=10,  $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -43,20 +46,34 @@ class RutaController extends Component
     public $disabled_departamento=false;
     public $disabled_municipio=false;
     public $i=0;
-    public $rutas=[];
 
             /////
 
             public $delete_no=null,$delete_nombre=null;
 
     public $filtroCodigo=null, $filtroNombre=null;
+    /////////////
+
+
 
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
+    public function borrarFiltros()
+    {
+        $this->reset();
+    }
+
     public function render()
     {
-        $this->rutas=Ruta::with('municipios')->with('departamentos')->get();
-        return view('livewire.pages.ruta.index');
+        $data_temp=Ruta::with('municipios')->with('departamentos')
+        ->where('codigo','LIkE',"%{$this->filtroCodigo}%")
+        ->where('nombre','LIkE',"%{$this->filtroNombre}%")
+        ->paginate($this->per_page);
+
+
+        return view('livewire.pages.ruta.index', [
+            'rutas' => $data_temp,
+        ]);
     }
 
     public function create(){
@@ -194,8 +211,12 @@ class RutaController extends Component
 
     public function exportarGeneral()
     {
+        $data_temp=Ruta::with('municipios')->with('departamentos')
+        ->where('codigo','LIkE',"%{$this->filtroCodigo}%")
+        ->where('nombre','LIkE',"%{$this->filtroNombre}%")
+        ->paginate($this->per_page);
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfRutaGeneral',['rutas' => $this->rutas]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfRutaGeneral',['rutas' => $data_temp]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

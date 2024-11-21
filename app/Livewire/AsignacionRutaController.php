@@ -9,11 +9,15 @@ use App\Models\User;
 use App\Models\Vehiculo;
 use App\Models\Venta;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class AsignacionRutaController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Asignacion Ruta';
-    public $data, $id_data,$id_last;
+    public $data, $per_page=10,  $id_data,$id_last;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;

@@ -20,7 +20,7 @@
 <body>
 <h1 style="padding-top: 2pt;padding-left: 262pt;text-indent: 0pt;text-align: center;">DISTRIBUIDORA METALUNA</h1>
 <p style="padding-left: 262pt;text-indent: 0pt;text-align: center;">9 calle Zona 3, Totonicapan</p>
-<p style="padding-left: 322pt;text-indent: 0pt;text-align: center;">Pedidos a Oficina: Cel: 77664092 - Cel: 30239120 Cel: 46427166 - Cel: 30597733</p>
+<p style="padding-left: 250pt;text-indent: 0pt;text-align: center;">Pedidos a Oficina: Cel: 77664092 - Cel: 30239120 Cel: 46427166 - Cel: 30597733</p>
 <p style="padding-left: 262pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
 <a href="mailto:metaluna@gmail.com" style=" color: black; font-family:&quot;Times New Roman&quot;, serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;" target="_blank">Correo Electrónico: </a>
 <a href="mailto:metaluna@gmail.com" target="_blank">metaluna@gmail.com</a>
@@ -30,82 +30,42 @@
 <br/>
 </p>
 
-<p style="padding-top: 2pt;text-indent: 0pt;text-align: left;">
-<br/>
-</p>
-
-<table style="border-collapse:collapse;margin-left:5.93pt" cellspacing="0">
-    <tr style="height:13pt">
-        <td style="width:570 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" bgcolor="#F9E1D4">
-            <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: center;">AJUSTE INVENTARIO</p>
-        </td>
-    </tr>
-</table>
-<p style="padding-top: 2pt;text-indent: 0pt;text-align: left;">
-<br/>
-</p>
-
+        <table style="border-collapse:collapse;margin-left:5.45pt" cellspacing="0">
+        <tr style="height:13pt">
+            <tr style="height:13pt">
+                <td style="width:567pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="2" bgcolor="#F9E1D4">
+                    <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: center;">AJUSTE INVENTARIO</p>
+                </td>
+                </tr>
+            <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">No Ajuste</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->ajuste_inventario_no}}</p></td></tr>
+            <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Fecha Ajuste</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->fecha_ajuste_inventario}}</p></td></tr>
+            <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Productos</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->producto->nombre}}</p></td></tr>
+            <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Cantidad</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->cantidad_traslado}}</p></td></tr>
+            <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Tipo Ajuste</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->tipo_ajuste}}</p></td></tr>
+            <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Descripcion</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->descripcion}}</p></td></tr>
 
 
-<table style="border-collapse:collapse;margin-left:5.93pt" cellspacing="0">
+
+
+
+
+
+
+
     <tr style="height:13pt">
-        <td style="width:570 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" bgcolor="#F9E1D4">
-            <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: center;">DETALLE</p>
+        <td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Registro</p>
         </td>
-    </tr>
-    <tr style="height:13pt">
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-            <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">No. Ajuste Inventario</p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-            <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Fecha Ajuste Inventario</p>
-        </td>
-        <td style="width:95pt;bord  er-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-            <p class="s3" style="text-indent: 0pt;line-height: 12pt;text-align: center;">Producto   </p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-            <p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Sucursal</p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-            <p class="s3" style="padding-left: 5pt;padding-right: 5pt;text-indent: 0pt;line-height: 12pt;text-align: center;">Tipo Ajuste</p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#F9E1D4">
-            <p class="s3" style="padding-left: 27pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Cantidad Traslado</p>
-        </td>
-    </tr>
-    <tr style="height:13pt">
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s3" style="text-indent: 0pt;text-align: center;">{{$ajuste_inventario['ajuste_inventario_no']}} </p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s3" style="text-indent: 0pt;text-align: center;">{{$ajuste_inventario['fecha_ajuste_inventario']}} </p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s3" style="padding-left: 5pt;text-indent: 0pt;text-align: center;">{{$producto['nombre']}}</p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="text-indent: 0pt;text-align: center;">{{$sucursal['nombre']}}</p>
-            </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s3" style="padding-right: 4pt;text-indent: 0pt;text-align: center;">{{$ajuste_inventario['tipo_ajuste']}} </p>
-        </td>
-        <td style="width:95pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s3" style="padding-right: 4pt;text-indent: 0pt;text-align: center;">{{$ajuste_inventario['cantidad_traslado']}}  </p>
-        </td>
-    </tr>
-    <tr style="height:13pt">
-        <td style="width:570 pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="6" >
-            <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: star;">Observaciones: {{$ajuste_inventario['descripcion']}}</p>
+        <td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Creado_ {{$data->created_at}} Actualizacion: {{$data->updated_at}}</p>
         </td>
     </tr>
 
 
-
-</table>
-<p style="padding-top: 1pt;text-indent: 0pt;text-align: left;">
-<br/>
-</p>
+    </table>
 
 
-</body>
-</html>
+
+
+    </body>
+    </html>

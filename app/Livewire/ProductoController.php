@@ -13,10 +13,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 use Livewire\Component;
 
 class ProductoController extends Component
 {
+    use WithPagination;
     use LivewireAlert;
     //
     public $codigo='', $precio_venta_mayorista=0,$precio_venta_minorista=0,$precio_venta_producto=0, $nombre='', $descripcion='', $disabled=false,$disabledButton=false,$calibre=null,   $divisible=false, $marca_id, $tipo_id, $material_id, $disenio_id,  $estado=true,$created_at,$updated_at;
@@ -34,12 +36,12 @@ class ProductoController extends Component
     public $diametro=null;
     public $tipo_diametro=null;
 
-    public $productos=[];
+
 
     public $marcas, $tipos, $materiales, $disenios;
     //
     public $title='Producto';
-    public $data=null, $id_data=null, $id_last=null;
+    public $data=null, $per_page=5, $id_data=null, $id_last=null;
     public $isCreate = false;
     public $isEdit = false;
     public $isShow = false;
@@ -70,53 +72,50 @@ class ProductoController extends Component
     public $filtroFechaInicio=null;
     public $filtroFechaFin=null;
 
-
-    public function mount()
-    {
-        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
-        $this->filtroFechaFin=Carbon::now()->toDateString();
-    }
-    public function updatedFiltroFecha($id){
-        if(Str::length($id)==10){
-            $this->filtroFechaInicio=$id;
-            $this->filtroFechaFin=$id;
-        }else{
-            $this->filtroFechaInicio=Str::substr($id, 0, 10);
-            $this->filtroFechaFin=Str::substr($id, 13, 25);
-        }
-    }
-
     public function borrarFiltros()
     {
         $this->reset();
         $this->mount();
     }
 
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
 
+
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+
+    }
 
     public function render()
     {
-
         $this->tipos=Tipo::all();
         $this->marcas=Marca::all();
         $this->disenios=Disenio::all();
         $this->materiales=Material::all();
 
-        //$this->productos=Sucursal::with('productos')->find(2);
-        $this->productos=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
+        $data_temp=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
         ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
         ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
         ->whereRelation('marca','id','LIKE',"%{$this->filtroMarca}%")
         ->whereRelation('tipo','id','LIKE',"%{$this->filtroTipo}%")
         ->whereRelation('disenio','id','LIKE',"%{$this->filtroDisenio}%")
         ->whereRelation('material','id','LIKE',"%{$this->filtroMaterial}%")
-        ->get();
+        ->paginate($this->per_page);
 
 
-        return view('livewire.pages.producto.index');
+
+        return view('livewire.pages.producto.index',['productos'=>$data_temp]);
     }
-
-
 
 
     public function create(){
@@ -410,8 +409,17 @@ class ProductoController extends Component
 
     public function exportarGeneral()
     {
+        $data_temp=Producto::with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')
+        ->where('codigo','LIKE',"%{$this->filtroCodigoProducto}%")
+        ->where('nombre','LIKE',"%{$this->filtroNombreProducto}%")
+        ->whereRelation('marca','id','LIKE',"%{$this->filtroMarca}%")
+        ->whereRelation('tipo','id','LIKE',"%{$this->filtroTipo}%")
+        ->whereRelation('disenio','id','LIKE',"%{$this->filtroDisenio}%")
+        ->whereRelation('material','id','LIKE',"%{$this->filtroMaterial}%")
+        ->paginate($this->per_page);
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfProductoGeneral',['productos'=>$this->productos]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfProductoGeneral',['productos'=>$data_temp]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

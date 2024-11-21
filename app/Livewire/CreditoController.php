@@ -12,12 +12,18 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
+
 
 class CreditoController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
 
     public $title='Credito';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $disabled=false;
@@ -54,6 +60,31 @@ class CreditoController extends Component
     /////
     protected $listeners=['edit', 'delete','show','pdfExportar'];
 
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
     public function render()
     {
 
@@ -62,9 +93,10 @@ class CreditoController extends Component
         ->rightJoin('ventas','creditos.venta_id','=','ventas.id')
         ->rightJoin('clientes','creditos.cliente_id','=','clientes.id')
         ->where('creditos.no_credito','LIKE',"%{$this->filtroNoCredito}%")
-        ->where('creditos.fecha_credito','LIKE',"%{$this->filtroFechaCredito}%")
         ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
         ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+        ->whereDate('fecha_credito', '>=', $this->filtroFechaInicio)
+        ->whereDate('fecha_credito', '<=', $this->filtroFechaFin)
         ->get();
 
 
@@ -137,19 +169,6 @@ class CreditoController extends Component
 
         $credito=Credito::with('venta')->with('cliente')
         ->where('no_credito',1)->first();
-
-/*
-        $this->creditos = DB::table('creditos')
-        ->rightJoin('ventas','creditos.venta_id','=','ventas.id')
-        ->rightJoin('clientes','creditos.cliente_id','=','clientes.id')
-        ->where('creditos.no_credito','LIKE',"%{$this->filtroNoCredito}%")
-        ->where('creditos.fecha_credito','LIKE',"%{$this->filtroFechaCredito}%")
-        ->where('clientes.nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-        ->where('clientes.codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-        ->get();
-*/
-
-
 
         $fecha_reporte=Carbon::now()->toDateTimeString();
 

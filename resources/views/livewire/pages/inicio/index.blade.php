@@ -201,72 +201,10 @@
                             <td class="px-4 py-2 text-right text-cyan-500 ">
                                 <p><span>{{$value->envio_fecha}}</span></p>
                             </td>
-
-
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-<!--
-        <div class="w-full bg-white rounded-lg p-4 shadow-md m-2">
-            <x-frk.components.subtitle label="creditos activos" />
-            <table class="table-auto w-full">
-                <thead>
-                    <tr class="border-b w-full">
-                        <th class="">
-                            <h2 class="text-ml font-bold text-gray-600">No Credito</h2>
-                        </th>
-                        <th class="">
-                            <h2 class="text-ml font-bold text-gray-600">Fecha credito</h2>
-                        </th>
-                        <th class="">
-                            <h2 class="text-ml font-bold text-gray-600">Asoc No. Venta</h2>
-                        </th>
-                        <th class="">
-                            <h2 class="text-ml font-bold text-gray-600">Cliente</h2>
-                        </th>
-                        <th class="">
-                            <h2 class="text-ml font-bold text-gray-600">Saldo</h2>
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($creditos as $key => $value)
-                        <tr class="border-b w-full">
-                            <td class="px-4 py-2 text-left align-top ">
-                                <div>
-                                    <h2>{{$value->no_credito}}</h2>
-                                </div>
-                            </td>
-                            <td class="px-4 py-2 text-left align-top ">
-                                <div>
-                                    <h2>{{$value->fecha_credito}}</h2>
-                                </div>
-                            </td>
-                            <td class="px-4 py-2 text-left align-top ">
-                                <div>
-                                    <h2>{{$value->venta_id}}</h2>
-                                </div>
-                            </td>
-                            <td class="px-4 py-2 text-left align-top ">
-                                <div>
-                                    <h2>{{$value->cliente->nombres_cliente}}</h2>
-                                </div>
-                            </td>
-
-                            <td class="px-4 py-2 text-right text-cyan-500 ">
-                                <p><span>Q. {{$value->total_credito}}</span></p>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    -->
     </div>
-
-
-
 <div>

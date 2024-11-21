@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Models\Servicio;
 use App\Models\User;
@@ -9,12 +10,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class ServicioController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+
     public $title='Servicio';
-    public $data, $id_data, $id=null;
+    public $data, $per_page=10,  $id_data, $id=null;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
@@ -31,7 +35,6 @@ class ServicioController extends Component
     Public $filtroFechaServicio=null;
     public $filtroVehiculo=null;
     public $filtroDescricion=null;
-    public $servicios=[];
     public $users=[];
 
 
@@ -40,6 +43,14 @@ class ServicioController extends Component
       public $delete_nombre=null;
 
     ////////////////////
+
+
+
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+    ////////
     protected $rules = [
         'no_servicio'=>'required',
         'fecha_servicio'=>'required',
@@ -56,17 +67,53 @@ class ServicioController extends Component
         //dd(Servicio::find(1));
         $this->users=User::all();
         $this->vehiculos=Vehiculo::all();
-        $this->servicios=Servicio::with('vehiculo')
+        $data_temp=Servicio::with('vehiculo')
         ->where('no_servicio','LIkE',"%{$this->filtroNoServicio}%")
         ->where('vehiculo_id','LIkE',"%{$this->filtroVehiculo}%")
-        ->where('fecha_servicio','LIkE',"%{$this->filtroFechaServicio}%")
-        ->get();
 
-        return view('livewire.pages.servicio.index');
+        ->latest();
+
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('fecha_servicio',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+
+
+
+
+
+        return view('livewire.pages.servicio.index', [
+            'servicios' => $data_temp,
+        ]);
 
     }
 
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+
+
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
     public function create(){
+        $this->fecha_servicio=Carbon::now()->format('Y')."-01-01";
 
         $data=Servicio::latest()->first();
         if ( $data) {
@@ -176,8 +223,20 @@ class ServicioController extends Component
 
     public function exportarGeneral()
     {
+        $data_temp=Servicio::with('vehiculo')
+        ->where('no_servicio','LIkE',"%{$this->filtroNoServicio}%")
+        ->where('vehiculo_id','LIkE',"%{$this->filtroVehiculo}%")
+
+        ->latest();
+
+
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('fecha_servicio',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $data_temp=$data_temp->paginate($this->per_page);
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfServicioGeneral',['servicios' => $this->servicios]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfServicioGeneral',['servicios' => $data_temp]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

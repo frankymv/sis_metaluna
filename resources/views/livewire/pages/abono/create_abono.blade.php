@@ -55,7 +55,7 @@
                 <x-frk.components.input-money  label="Saldo credito " :disabled="$disabled" wire:model.live="saldo_credito" />
             </div>
             <div class="flex w-full md:w-1/4">
-                <x-frk.components.input-money  label="Total Abono:" error="cantidad_abono"  wire:model.live="cantidad_abono" />
+                <x-frk.components.input-money  label="Cantidad Abono:" error="cantidad_abono"  wire:model.live="cantidad_abono" />
             </div>
             <div class="flex w-full md:w-1/4">
                 <x-frk.components.input-money label="Nuevo saldo:" error="nuevo_saldo" :disabled="$disabled" wire:model="nuevo_saldo" />

@@ -24,8 +24,8 @@ return new class extends Migration
             $table->unsignedBigInteger('cliente_id')->nullable(true);
             $table->foreign('cliente_id')->references('id')->on('clientes');
              //registro de operaciones a una venta
-             $table->integer('correlativo')->nullable(true)->default('0')->comment('correlativo para el seguimiento de las operaciones de abono y notas de credito');
-
+            $table->integer('correlativo')->nullable(true)->default('0')->comment('correlativo para el seguimiento de las operaciones de abono y notas de credito');
+            $table->boolean('activo')->nullable(true)->default(true);
             $table->string('observaciones');
             $table->timestamps();
         });

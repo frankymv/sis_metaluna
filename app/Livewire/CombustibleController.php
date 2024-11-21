@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
 
 use App\Models\Combustible;
 use App\Models\User;
@@ -10,35 +11,33 @@ use Carbon\Carbon;
 use Livewire\Component;
 
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 class CombustibleController extends Component
 
 {
     use LivewireAlert;
 
     public $title='Combustible';
-    public $data, $id_venta=null,$id=null,$no_abono=0;
+    public $data, $per_page=10,  $id_venta=null,$id=null,$no_abono=0;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isCreateAnticipado = false,$isCreateAnticipadoAsignar = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;
     public $nuevo_saldo=0, $fecha_abono=null,$abono_anticipados=null;
     public $tipo_pago=null, $tipo_pago_id=null,$no_pago=0,$detalle_pago='',$clientes=null;
     public $estado=true;
-
     /////////filtros
 
     public $filtroCodigoCliente=null;
     Public $filtroFechaAbono=null;
 
     public $creditos=[];
-
-
     public $forma_pagos,$envios,$tipo_clientes,$rutas,$total_ventas=0;
     public $abonos=[],$estado_cuentas=[],$total_abonos;
 
 
-    public $no_combustible=0, $user_id=null, $fecha_combustible=null, $total_combustible=0, $observaciones=null;
+    public $no_combustible=0, $user_id=null, $fecha_combustible=null, $total_combustible=0, $observaciones="";
     public $vehiculo_id=null;
-    public $combustibles=[];
+
     public $vehiculos=[];
     public $users=[];
     public $id_data=null;
@@ -50,7 +49,7 @@ class CombustibleController extends Component
     public $filtroUsuario=null;
     public $filtroVehiculo=null;
     public $filtroFechaCombustible=null;
-    public $filtroObservaciones=null;
+    public $filtroObservaciones="";
     /////
 
 
@@ -70,6 +69,33 @@ class CombustibleController extends Component
         'vehiculo_id'=>'required',
     ];
 
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
+    {
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
+    }
+
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
+
 
     public function render()
     {
@@ -77,16 +103,23 @@ class CombustibleController extends Component
         $this->users=User::all();
         $this->vehiculos=Vehiculo::all();
 
+        $data_temp=Combustible::with('user')->with('vehiculo')
+            ->where('no_combustible','LIKE',"%{$this->filtroNoCombustible}%")
+            ->where('user_id','LIKE',"%{$this->filtroUsuario}%")
+            ->where('vehiculo_id','LIKE',"%{$this->filtroVehiculo}%")
+            ->where('observaciones','LIKE',"%{$this->filtroObservaciones}%")
+            ->latest();
 
-    $this->combustibles=Combustible::with('user')
-    ->with('vehiculo')
-    ->where('no_combustible','LIkE',"%{$this->filtroNoCombustible}%")
-    ->where('fecha_combustible','LIkE',"%{$this->filtroFechaCombustible}%")
-    ->where('observaciones','LIkE',"%{$this->filtroObservaciones}%")
-    ->whereRelation('user','id','LIKE',"%{$this->filtroUsuario}%")
-    ->whereRelation('vehiculo','id','LIKE',"%{$this->filtroVehiculo}%")
-    ->get();
-        return view('livewire.pages.combustible.index');
+            if(!empty($this->filtroFecha)){
+                $data_temp->whereBetween('fecha_combustible',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+            }
+
+            $data_temp=$data_temp->paginate($this->per_page);
+
+        return view('livewire.pages.combustible.index', [
+            'combustibles' => $data_temp,
+        ]);
+
     }
 
     public function create(){

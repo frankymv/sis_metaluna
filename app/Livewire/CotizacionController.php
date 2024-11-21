@@ -23,16 +23,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 
 
 class CotizacionController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
 
     use LivewireAlert;
     ///sistema
     public $title='Cotizacion';
-    public $data, $id_data,$ultima_cotizacion,$id=null;
+    public $data, $per_page=10,  $id_data,$ultima_cotizacion,$id=null;
     public $isCreate=false, $isAddProduct=false, $isSearchProduct=false, $isVentaDetalle=false;
 
     ////venta

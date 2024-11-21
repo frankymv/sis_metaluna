@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Str;
+
+
 
 use App\Constantes\DataSistema;
-use App\Constantes\VehiculoData as Notifi;
+
 use App\Models\Abono;
 use App\Models\Cliente;
 use App\Models\EstadoCuenta;
@@ -13,14 +16,17 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 
 class AbonoController extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+
 
     public $title='Abono';
-    public $data, $id_venta=null,$id=null,$no_abono=0;
+    public $data, $per_page=10,  $id_venta=null,$id=null,$no_abono=0;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false,$isCreateAnticipado = false,$isCreateAnticipadoAsignar = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false,$disabledAsignarAbonoAnticipado=false;
@@ -64,6 +70,7 @@ class AbonoController extends Component
     public $filtroNombreCliente=null;
     public $filtroCodigoCliente=null;
     Public $filtroFechaAbono=null;
+    private $data_temp;
 
     public $creditos=[];
 
@@ -89,25 +96,59 @@ class AbonoController extends Component
     ];
 
 
-    public function render()
+    public $filtroFecha=null;
+    public $filtroFechaInicio=null;
+    public $filtroFechaFin=null;
+
+
+    public function mount()
     {
-        $this->abonos= Abono::with('venta')->with('cliente')
-            ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
-            ->where('fecha_abono','LIkE',"%{$this->filtroFechaAbono}%")
-            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-            ->get();
-
-        $this->total_abonos= Abono::with('venta')->with('cliente')
-            ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
-            ->where('fecha_abono','LIkE',"%{$this->filtroFechaAbono}%")
-            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
-            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")
-            ->sum('total_abono');
-
-        return view('livewire.pages.abono.index');
+        $this->filtroFechaInicio=Carbon::now()->format('Y')."-01-01";
+        $this->filtroFechaFin=Carbon::now()->toDateString();
     }
 
+    public function updatedFiltroFecha($id){
+        if(Str ::length($id)==10){
+            $this->filtroFechaInicio=$id;
+            $this->filtroFechaFin=$id;
+        }else{
+            $this->filtroFechaInicio=Str::substr($id, 0, 10);
+            $this->filtroFechaFin=Str::substr($id, 13, 25);
+        }
+    }
+    public function borrarFiltros()
+    {
+        $this->reset();
+        $this->mount();
+    }
+
+    public function render()
+    {
+        $data_temp= Abono::with('venta')->with('cliente')
+            ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
+            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")->latest();
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('fecha_abono',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+
+        $data_temp=$data_temp->paginate($this->per_page);
+        $total_abonos= Abono::with('venta')->with('cliente')
+            ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
+            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")->latest();
+            if(!empty($this->filtroFecha)){
+                $total_abonos->whereBetween('fecha_abono',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+            }
+        $this->total_abonos=$total_abonos->sum('total_abono');
+
+
+
+        return view('livewire.pages.abono.index', [
+            'abonoss' => $data_temp,
+        ]);
+
+    }
 
     ////////////////// ABONO////////////////////////
     public function create()
@@ -135,16 +176,35 @@ class AbonoController extends Component
         $this->isCreate=false;
     }
 
+    public function updatedSearchNoVenta($value)
+    {
+
+        $this->reset(['search_nombres_cliente','search_codigo_cliente']);
+
+            $this->ventas=Venta::with("cliente")
+            ->where('no_venta','LIKE',"%{$value}%")
+            ->where('cancelado_total_venta','=',false)
+            ->where('anulado','=',false)
+            ->get();
+
+
+    }
+
+
     public function updatedSearchNombresCliente($value)
     {
         $this->reset(['search_no_venta','search_codigo_cliente']);
 
-        $this->ventas = DB::table('ventas')
-            ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-            ->where('nombres_cliente','LIKE',"%$value%")
-            ->where('cancelado_total_venta','=',false)
+
+        $this->ventas=Venta::where('cancelado_total_venta','=',false)
             ->where('anulado','=',false)
+            ->with("cliente")->where('nombres_cliente','LIKE',"%$value%")
             ->get();
+
+
+
+
+
     }
 
     public function updatedSearchCodigoCliente($value)
@@ -159,24 +219,7 @@ class AbonoController extends Component
 
     }
 
-    public function updatedSearchNoVenta($value)
-    {
-        $this->reset(['search_nombres_cliente','search_codigo_cliente']);
-        /*$this->ventas = DB::table('ventas')
-            ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
-            ->where('no_venta','LIKE',"%$value%")
-            ->where('cancelado_total_venta','=',false)
-            ->select('(ventas.total_venta - ventas.total_nota_credito) as total_venta')
-            ->get();
-        */
-            $this->ventas=Venta::with("cliente")
-            ->where('no_venta','LIKE',"%$value%")
-            ->where('cancelado_total_venta','=',false)
-            ->where('anulado','=',false)
-            ->get();
 
-
-    }
 
     public function agregarVenta($id)
     {
@@ -219,24 +262,32 @@ class AbonoController extends Component
 
         $venta=Venta::find($this->id_venta);
         $venta->correlativo+=1;
-        Abono::create([
-                'no_abono'=>$this->no_abono,
-                'fecha_abono'=>$this->fecha_abono,
-                'total_abono'=>$this->cantidad_abono,
-                'observaciones'=>$this->observaciones,
-                'abono_anticipado'=>false,
-                'abono_anticipado_asignado'=>false,
-                'fecha_abono_anticipado_asignado'=>null,
-                'tipo_pago'=>$this->tipo_pago_id,
-                'detalle_pago'=>$this->detalle_pago,
-                'correlativo'=>$venta->correlativo,
-                'venta_id'=>$this->id_venta,
-                'cliente_id'=>$this->cliente_id,
-            ]
-        );
         $venta->abono=true;
         $venta->total_abono=$venta->total_abono+$this->cantidad_abono;
+
+
+        Abono::create([
+            'no_abono'=>$this->no_abono,
+            'fecha_abono'=>$this->fecha_abono,
+            'total_abono'=>$this->cantidad_abono,
+            'observaciones'=>$this->observaciones,
+            'abono_anticipado'=>false,
+            'abono_anticipado_asignado'=>false,
+            'fecha_abono_anticipado_asignado'=>null,
+            'tipo_pago'=>$this->tipo_pago_id,
+            'detalle_pago'=>$this->detalle_pago,
+            'correlativo'=>$venta->correlativo,
+            'venta_id'=>$this->id_venta,
+            'cliente_id'=>$this->cliente_id,
+        ]);
+
+
+        if($venta->total_credito==$venta->total_abono){
+            $venta->fecha_cancelado_total_venta=$this->fecha_abono;
+            $venta->cancelado_total_venta=TRUE;
+        }
         $venta->save();
+
 
         if($estado_cuenta=EstadoCuenta::where('cliente_id',$this->cliente_id)->first()){
             $estado_cuenta->total_abono=$estado_cuenta->total_abono+$this->cantidad_abono;
@@ -282,6 +333,7 @@ class AbonoController extends Component
             'fecha_abono'=>'required',
             'tipo_pago_id'=>'required',
         ]);
+
         Abono::create([
             'abono_anticipado'=>true,
             'abono_anticipado_asignado'=>false,
@@ -303,14 +355,10 @@ class AbonoController extends Component
 
     public function abonoAnticipadoAsignar()
     {
-
-
         $this->ventas_credito=Venta::where('cancelado_total_venta','=',false)
         ->where('anulado','=',false)->get();
-
         $this->disabledAsignarAbonoAnticipado=true;
         $this->fecha_abono = Carbon::now()->toDateString();
-
         $this->tipo_pago=DataSistema::$forma_pago;
         $this->ventas=Venta::where('cancelado_total_venta',false)->get();
         $this->abono_anticipados=Abono::where('abono_anticipado',true)->where('abono_anticipado_asignado',false)->get();
@@ -450,8 +498,31 @@ class AbonoController extends Component
 
     public function exportarGeneral()
     {
+
+        $data_temp= Abono::with('venta')->with('cliente')
+        ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
+        ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+        ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")->latest();
+        if(!empty($this->filtroFecha)){
+            $data_temp->whereBetween('fecha_abono',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+        }
+        $data_temp=$data_temp->paginate($this->per_page);
+
+
+        $total_abonos= Abono::with('venta')->with('cliente')
+            ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
+            ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
+            ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")->latest();
+
+
+            if(!empty($this->filtroFecha)){
+                $total_abonos->whereBetween('fecha_abono',[$this->filtroFechaInicio,$this->filtroFechaFin]);
+            }
+
+        $total_abonos=$total_abonos->sum('total_abono');
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfAbonoGeneral',['abonos' => $this->abonos,'total_abonos'=>$this->total_abonos]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfAbonoGeneral',['abonos' => $data_temp,'total_abonos'=>$total_abonos]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter', 'landscape')->stream();
             }, "$this->title-$fecha_reporte.pdf");

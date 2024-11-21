@@ -41,9 +41,7 @@
     <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Descripcion</p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">{{$data->descripcion}}</p></td></tr>
     <tr style="height:13pt"><td style="width:113pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;"></p></td><td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"><p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">
         @foreach ($data->departamentos as $key=>$dataa)
-        <p>DEPARTAMENTO:{{$dataa->nombre}}</p>
-        <p>MUNICIPIO:{{$data->municipios[$key]['nombre']}}</p>
-        <p>Observacion:{{$data->municipios[$key]['observacion']}}</p>
+        <p>Departamento: {{$dataa->nombre}} / Municipio: {{$data->municipios[$key]['nombre']}} / Observacion: {{$data->municipios[$key]['observacion']}}</p>
         @endforeach
 
     </p></td></tr>

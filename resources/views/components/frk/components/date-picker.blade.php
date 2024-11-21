@@ -1,10 +1,9 @@
 @props(['label'=>'','placeholder'=>'Seleccione aqui','erase'=>'true'])
 <div class="w-full flex-wrap items-center  px-1 "
     x-data
-    x-init="flatpickr($refs.datewidget, {wrap: true, enableTime: false, mode: 'range',  dateFormat: 'Y-m-d'});"
+    x-init="flatpickr($refs.datewidget, {wrap: true, enableTime: false,   dateFormat: 'Y-m-d'});"
     x-ref="datewidget">
-            <x-frk.components.label label="{{$label}}" class="font-semibold" />
-
+        <x-frk.components.label label="{{$label}}" class="font-semibold" />
         <div class="flex w-full align-middle align-content-center">
 
 

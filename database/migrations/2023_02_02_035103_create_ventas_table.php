@@ -29,8 +29,9 @@ return new class extends Migration
             $table->date('fecha_cancelado_total_venta')->nullable(true);
 
             /////credito///////////
-            $table->boolean('credito')->default(0)->nullable(true)->comment('fue aplicado un credito a la venta');
+            $table->boolean('credi')->default(0)->nullable(true)->comment('fue aplicado un credito a la venta');
             $table->float('total_credito')->default(0)->nullable(true)->comment('total del credito al crear la venta');
+
             /////anulado///////////
             $table->boolean('anulado')->default(false)->nullable(true)->comment('fue anula la venta');
             $table->date('fecha_anulado')->nullable(true);

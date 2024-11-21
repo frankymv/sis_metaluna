@@ -3,14 +3,14 @@
         <div class="w-full">
             <div class="flex w-full">
                 <x-frk.components.title label="{{$title}}" />
-                <x-frk.components.button color="red" label="Exportar PDF" wire:click="exportarGeneral()" />
             </div>
             <div class="flex w-full">
                 <x-frk.components.label-input label="No venta" wire:model.live="filtroNoVenta"/>
                 <x-frk.components.label-input label="Codigo Cliente" wire:model.live="filtroCodigoCliente"/>
                 <x-frk.components.label-input label="Nombre Cliente" wire:model.live="filtroNombreCliente"/>
 
-                <x-frk.components.date-picker   wire:model.live="filtroFechaVenta" label="Fecha Venta"/>
+
+                <x-frk.components.filtro-date-picker-range  label="Fecha"  />
                 <x-frk.components.select label="Forma Pago" wire:model.live="filtroFormaPago">
                     @foreach ($this->forma_pagos as $data)
                     <option value="{{ $data['valor'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
@@ -33,14 +33,46 @@
                     <option value="{{ $data['id'] }}" wire:key="tipo-{{ $data['id'] }}">{{ $data['nombre'] }}</option>
                     @endforeach
                 </x-forms.select>
-                {{$filtroNoVenta}}
+                <x-frk.components.button-icon  color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
+                <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
+                <div class="flex   justify-center">
+                    <select wire:model.live="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="">Todo</option>
+                    </select>
+                </div>
             </div>
         </div>
 
     </x-slot:head>
+
+
+
+        <div class="flex w-full">
+            <div class="flex w-full justify-center">
+                <x-frk.components.title   label="{{$title}}" />
+            </div>
+
+            <div class="flex w-full justify-center">
+                <x-frk.components.button color="blue" label="agregar" wire:click="create()" />
+
+                <x-frk.components.button-icon  color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
+                <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
+                <div class="flex   justify-center">
+                    <select wire:model.live="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="">Todo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     <x-slot:body>
-
-
 
         <section class="container mx-auto ">
             <div class="w-full  rounded-lg shadow-lg">
@@ -48,66 +80,37 @@
                 <table class="w-full">
                     <thead>
                         <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
-                            <th class="px-4 py-3">No Venta</th>
-                        <th class="px-4 py-3">Cliente</th>
-                        <th class="px-4 py-3">Empresa</th>
-                        <th class="px-4 py-3">Tipo Cliente</th>
-
-                        <th class="px-4 py-3">Forma Pago</th>
-                        <th class="px-4 py-3">Ruta</th>
-                        <th class="px-4 py-3">Envio</th>
-                        <th class="px-4 py-3">Fecha Venta</th>
-                        <th class="px-4 py-3">Total Venta</th>
-                        <th class="px-4 py-3">Nota Credito</th>
-                        <th class="px-4 py-3">Total Venta con Nota Credito</th>
-                        <th class="px-4 py-3">Credito</th>
-                        <th class="px-4 py-3">Abono</th>
-                        <th class="px-4 py-3">Saldo</th>
-
-
-                        <th class="px-4 py-3">Acciones</th>
+                            <th class="px-4 py-3 ">No</br> Venta</th>
+                            <th class="px-4 py-3">Cliente</th>
+                            <th class="px-4 py-3">Tipo</br> Cliente</th>
+                            <th class="px-4 py-3">Forma</br> Pago</th>
+                            <th class="px-4 py-3">Ruta</th>
+                            <th class="px-4 py-3">Envio</th>
+                            <th class="px-4 py-3">Fecha Venta</th>
+                            <th class="px-4 py-3">Total</th>
+                            <th class="px-4 py-3">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
                         @foreach ($ventas as $data)
                         <tr class="text-gray-700">
-                            <td class="px-4 py-3 text-ms font-semibold border">{{$data->no_venta}}</td>
+                            <td class="px-4 py-3 border">{{$data->no_venta}}</td>
                             <td class="px-4 py-3 border">
-                                <p class="text-xs text-gray-600">Codigo Cliente Mayorista: {{$data->codigo_mayorista}} Nombres: {{$data->nombres_cliente}}</p>
+                                <p class="text-xs text-gray-600">Codigo Cliente Mayorista: {{$data->cliente->codigo_mayorista}} Nombres: {{$data->cliente->nombres_cliente}}</p>
+                                <p class="text-xs text-gray-600">{{$data->cliente->nombre_empresa}}</p>
                             </td>
-                            <td class="px-4 py-3 text-sm border">{{$data->nombre_empresa}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->tipo_cliente}}</td>
-
+                            <td class="px-4 py-3 text-sm border">{{$data->cliente->tipo_cliente}}</td>
                             <td class="px-4 py-3 text-sm border">{{$data->forma_pago_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->nombre}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->envio}} / {{$data->estado_envio}} / No Envio: {{$data->envio_no}}</td>
+                            <td class="px-4 py-3 text-sm border">{{$data->ruta}} </td>
+                            <td class="px-4 py-3 text-sm border">{{$data->envio}} </td>
                             <td class="px-4 py-3 text-sm border">{{$data->fecha_venta}}</td>
-                            <td class="px-4 py-3 text-sm font-semibold border">{{$data->total_venta}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->total_nota_credito}}</td>
-                            <td class="px-4 py-3 text-sm border">{{$data->total_venta-$data->total_nota_credito}}</td>
 
+                            <td class="px-4 py-3 text-sm border">Q. {{$data->total_venta-$data->total_nota_credito}}</td>
 
-
-                            @if (($data->total_credito-$data->total_nota_credito)<=0)
-                            <td class="px-4 py-3 text-sm border"> 0</td>
-                            @else
-                            <td class="px-4 py-3 text-sm border"> {{$data->total_credito-$data->total_nota_credito}}</td>
-                            @endif
-
-                            <td class="px-4 py-3 text-sm border">{{$data->total_abono}}</td>
-
-
-
-
-                            @if ((($data->total_credito-$data->total_nota_credito)-$data->total_abono)<=0)
-                            <td class="px-4 py-3 text-sm border"> 0</td>
-                            @else
-                            <td class="px-4 py-3 text-sm border"> {{($data->total_credito-$data->total_nota_credito)-$data->total_abono}}</td>
-                            @endif
-                            <td class="px-4 py-3 text-sm border flex w-full">
+                            <td class="px-4 py-3 text-sm border flex">
                                 <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
-                                                        </td>
-
+                                <x-frk.components.button-icon color="yellow" icon="fa-solid fa-edit" wire:click="Envio({{$data->id}})" />
+                            </td>
                         </tr>
                         @endforeach
                         <tr>
@@ -119,7 +122,7 @@
                             <td class="px-4 py-3 text-sm border"></td>
                             <td class="px-4 py-3 text-sm border"></td>
 
-                            <td class="px-4 py-3 text-sm border">{{$total_ventas}}</td>
+                            <td class="px-4 py-3 text-sm border">Q. {{$total_ventas}}</td>
                         </tr>
 
                     </tbody>
@@ -128,7 +131,7 @@
             </div>
         </section>
 
-
+        {{ $ventas->withQueryString()->links()}}
 
 
 

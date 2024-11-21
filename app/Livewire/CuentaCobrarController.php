@@ -5,11 +5,15 @@ namespace App\Livewire;
 use App\Models\EstadoCuenta;
 use App\Models\Venta;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithPagination;
 
 class CuentaCobrarController extends Component
 {
+    use LivewireAlert;
+    use WithPagination;
     public $title='Estado Cuenta Ventas';
-    public $data, $id_data;
+    public $data, $per_page=10,  $id_data;
     public $isCreate = false,$isEdit = false, $isShow = false, $isDelete = false;
     public $estadoShow,$estadoFalse="Inactivo",$estadoTrue="Habilitado";
     public $created_at,$updated_at,$disabled=false;

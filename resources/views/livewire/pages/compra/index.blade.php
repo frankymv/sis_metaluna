@@ -8,6 +8,15 @@
                 <x-frk.components.button color="blue" label="agregar" wire:click="create()" />
                 <x-frk.components.button-icon  color="red" icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
                 <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
+                <div class="flex   justify-center">
+                    <select wire:model.live="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="">Todo</option>
+                    </select>
+                </div>
             </div>
         </div>
             <div class="flex w-full">
@@ -21,11 +30,11 @@
     <section class="container mx-auto ">
         <div class="w-full  rounded-lg shadow-lg">
           <div class="w-full overflow-x-auto">
-            <table class=" table-fixed">
+            <table class=" w-full">
                 <thead>
                     <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b">
                         <th class="px-4 py-3 text-ms font-semibold border">No Compra
-                            <x-frk.components.filtro-input label="No Compra" wire:model.live="filtroNoCompra"/>
+                            <x-frk.components.filtro-input  wire:model.live="filtroNoCompra"/>
 
                         </th>
                         <th class="px-4 py-3">Fecha Compra
@@ -74,7 +83,7 @@
 
                         </td>
 
-                         <td class="px-4 py-3 text-sm border flex w-full">
+                         <td class="px-4 py-3 text-sm border flex">
                             <x-frk.components.button-icon color="green" icon="fa-solid fa-pencil" wire:click="edit({{$data->id}})" />
                             <x-frk.components.button-icon color="blue" icon="fa-solid fa-eye" wire:click="show({{$data->id}})" />
                             <x-frk.components.button-icon color="yellow" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
@@ -85,6 +94,7 @@
 
                 </tbody>
             </table>
+            {{$compras->withQueryString()->links()}}
           </div>
         </div>
     </section>

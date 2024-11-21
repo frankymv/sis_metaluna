@@ -73,9 +73,7 @@
             <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Vehiculo</p>
         </td>
         <td style="width:454pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Codigo: {{$dato->vehiculo->alias}}</p>
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Codigo: {{$dato->vehiculo->numero_placa}}</p>
-            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Codigo: {{$dato->vehiculo->alias}}</p>
+            <p class="s3" style="padding-left: 5pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Codigo: {{$dato->vehiculo->codigo}} / No. Placa: {{$dato->vehiculo->numero_placa}} / Alias: {{$dato->vehiculo->alias}}</p>
         </td>
     </tr>
 

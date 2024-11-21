@@ -14,21 +14,6 @@ return new class extends Migration
      */
     public function up()
     {/*
-        DB::unprepared('DROP TRIGGER IF EXISTS `agregar_estado_cuenta_abono`');
-        DB::unprepared('CREATE TRIGGER agregar_estado_cuenta_abono AFTER INSERT ON abonos
-            FOR EACH ROW
-            BEGIN
-            DECLARE t_abono INT DEFAULT 0;
-
-            IF (SELECT EXISTS (SELECT id FROM estado_cuentas WHERE  cliente_id=NEW.cliente_id)) THEN
-                SET t_abono = (SELECT total_abono FROM estado_cuentas WHERE cliente_id=NEW.cliente_id);
-                UPDATE estado_cuentas SET total_abono = (NEW.total_abono+t_abono) WHERE cliente_id=NEW.cliente_id;
-            ELSE
-                INSERT INTO estado_cuentas (cliente_id,total_abono)
-                VALUES (NEW.cliente_id,NEW.total_abono);
-            END IF;
-        END');
-
 
         DB::unprepared('DROP TRIGGER IF EXISTS `agregar_estado_cuenta_abono`');
         DB::unprepared('CREATE TRIGGER agregar_estado_cuenta_abono AFTER INSERT ON abonos
@@ -37,59 +22,38 @@ return new class extends Migration
 
             DECLARE correl INT DEFAULT 0;
 
-            DECLARE t_abono INT DEFAULT 0;
-            DECLARE nuevo_saldo INT DEFAULT 0;
-            DECLARE t_saldo_venta INT DEFAULT 0;
+            DECLARE t_abono_venta INT DEFAULT 0;
+            DECLARE t_abono_estado INT DEFAULT 0;
+            DECLARE t_credito_venta INT DEFAULT 0;
             DECLARE cliente INT DEFAULT 0;
+            DECLARE nuevo_saldo INT DEFAULT 0;
 
-            IF(NEW.abono_anticipado=FALSE) THEN
 
-                SET t_saldo_venta = (SELECT saldo_venta FROM ventas WHERE id=NEW.venta_id);
                 SET cliente = (SELECT cliente_id FROM ventas WHERE id=NEW.venta_id);
-                SET t_abono= (SELECT total_abono FROM estado_cuentas WHERE cliente_id=cliente);
-
-
-                SET nuevo_saldo=t_saldo_venta-NEW.total_abono;
+                SET t_credito_venta = (SELECT total_credito FROM ventas WHERE id=NEW.venta_id);
+                SET t_abono_venta = (SELECT total_abono FROM ventas WHERE id=NEW.venta_id);
+                SET t_abono_estado= (SELECT total_abono FROM estado_cuentas WHERE cliente_id=cliente);
+                SET nuevo_saldo=t_credito_venta-NEW.total_abono;
 
                 IF(nuevo_saldo!=0) THEN
-                    UPDATE ventas SET saldo_venta = nuevo_saldo, correlativo=NEW.correlativo WHERE id=NEW.venta_id;
+                    UPDATE ventas SET total_abono = (t_abono_venta+NEW.total_abono), correlativo=NEW.correlativo WHERE id=NEW.venta_id;
+
                 ELSE
-                    UPDATE ventas SET saldo_venta = nuevo_saldo, cancelado=1, fecha_cancelado= NEW.fecha_abono,correlativo=NEW.correlativo WHERE id=NEW.venta_id;
+                    UPDATE ventas SET total_abono = (t_abono_venta+NEW.total_abono), cancelado_total_venta=TRUE, fecha_cancelado_total_venta= NEW.fecha_abono,correlativo=NEW.correlativo WHERE id=NEW.venta_id;
                 END IF;
 
                 IF (SELECT EXISTS (SELECT id FROM estado_cuentas WHERE  cliente_id=cliente)) THEN
-                    UPDATE estado_cuentas SET total_abono = (NEW.total_abono+t_abono) WHERE cliente_id=cliente;
+                    UPDATE estado_cuentas SET total_abono = (NEW.total_abono+t_abono_estado) WHERE cliente_id=cliente;
                 ELSE
                     INSERT INTO estado_cuentas (cliente_id,total_abono,total_credito)
                     VALUES (cliente,NEW.total_abono,0);
+                END IF;
 
-                END IF;
-            END IF;
+
+
+
         END');
-*/
-    /*
-        while total > 0 do
-                SET sucursal_origen =(SELECT id FROM sucursals WHERE  prioridad=prioridad_contador);
-                IF (SELECT EXISTS (SELECT * FROM producto_sucursal WHERE  producto_id=NEW.producto_id AND sucursal_id=sucursal_origen)) THEN
-                    SET cantidad_temp =(SELECT cantidad FRtotal_creditoOM producto_sucursal WHERE  producto_id=NEW.producto_id AND sucursal_id=sucursal_origen);
-                    IF (TOTAL>cantidad_temp) THEN
-                        INSERT INTO salidas (venta_id,producto_venta_id,sucursal_id,cantidad) VALUES (NEW.venta_id, NEW.producto_id,sucursal_origen,cantidad_temp);
-                        UPDATE producto_sucursal SET cantidad = 0 WHERE producto_id = NEW.producto_id AND sucursal_id = sucursal_id;
-                        SET TOTAL=TOTAL-cantidad_temp;
-                        ELSE IF (TOTAL<cantidad_temp) THEN
-                            INSERT INTO salidas (venta_id,producto_venta_id,sucursal_id,cantidad) VALUES (NEW.venta_id, NEW.producto_id,sucursal_origen,total);
-                            UPDATE producto_sucursal SET cantidad = (cantidad_temp-TOTAL) WHERE producto_id = NEW.producto_id AND sucursal_id = sucursal_id;
-                            SET TOTAL=0;
-                            ELSE IF (TOTAL=cantidad_temp) THEN
-                                INSERT INTO salidas (venta_id,producto_venta_id,sucursal_id,cantidad) VALUES (NEW.venta_id, NEW.producto_id,sucursal_origen,cantidad_temp);
-                                UPDATE producto_sucursal SET cantidad = (cantidad_temp-TOTAL) WHERE producto_id = NEW.producto_id AND sucursal_id = sucursal_id;
-                                SET TOTAL=0;
-                            END IF;
-                ELSE
-                    SET prioridad_contador=prioridad_contador+1;
-                END IF;
-        end while ;
-    */
+  */
 
 
     /*
