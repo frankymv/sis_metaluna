@@ -448,13 +448,17 @@ public $email_edit=null, $codigo_edit=null;
         ->where('id','=',$id)
         ->get();
 
+
+
         $datatempproducto=[];
         foreach ($this->productos as $key => $value) {
             if($value['id']===intval($this->id_producto)){
                 $datatempproducto=$value->attributesToArray();
-                $datatempproducto+=['precio_venta_producto'=>$this->precio_venta_producto];
+                $datatempproducto+=['precio_final'=>$this->precio_venta_producto];
                 $datatempproducto+=['cantidad_producto'=>$this->cantidad_producto];
                 $datatempproducto+=['subtotal_producto'=>$this->subtotal_producto];
+
+
                 array_push($this->productosDetalle,$datatempproducto);
                 $this->total_venta=$this->total_venta+$this->subtotal_producto;
                 $this->nuevo_saldo=$this->saldo_credito+$this->total_venta;

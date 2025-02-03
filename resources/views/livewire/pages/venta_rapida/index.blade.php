@@ -86,7 +86,7 @@
                                     <td class="px-4 py-1 text-ms font-semibold border">{{$value['id']}} - {{$value['codigo']}}</td>
                                     <td class="px-4 py-1 text-sm border"> {{$value['cantidad_producto']}}</td>
                                     <td class="px-4 py-1 text-sm border">{{$value['nombre']}}</td>
-                                    <td class="px-4 py-1 text-sm border">Q. {{$value['precio_venta_producto']}}</td>
+                                    <td class="px-4 py-1 text-sm border">Q. {{$value['precio_final']}}</td>
                                     <td class="px-4 py-1 text-sm border">Q. {{$value['subtotal_producto']}}</td>
                                     <td class="px-4 py-1 text-sm border flex">
                                         <x-frk.buttons.trash-button label="-" icon="fa-solid fa-truck-fast"   wire:click="removeDetalle({{$key}})" />
