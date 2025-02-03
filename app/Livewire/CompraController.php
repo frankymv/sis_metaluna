@@ -208,6 +208,15 @@ public function exportarFila($id)
             'inputs'=>'required'
         ]);
 
+        $data=Compra::latest()->first();
+        if ( $data) {
+            $this->id=$data->id+1;
+            $this->compra_no=$this->id;
+
+        }else{
+            $this->id=1;
+            $this->compra_no=$this->id;
+        }
         $data=Compra::create(
             [
             'compra_no'=>$this->compra_no,
