@@ -183,7 +183,7 @@ class AbonoController extends Component
 
             $this->ventas=Venta::with("cliente")
             ->where('no_venta','LIKE',"%{$value}%")
-            ->where('cancelado_total_venta','=',false)
+            ->where('cancelado_total_venta','=',true)
             ->where('anulado','=',false)
             ->get();
 
@@ -195,12 +195,17 @@ class AbonoController extends Component
     {
         $this->reset(['search_no_venta','search_codigo_cliente']);
 
-
+/*
         $this->ventas=Venta::where('cancelado_total_venta','=',false)
             ->where('anulado','=',false)
             ->with("cliente")->where('nombres_cliente','LIKE',"%$value%")
             ->get();
+*/
 
+
+    $this->ventas=Venta::with('cliente')->where('cancelado_total_venta','=',true)
+            ->where('anulado','=',false)
+        ->whereRelation('cliente','nombres_cliente','LIKE',"%{$value}%")->get();
 
 
 
@@ -210,12 +215,20 @@ class AbonoController extends Component
     public function updatedSearchCodigoCliente($value)
     {
         $this->reset(['search_nombres_cliente','search_no_venta']);
-        $this->ventas = DB::table('ventas')
+       /* $this->ventas = DB::table('ventas')
             ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
             ->where('codigo_mayorista','LIKE',"%$value%")
             ->where('cancelado_total_venta','=',false)
             ->where('anulado','=',false)
             ->get();
+            */
+
+
+        $this->ventas=Venta::with('cliente')
+        ->where('cancelado_total_venta','=',true)
+            ->where('anulado','=',false)
+        ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$value}%")->get();
+
 
     }
 
@@ -509,11 +522,11 @@ class AbonoController extends Component
         $data_temp=$data_temp->paginate($this->per_page);
 
 
+
         $total_abonos= Abono::with('venta')->with('cliente')
             ->where('no_abono','LIkE',"%{$this->filtroNoAbono}%")
             ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$this->filtroCodigoCliente}%")
             ->whereRelation('cliente','nombres_cliente','LIKE',"%{$this->filtroNombreCliente}%")->latest();
-
 
             if(!empty($this->filtroFecha)){
                 $total_abonos->whereBetween('fecha_abono',[$this->filtroFechaInicio,$this->filtroFechaFin]);

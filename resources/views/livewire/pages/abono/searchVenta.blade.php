@@ -63,17 +63,42 @@
                                         </th>
 
                                         <td class="px-2 py-1">
-                                            {{$value->total_venta - $value->total_nota_credito}}
+                                            Q. {{$value->total_venta - $value->total_nota_credito}}
                                         </th>
                                         <td class="px-2 py-1">
-                                            {{($value->total_venta - $value->total_nota_credito) - $value->total_abono}}
+                                            Q. {{($value->total_venta - $value->total_nota_credito) - $value->total_abono}}
                                         </th>
 
                                         <td class="px-2 py-1">
-                                            <x-frk.buttons.plus-button label="agregar" wire:click="agregarVenta({{$value->no_venta}})" />
+                                            <x-frk.buttons.plus-button color="blue" label="agregar" wire:click="agregarVenta({{$value->no_venta}})" />
                                         </td>
                                     </tr>
                                     @endforeach
+                                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                        <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-prewrap dark:text-white">
+
+                                        </th>
+                                        <td class="px-2 py-1">
+
+                                        </th>
+                                        <td class="px-2 py-1">
+
+                                        </th>
+                                        <td class="px-2 py-1">
+
+                                        </th>
+
+                                        <td class="px-2 py-1">
+
+                                        </th>
+                                        <td class="px-2 py-1">
+                                           Total: 0000
+                                        </th>
+
+                                        <td class="px-2 py-1">
+
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

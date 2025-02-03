@@ -16,7 +16,7 @@
 
             </div>
             <div class="flex w-full md:w-1/3">
-                <x-frk.components.input-money  label="total viatico" error="total_viatico" :disabled="$disabled" wire:model.live="total_viatico" />
+                <x-frk.components.label-input-money label="total viatico" error="total_viatico" :disabled="$disabled" wire:model.live="total_viatico" />
             </div>
         </div>
 

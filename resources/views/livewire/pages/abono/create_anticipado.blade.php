@@ -28,7 +28,7 @@
 
             <div class="flex w-full ">
                 <div class=" w-full md:w-1/4">
-                    <x-frk.components.input-money  label="Total Abono" error="total_abono" :disabled="$disabled" wire:model.live="cantidad_abono" />
+                    <x-frk.components.label-input-money  label="Total Abono" error="total_abono" :disabled="$disabled" wire:model.live="cantidad_abono" />
                 </div>
                 <div class=" w-full md:w-3/4">
                 <x-frk.components.label-input label="Observaciones"   wire:model="observaciones" />
@@ -61,7 +61,7 @@
 
     </x-slot>
     <x-slot:footer>
-        <x-frk.components.button label="guardar" wire:click.prevent="storeAnticipado()" />
+        <x-frk.components.button color="blue" label="guardar" wire:click.prevent="storeAnticipado()" />
         <x-frk.components.button label="cancelar" wire:click.prevent="cancel()" />
     </x-slot>
 </x-frk.modal>

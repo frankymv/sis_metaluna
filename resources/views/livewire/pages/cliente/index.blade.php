@@ -53,13 +53,7 @@
                     <th class="px-4 py-3">Nit</th>
                     <th class="px-4 py-3">Telefono</th>
                     <th class="px-4 py-3">Direccion</th>
-                    <th class="px-4 py-3">Ruta
-                        <x-frk.components.select label="Ruta" wire:model.live="filtroRuta">
-                            @foreach ($this->rutas as $data)
-                            <option value="{{ $data->id }}" wire:key="tipo-{{ $data['id'] }}"> {{ $data->nombre }}</option>
-                            @endforeach
-                        </x-forms.select>
-                    </th>
+
                     <th class="px-4 py-3">Credito</th>
                     <th class="px-4 py-3">Acciones</th>
                     </tr>
@@ -78,7 +72,7 @@
                         <td class="px-4 py-3 text-sm border">{{$data->telefono_principal}}</td>
                         <td class="px-4 py-3 text-sm border">{{$data->direccion_fisica}}</td>
 
-                        <td class="px-4 py-3 text-sm border">{{$data->ruta->nombre}}</td>
+
                         <td class="px-4 py-3 text-sm border">
                             <p class="text-xs text-gray-600">Limite:{{$data->limite_credito}}</p>
                             <p class="text-xs text-gray-600">Dias:{{$data->dias_limite_credito}}</p>

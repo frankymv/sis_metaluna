@@ -35,14 +35,14 @@
     </div>
     <div class="flex w-full ">
         <div class="flex w-full md:w-1/4">
-            <x-frk.components.input-money  label="total venta" error="total_venta" :disabled="$disabled" wire:model.live="total_venta" />
+            <x-frk.components.label-input-money  label="total venta" error="total_venta" :disabled="$disabled" wire:model.live="total_venta" />
         </div>
 
         <div class="flex w-full md:w-1/4">
-            <x-frk.components.input-money  label="Total nota credito" error="total_nota_credito" :disabled="$disabledTotalNotaCredito" wire:model.live="total_nota_credito" />
+            <x-frk.components.label-input-money  label="Total nota credito" error="total_nota_credito" :disabled="$disabledTotalNotaCredito" wire:model.live="total_nota_credito" />
         </div>
         <div class="flex w-full md:w-1/4">
-            <x-frk.components.input-money label="Nuevo saldo" error="nuevo_saldo" :disabled="$disabled" wire:model.live="nuevo_saldo" />
+            <x-frk.components.label-input-money label="Nuevo saldo" error="nuevo_saldo" :disabled="$disabled" wire:model.live="nuevo_saldo" />
         </div>
 
         <div class="flex w-full md:w-1/4"  x-data="{open: @entangle('anulado')}"  >

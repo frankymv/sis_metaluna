@@ -15,7 +15,7 @@
     <div class="flex w-full flex-wrap m-4">
         <div class="flex w-full ">
             <x-frk.components.subtitle  label="VENTA" />
-            <x-frk.components.button label="Buscar" wire:click="buscarVenta()" />
+            <x-frk.components.button color="blue" label="Buscar" wire:click="buscarVenta()" />
         </div>
 
         <div class="flex w-full ">
@@ -49,16 +49,16 @@
 
         <div class="flex w-full ">
             <div class="flex w-full md:w-1/4">
-                <x-frk.components.input-money  label="total venta" error="total_venta" :disabled="$disabled" wire:model.live="total_venta" />
+                <x-frk.components.label-input-money  label="total venta" error="total_venta" :disabled="$disabled" wire:model.live="total_venta" />
             </div>
             <div class="flex w-full md:w-1/4">
-                <x-frk.components.input-money  label="Saldo credito " :disabled="$disabled" wire:model.live="saldo_credito" />
+                <x-frk.components.label-input-money label="Saldo credito " :disabled="$disabled" wire:model.live="saldo_credito" />
             </div>
             <div class="flex w-full md:w-1/4">
-                <x-frk.components.input-money  label="Cantidad Abono:" error="cantidad_abono"  wire:model.live="cantidad_abono" />
+                <x-frk.components.label-input-money  label="Cantidad Abono:" error="cantidad_abono"  wire:model.live="cantidad_abono" />
             </div>
             <div class="flex w-full md:w-1/4">
-                <x-frk.components.input-money label="Nuevo saldo:" error="nuevo_saldo" :disabled="$disabled" wire:model="nuevo_saldo" />
+                <x-frk.components.label-input-money label="Nuevo saldo:" error="nuevo_saldo" :disabled="$disabled" wire:model="nuevo_saldo" />
             </div>
 
         </div>
@@ -92,7 +92,7 @@
 
     </x-slot>
     <x-slot:footer>
-        <x-frk.components.button label="guardar" wire:click.prevent="store()" />
+        <x-frk.components.button color="blue" label="guardar" wire:click.prevent="store()" />
         <x-frk.components.button label="cancelar" wire:click.prevent="cancel()" />
     </x-slot>
 </x-frk.modal>

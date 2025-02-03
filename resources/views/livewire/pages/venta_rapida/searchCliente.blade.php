@@ -65,7 +65,7 @@
                                         </th>
 
                                         <td class="px-2 py-1">
-                                            <x-frk.buttons.plus-button label="agregar" wire:click="agregarCliente({{$value['id']}})" />
+                                            <x-frk.buttons.plus-button color="blue" label="agregar" wire:click="agregarCliente({{$value['id']}})" />
                                         </td>
                                     </tr>
                                     @endforeach

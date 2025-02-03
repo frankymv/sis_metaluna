@@ -41,7 +41,7 @@ class ProductoController extends Component
     public $marcas, $tipos, $materiales, $disenios;
     //
     public $title='Producto';
-    public $data=null, $per_page=5, $id_data=null, $id_last=null;
+    public $data=null, $per_page=10, $id_data=null, $id_last=null;
     public $isCreate = false;
     public $isEdit = false;
     public $isShow = false;

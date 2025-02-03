@@ -125,16 +125,12 @@ class ClienteController extends Component
         $this->rutas=Ruta::all();
         $this->tipo_clientes=DataSistema::$tipo_cliente;
 
-        $data_temp=Cliente::with('ruta')
-        ->where('codigo_interno','LIkE',"%{$this->filtroCodigoInterno}%")
+        $data_temp=Cliente::where('codigo_interno','LIkE',"%{$this->filtroCodigoInterno}%")
         ->where('codigo_mayorista','LIkE',"%{$this->filtroCodigMayorista}%")
         ->where('tipo_cliente','LIkE',"%{$this->filtroTipoCliente}%")
         ->where('nombres_cliente','LIkE',"%{$this->filtroNombresCliente}%")
         ->where('apellidos_cliente','LIkE',"%{$this->filtroApellidosCliente}%")
-        ->whereRelation('ruta','id','LIKE',"%{$this->filtroRuta}%")
         ->paginate($this->per_page);
-
-
 
 
         return view('livewire.pages.cliente.index', [

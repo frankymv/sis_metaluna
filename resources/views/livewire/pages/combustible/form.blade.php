@@ -13,7 +13,7 @@
                 <x-frk.components.date-picker label="Fecha Combustible" error="fecha_combustible" :disabled="$disabled" wire:model.live="fecha_combustible" />
             </div>
             <div class="flex w-full md:w-1/3">
-                <x-frk.components.input-money  label="total Combustible" error="total_combustible" :disabled="$disabled" wire:model.live="total_combustible" />
+                <x-frk.components.label-input-money  label="total Combustible" error="total_combustible" :disabled="$disabled" wire:model.live="total_combustible" />
             </div>
         </div>
 

@@ -4,8 +4,11 @@ namespace App\Livewire;
 
 use App\Models\Cliente;
 use App\Models\Cotizacion;
+use App\Models\EstadoCuenta;
+use App\Models\Venta;
 use Livewire\Component;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Barryvdh\DomPDF\Facade\Pdf ;
+use Carbon\Carbon;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithPagination;
 
@@ -43,7 +46,7 @@ class HistorialCotizacionController extends Component
     public $envio=false,$venta=null;
 
 
-    protected $listeners=['edit', 'delete','showDetalle','pdfExportar'];
+    protected $listeners=['edit', 'delete','show','exportarFila'];
 
     public function render()
     {
@@ -78,17 +81,36 @@ class HistorialCotizacionController extends Component
 
     }
 
-    public function pdfExportarCotizacion($id)
+
+    public function exportarFila($id)
     {
 
-        $cotizacion=Cotizacion::with('productos')->find($id)->toArray();
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $saldo_actual=0;
+        $saldo_anterior=0;
 
-        $cliente=Cliente::find($cotizacion['cliente_id'])->toArray();
+        $venta=Venta::with('productos')->find($id)->toArray();
+        $no_venta=$venta['no_venta'];
+        $cliente=Cliente::find($venta['cliente_id'])->toArray();
+        //$user=User::find(1)->toArray();
 
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfCotizacion',['cotizacion' => $cotizacion,'cliente'=>$cliente]);
 
-        return $pdf->stream();
+
+        if ($venta['forma_pago_venta']==='CREDI') {
+            $data=EstadoCuenta::where('cliente_id','=',$venta['cliente_id'])->get();
+
+            $saldo_actual=$saldo_anterior+$venta['total_venta'];
+        }else{
+            $saldo_anterior=0;
+            $saldo_actual=$venta['total_venta'];
+        }
+
+        $pdf = Pdf::loadView('/livewire/pdf/pdfCotizacionFinal',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
     }
+
 
 
     private function resetInputFields(){

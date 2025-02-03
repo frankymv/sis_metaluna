@@ -63,14 +63,14 @@
 
         <div class="flex w-full ">
             <div class="flex w-full md:w-1/4">
-                <x-frk.components.input-money  label="total venta" error="total_venta" :disabled="$disabledAsignarAbonoAnticipado" wire:model.live="total_venta" />
+                <x-frk.components.label-input-money  label="total venta" error="total_venta" :disabled="$disabledAsignarAbonoAnticipado" wire:model.live="total_venta" />
             </div>
 
             <div class=" w-full md:w-1/4">
-                <x-frk.components.input-money  label="Cantidad Abono:" error="cantidad_abono" :disabled="$disabledAsignarAbonoAnticipado" wire:model.live="cantidad_abono_asignar" />
+                <x-frk.components.label-input-money  label="Cantidad Abono:" error="cantidad_abono" :disabled="$disabledAsignarAbonoAnticipado" wire:model.live="cantidad_abono_asignar" />
             </div>
             <div class=" w-full md:w-1/4">
-                <x-frk.components.input-money label="Nuevo saldo:" error="nuevo_saldo" :disabled="$disabledAsignarAbonoAnticipado" wire:model.live="nuevo_saldo_asignar" />
+                <x-frk.components.label-input-money label="Nuevo saldo:" error="nuevo_saldo" :disabled="$disabledAsignarAbonoAnticipado" wire:model.live="nuevo_saldo_asignar" />
             </div>
         </div>
 
@@ -95,7 +95,7 @@
 
     </x-slot>
     <x-slot:footer>
-        <x-frk.components.button label="guardar" wire:click.prevent="storeAsignarAbonoAnticipado({{$asignar_abono_anticipado_id}})" />
+        <x-frk.components.button color="blue" label="guardar" wire:click.prevent="storeAsignarAbonoAnticipado({{$asignar_abono_anticipado_id}})" />
         <x-frk.components.button label="cancelar" wire:click.prevent="cancel()" />
     </x-slot>
 </x-frk.modal>

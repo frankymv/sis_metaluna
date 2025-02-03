@@ -129,7 +129,7 @@ final class CotizacionTable extends PowerGridComponent
             ->slot('Exportar')
             ->id()
             ->class('bg-blue-500 hover:bg-blue-700 cursor-pointer text-white px-1 py-0.5 rounded text-sm')
-            ->dispatch('pdfExportar',['id'  => $row->id]),
+            ->dispatch('exportarFila',['id'  => $row->id]),
 
 
         ];

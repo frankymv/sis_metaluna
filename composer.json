@@ -9,6 +9,7 @@
         "asdh/laravel-flatpickr": "^2.2",
         "barryvdh/laravel-dompdf": "^2.2",
         "box/spout": "^3.3",
+        "consoletvs/charts": "6.*",
         "jantinnerezo/livewire-alert": "^3.0",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",

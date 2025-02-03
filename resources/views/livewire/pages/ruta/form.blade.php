@@ -36,7 +36,7 @@
 
         <div class="flex flex-wrap md:w-1/9">
             <x-frk.components.label label="Agregar" class="font-semibold capitalize"/>
-            <x-frk.components.button label="+" wire:click.prevent="addDetalle()" />
+            <x-frk.components.button color="blue" label="+" wire:click.prevent="addDetalle()" />
         </div>
         </div>
 

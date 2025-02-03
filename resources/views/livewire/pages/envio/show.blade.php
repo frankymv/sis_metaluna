@@ -9,7 +9,7 @@
 
     </x-slot>
     <x-slot:footer>
-        <x-frk.components.button label="guardar" wire:click.prevent="store()" />
+        <x-frk.components.button label="guardar"  color="blue" wire:click.prevent="store()" />
         <x-frk.components.button label="cancelar" wire:click.prevent="cancel()" />
     </x-slot>
 </x-frk.components.template-create>

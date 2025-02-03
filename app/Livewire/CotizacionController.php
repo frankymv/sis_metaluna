@@ -16,8 +16,9 @@ use App\Models\Proveedor;
 use App\Models\Tipo;
 use App\Models\User;
 use App\Models\Venta;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -101,7 +102,7 @@ class CotizacionController extends Component
     public $liberar_credito_usuario=null;
     public $autorizacion_limite_credito=false;
 
-    protected $listeners=['edit', 'delete','show','pdfExportar'];
+    protected $listeners=['edit', 'delete','show','exportarFila'];
 
     public $tipo_documento=null;
 
@@ -535,17 +536,49 @@ public $email_edit=null, $codigo_edit=null;
 
     }
 
-    public function pdfExportarCotizacion($id)
+
+
+
+    public function exportarFila($id)
     {
+        dd($id);
+        $fecha_reporte=Carbon::now()->toDateTimeString();
+        $saldo_actual=0;
+        $saldo_anterior=0;
 
-        $cotizacion=Cotizacion::with('productos')->find($id)->toArray();
+        $venta=Venta::with('productos')->find($id)->toArray();
+        $no_venta=$venta['no_venta'];
+        $cliente=Cliente::find($venta['cliente_id'])->toArray();
+        //$user=User::find(1)->toArray();
 
-        $cliente=Cliente::find($cotizacion['cliente_id'])->toArray();
 
-        $pdf = FacadePdf::loadView('/livewire/pdf/pdfCotizacion',['cotizacion' => $cotizacion,'cliente'=>$cliente]);
 
-        return $pdf->stream();
+        if ($venta['forma_pago_venta']==='CREDI') {
+            $data=EstadoCuenta::where('cliente_id','=',$venta['cliente_id'])->get();
+
+            $saldo_actual=$saldo_anterior+$venta['total_venta'];
+        }else{
+            $saldo_anterior=0;
+            $saldo_actual=$venta['total_venta'];
+        }
+
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual]);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->setPaper('leter')->stream();
+            }, "$this->title-$fecha_reporte.pdf");
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
