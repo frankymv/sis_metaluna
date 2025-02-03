@@ -41,9 +41,7 @@
 
 
     <div class="flex md:w-1/3 ">
-        <div class="flex md:w-1/2 ">
-            <x-frk.components.label-input label="longitud" :disabled="$disabled" wire:model.lazy="longitud" />
-        </div>
+
         <div class="flex md:w-1/2 ">
             <x-frk.components.select label="Longitud" error="tipo_longitud"  :disabled="$disabledLongitud" wire:model="tipo_longitud">
                 @foreach ($this->longitudes as $key => $data)
@@ -51,6 +49,9 @@
                 @endforeach
             </x-forms.select>
         </div>
+        <div class="flex md:w-1/2 ">
+            <x-frk.components.label-input label="longitud" :disabled="$disabled" wire:model.lazy="longitud" />
+        </div>
     </div>
 
 
@@ -59,9 +60,7 @@
 
 
     <div class="flex md:w-1/3 ">
-        <div class="flex md:w-1/2 ">
-            <x-frk.components.label-input label="peso" :disabled="$disabled" wire:model.lazy="peso" />
-        </div>
+
         <div class="flex md:w-1/2 ">
             <x-frk.components.select label="Peso" error="tipo_peso"  :disabled="$disabledTipo" wire:model="tipo_peso">
                 @foreach ($this->pesos as $key => $data)
@@ -69,18 +68,22 @@
                 @endforeach
             </x-forms.select>
         </div>
+        <div class="flex md:w-1/2 ">
+            <x-frk.components.label-input label="peso" :disabled="$disabled" wire:model.lazy="peso" />
+        </div>
     </div>
 
     <div class="flex md:w-1/3 ">
-        <div class="flex md:w-1/2 ">
-            <x-frk.components.label-input label="diametro" :disabled="$disabled" wire:model.lazy="diametro" />
-        </div>
+
         <div class="flex md:w-1/2 ">
             <x-frk.components.select label="Diametro" error="tipo_diametro"  :disabled="$disabledDiametro" wire:model="tipo_diametro">
                 @foreach ($this->diametros as $key => $data)
                 <option value="{{ $key }}">{{ $data }}</option>
                 @endforeach
             </x-forms.select>
+        </div>
+        <div class="flex md:w-1/2 ">
+            <x-frk.components.label-input label="diametro" :disabled="$disabled" wire:model.lazy="diametro" />
         </div>
     </div>
 
