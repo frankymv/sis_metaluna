@@ -489,7 +489,19 @@ public $email_edit=null, $codigo_edit=null;
         $data=null;
         $this->validate(['id_forma_pago'=>'required','id_envio'=>'required','contadorProductos'=>'required|numeric|min:1','nombres_cliente'=>'required','dias_ultimo_credito'=>'required|numeric|min:0']);
 
+        $ultima_venta=Venta::latest()->first();
+
+        if ( $ultima_venta) {
+            $this->id=$ultima_venta->id+1;
+            $this->no_venta=$this->id;
+
+        }else{
+            $this->id=1;
+            $this->no_venta=$this->id;
+        }
         if ($this->id_forma_pago==="EFECT") {
+
+
             $data=Venta::create(
                 [
                     'no_venta'=>$this->no_venta,
