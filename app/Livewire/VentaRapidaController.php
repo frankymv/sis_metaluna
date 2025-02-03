@@ -375,7 +375,7 @@ public $email_edit=null, $codigo_edit=null;
     public function unlock(){
 
 
-        if(User::where('email',$this->email_edit)->where('codigo', $this->codigo_interno_edit)->exists()){
+        if(User::where('email',$this->email_edit)->where('codigo', $this->codigo_edit)->exists()){
 
             $this->disabled_precio_venta_producto=false;
             $this->alert('success', 'Precio desbloqueado', [
