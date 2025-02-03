@@ -458,7 +458,6 @@ public $email_edit=null, $codigo_edit=null;
                 $datatempproducto+=['cantidad_producto'=>$this->cantidad_producto];
                 $datatempproducto+=['subtotal_producto'=>$this->subtotal_producto];
 
-
                 array_push($this->productosDetalle,$datatempproducto);
                 $this->total_venta=$this->total_venta+$this->subtotal_producto;
                 $this->nuevo_saldo=$this->saldo_credito+$this->total_venta;
@@ -534,7 +533,7 @@ public $email_edit=null, $codigo_edit=null;
                 $this->apellidos_cliente_detalle=$data->cliente->apellidos_cliente;
 
                 foreach ($this->productosDetalle as $key => $value) {
-                    $data->productos()->attach($value['id'],['cantidad' => $value['cantidad_producto'],'precio_venta' => $value['precio_venta_producto'],'sub_total' => $value['subtotal_producto']]);
+                    $data->productos()->attach($value['id'],['cantidad' => $value['cantidad_producto'],'precio_venta' => $value['precio_final'],'sub_total' => $value['subtotal_producto']]);
                 }
                 $this->alertaNotificacion("store");
                 $this->isDetalleVenta=true;
@@ -575,7 +574,7 @@ public $email_edit=null, $codigo_edit=null;
                     ]);
 
                 foreach ($this->productosDetalle as $key => $value) {
-                    $data->productos()->attach($value['id'],['cantidad' => $value['cantidad_producto'],'precio_venta' => $value['precio_venta_producto'],'sub_total' => $value['subtotal_producto']]);
+                    $data->productos()->attach($value['id'],['cantidad' => $value['cantidad_producto'],'precio_venta' => $value['precio_final'],'sub_total' => $value['subtotal_producto']]);
                 }
 
 
