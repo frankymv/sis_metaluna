@@ -195,14 +195,30 @@ class ClienteController extends Component
     public function store(){
         $this->validate();
 
+
+            if ($data=Cliente::latest()->first()) {
+                $this->id=$data->id+1;
+                $this->codigo_interno=$this->id;
+
+            }else{
+                $this->id=1;
+                $this->codigo_interno=$this->id;
+            }
+
+
             if($this->tipo_cliente_id!='MAYO')
             {
                 $this->isDisabledMinorista=true;
                 $this->limite_credito=0;
+
+                $data=Cliente::where('tipo_cliente','MAYO')->latest()->first();
+                $this->codigo_mayorista=$data->codigo_mayorista+1;
+
             }else{
                 $this->isDisabledMinorista=false;
 
             }
+
 
 
         Cliente::create(
