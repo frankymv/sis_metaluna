@@ -74,8 +74,8 @@
 
 
                         <td class="px-4 py-3 text-sm border">
-                            <p class="text-xs text-gray-600">Limite:{{$data->limite_credito}}</p>
-                            <p class="text-xs text-gray-600">Dias:{{$data->dias_limite_credito}}</p>
+                            <p class="text-xs text-gray-600">Limite: Q.{{$data->limite_credito}}</p>
+                            <p class="text-xs text-gray-600">Dias: {{$data->dias_limite_credito}}</p>
 
 
                         </td>
