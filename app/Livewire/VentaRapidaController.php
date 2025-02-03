@@ -152,6 +152,13 @@ public $email_edit=null, $codigo_edit=null;
         $this->clientes=Cliente::where('nombres_cliente','like',"%$value%")->get();
     }
 
+
+    public function updatedPrecioVentaProducto($value){
+        $this->cantidad_producto=0;
+        $this->subtotal_producto=0;
+
+    }
+
     public function updatedSearchCodigoCliente($value){
         $this->reset(['search_nombres_cliente','search_nit_cliente']);
         $this->clientes=Cliente::where('codigo_mayorista','like',"%$value%")->get();

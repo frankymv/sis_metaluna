@@ -21,7 +21,7 @@
                             <x-frk.components.label-input label="existencia_producto" :disabled="$disabled_existencia_producto" wire:model="existencia_producto" />
                         </div>
                         <div class="flex w-full md:w-1/2">
-                            <x-frk.components.label-input-money label="Precio:" :disabled="$disabled_precio_venta_producto" wire:model="precio_venta_producto" />
+                            <x-frk.components.label-input-money label="Precio:" :disabled="$disabled_precio_venta_producto" wire:model.live="precio_venta_producto" />
                         </div>
                     </div>
                     <div class="flex w-full">
