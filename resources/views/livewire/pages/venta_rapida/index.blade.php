@@ -10,16 +10,12 @@
                     <div class="flex flex-wrap justify-center items-center w-2/12">
                         <x-frk.components.title label="{{$title}}" />
                     </div>
-
-
                     <div class="flex  w-1/12">
                         <x-frk.components.label-input label="No." :disabled="$disabledInput" wire:model="no_venta" />
                     </div>
-
                     <div class="flex w-2/12">
                         <x-frk.components.date-picker :disabled="$disabledInput" erase="false" wire:model="fecha_venta" label="Fecha"/>
                     </div>
-
                     <div class="flex w-2/12 ">
                         <x-frk.components.select label="Forma Pago" error="id_forma_pago" :disabled="$disabled" wire:model.live="id_forma_pago">
                             @foreach ($this->forma_pagos as $data)
@@ -27,7 +23,6 @@
                             @endforeach
                         </x-forms.select>
                     </div>
-
                     <div class="flex w-2/12 ">
                         <x-frk.components.select label="Envio" error="id_envio" :disabled="$disabled" wire:model.live="id_envio">
                             @foreach ($this->envios as $data)
@@ -35,17 +30,13 @@
                             @endforeach
                         </x-forms.select>
                     </div>
-
                     <div class="flex w-1/12"></div>
-
                     <div class="flex w-2/12 justify-between">
                         <x-frk.components.button label="Buscar Cliente" color="blue" wire:click="searchCliente()" />
                         <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarTodo()" />
                     </div>
-
                 </div>
                 <div class="flex w-full">
-
                     <div class="flex w-1/12">
                         <x-frk.components.label-input label="cod. inter" :disabled="$disabledInput" wire:model="codigo_interno" />
                     </div>
@@ -64,14 +55,11 @@
                     <div class="flex w-4/12">
                         <x-frk.components.label-input label="direccion" :disabled="$disabled" wire:model="direccion_fisica" />
                     </div>
-
                 </div>
-
                 <div class=" flex w-full">
                     <div class="flex flex-wrap mt-5 w-1/2">
                         <x-frk.components.subtitle    label="Detalle venta" />
                     </div>
-
                     <div class="flex flex-wrap w-1/2">
                         <x-frk.components.button label="Buscar Producto" color="green" wire:click="buscarProducto()" />
                     </div>
@@ -79,10 +67,7 @@
                 <div class="flex w-1/3">
                     <x-frk.components.error error="contadorProductos" />
                 </div>
-
-
-
-                    <div class="w-full  rounded-lg shadow-lg">
+                <div class="w-full  rounded-lg shadow-lg">
                     <div class="w-full overflow-x-auto">
                         <table class=" w-full">
                             <thead>
@@ -105,7 +90,6 @@
                                     <td class="px-4 py-1 text-sm border">Q. {{$value['subtotal_producto']}}</td>
                                     <td class="px-4 py-1 text-sm border flex">
                                         <x-frk.buttons.trash-button label="-" icon="fa-solid fa-truck-fast"   wire:click="removeDetalle({{$key}})" />
-
                                     </td>
                                 </tr>
                                 @endforeach
@@ -119,20 +103,14 @@
                                 </tr>
                             </tbody>
                         </table>
-
                     </div>
-                    </div>
-
-
+                </div>
                 <div class="flex w-full py-4">
                     <x-frk.components.label-input label="Observaciones venta"  wire:model="observaciones_venta" />
                     <x-frk.components.button color="orange" label="Finalizar Venta" wire:click="store()" />
                 </div>
-
             </div>
-
             <div class="flex">
-
                 <div class="flex-wrap w-4/12">
                     <x-frk.components.subtitle font_size="text-base"  label="Historial Credito" />
                     <div class="flex">
@@ -186,11 +164,8 @@
             </div>
         </div>
     </section>
-
-
         </x-slot:body>
     <x-slot:footer>
-
         @if($isSearchCliente)
             @include('livewire.pages.venta_rapida.searchCliente')
         @endif
@@ -203,12 +178,9 @@
         @if($isDetalleVenta)
             @include('livewire.pages.venta_rapida.detalleVenta')
         @endif
-
         @if($isPrintVenta)
             @include('livewire.pages.venta_rapida.printVenta')
         @endif
-
-
     </x-slot:footer>
 </x-frk.components.template-index>
 
