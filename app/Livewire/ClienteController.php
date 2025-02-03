@@ -122,7 +122,7 @@ class ClienteController extends Component
     }
     public function render()
     {
-        $this->rutas=Ruta::all();
+
         $this->tipo_clientes=DataSistema::$tipo_cliente;
 
         $data_temp=Cliente::where('codigo_interno','LIkE',"%{$this->filtroCodigoInterno}%")
