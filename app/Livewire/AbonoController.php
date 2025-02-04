@@ -203,7 +203,7 @@ class AbonoController extends Component
 */
 
 
-    $this->ventas=Venta::with('cliente')->where('cancelado_total_venta','=',true)
+    $this->ventas=Venta::with('cliente')->where('cancelado_total_venta','=',false)
             ->where('anulado','=',false)
         ->whereRelation('cliente','nombres_cliente','LIKE',"%{$value}%")->get();
 
