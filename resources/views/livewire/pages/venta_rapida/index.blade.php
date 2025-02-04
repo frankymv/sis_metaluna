@@ -50,7 +50,7 @@
                         <x-frk.components.label-input label="nit" :disabled="$disabledInput" wire:model="nit" />
                     </div>
                     <div class="flex w-4/12">
-                        <x-frk.components.label-input label="nombre" error="nombres_cliente" :disabled="$disabled" wire:model="nombres_cliente" />
+                        <x-frk.components.label-input label="nombre" error="nombres_cliente" :disabled="$disabledInput" wire:model="nombres_cliente" />
                     </div>
                     <div class="flex w-4/12">
                         <x-frk.components.label-input label="direccion" :disabled="$disabled" wire:model="direccion_fisica" />
