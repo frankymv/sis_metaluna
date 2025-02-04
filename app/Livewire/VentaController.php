@@ -252,7 +252,8 @@ class VentaController extends Component
         $saldo_actual=0;
         $saldo_anterior=0;
 
-        $venta=Venta::with('productos')->find($id)->toArray();
+
+        $venta=Venta::with('productos')->where('id',$id)->get()->first()->toArray();
         $no_venta=$venta['no_venta'];
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
         //$user=User::find(1)->toArray();
