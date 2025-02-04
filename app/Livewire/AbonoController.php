@@ -182,8 +182,8 @@ class AbonoController extends Component
         $this->reset(['search_nombres_cliente','search_codigo_cliente']);
 
             $this->ventas=Venta::with("cliente")
-            ->where('no_venta','LIKE',"%{$value}%")
-            ->where('cancelado_total_venta','=',true)
+            ->where('no_venta',$value)
+            ->where('cancelado_total_venta','=',false)
             ->where('anulado','=',false)
             ->get();
 
