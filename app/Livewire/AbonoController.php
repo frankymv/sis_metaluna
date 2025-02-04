@@ -272,6 +272,13 @@ class AbonoController extends Component
             'fecha_abono'=>'required',
             'tipo_pago_id'=>'required',
         ]);
+        if ($data=Abono::latest()->first() ) {
+            $this->id=$data->id+1;
+            $this->no_abono=$this->id;
+        }else{
+            $this->id=1;
+            $this->no_abono=$this->id;
+        }
 
         $venta=Venta::find($this->id_venta);
         $venta->correlativo+=1;
