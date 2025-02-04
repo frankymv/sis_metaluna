@@ -28,7 +28,7 @@
         <x-slot:footer>
 
                 <div class="flex w-full justify-center">
-                    <a href="{{ route("pdfVentaRapida","1") }}" target="_blank">
+                    <a href="{{ route("pdfVentaRapida",$no_venta_detalle) }}" target="_blank">
 
                         <x-frk.components.button color="red" label="Imprimir" />
                     </a>

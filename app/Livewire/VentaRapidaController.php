@@ -713,12 +713,15 @@ public $email_edit=null, $codigo_edit=null;
     public function pdfVentaRapida($id)
     {
 
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
         $saldo_actual=0;
         $saldo_anterior=0;
 
-        $venta=Venta::with('productos')->find($id)->toArray();
+        $venta=Venta::with('productos')->where('no_venta',$id)->get()->first()->toArray();
+
         $no_venta=$venta['no_venta'];
+
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
         //$user=User::find(1)->toArray();
 
