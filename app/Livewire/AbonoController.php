@@ -346,6 +346,13 @@ class AbonoController extends Component
             'fecha_abono'=>'required',
             'tipo_pago_id'=>'required',
         ]);
+        if ($data=Abono::latest()->first() ) {
+            $this->id=$data->id+1;
+            $this->no_abono=$this->id;
+        }else{
+            $this->id=1;
+            $this->no_abono=$this->id;
+        }
 
         Abono::create([
             'abono_anticipado'=>true,
