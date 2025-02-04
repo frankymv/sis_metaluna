@@ -99,12 +99,11 @@
             <x-frk.components.toggle :disabled="$disabled" label="estado" left="Inactivo" right="Activo"   />
         </div>
         <div class="flex w-full md:w-1/3"  x-data="{open: @entangle('divisible')}"  >
-            <x-frk.components.toggle :disabled="$disabled" label="divisible" left="No" right="Si"   />
+            <x-frk.components.toggle :disabled="$disabled" label="Venta por pie" left="No" right="Si"   />
         </div>
     </div>
 
     <div class="flex  w-full md:w-1/2 " >
-
-        <x-frk.components.input-money label="Precio" :disabled="$disabled" wire:model="precio_venta_producto" />
+        <x-frk.components.input-money label="Precio por pie" :disabled="$disabled" wire:model="precio_venta_producto" />
     </div>
 </div>

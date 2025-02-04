@@ -145,7 +145,7 @@ class ProductoController extends Component
             'tipo_diametro'=>$this->tipo_diametro,
             'peso'=>$this->peso,
             'tipo_peso'=>$this->tipo_peso,
-            'divisible'=>$this->divisible,
+            'divisible'=>$this->divisible, //venta por pie
             'estado'=>$this->estado,
             'marca_id'=>$this->marca_id,
             'tipo_id'=>$this->tipo_id,

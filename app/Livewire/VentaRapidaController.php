@@ -73,6 +73,8 @@ class VentaRapidaController extends Component
     public $nombre_producto=null;
     public $existencia_producto=null;
     public $precio_venta_base=null;
+    public $venta_por_pie=false;
+    public $longitud=0;
 
     public $temp=null;
 
@@ -153,11 +155,6 @@ public $email_edit=null, $codigo_edit=null;
     }
 
 
-    public function updatedPrecioVentaProducto($value){
-        $this->cantidad_producto=0;
-        $this->subtotal_producto=0;
-
-    }
 
     public function updatedSearchCodigoCliente($value){
         $this->reset(['search_nombres_cliente','search_nit_cliente']);
@@ -357,6 +354,12 @@ public $email_edit=null, $codigo_edit=null;
 
         //////////////// AGREGAR CANTIDAD PRODUCTO////////////////////
 
+        public function updatedPrecioVentaProducto($value){
+            $this->cantidad_producto=0;
+            $this->subtotal_producto=0;
+        }
+
+
     public function agregarCantidadProducto($id){
 
         $this->reset(['buscar_producto','productos','id_tipo','id_marca','isSearchProduct']);
@@ -370,7 +373,8 @@ public $email_edit=null, $codigo_edit=null;
         $this->disabled_subtotal_producto=true;
 
         $this->isAddProduct=true;
-
+        $this->venta_por_pie=$productos->divisible;
+        $this->longitud=$productos->longitud;
         $this->id_producto=$productos->id;
         $this->codigo_producto=$productos->codigo;
         $this->nombre_producto=$productos->nombre;
@@ -380,10 +384,7 @@ public $email_edit=null, $codigo_edit=null;
     }
 
     public function unlock(){
-
-
         if(User::where('email',$this->email_edit)->where('codigo', $this->codigo_edit)->exists()){
-
             $this->disabled_precio_venta_producto=false;
             $this->alert('success', 'Precio desbloqueado', [
                 'position' => 'center',
@@ -416,8 +417,6 @@ public $email_edit=null, $codigo_edit=null;
     }
 
     public function updatedCantidadProducto($value){
-
-
         $this->validate(['cantidad_producto'=>"numeric|required|min:1|max:$this->existencia_producto"]);
         if(!$value){
             $value=0;
@@ -427,7 +426,13 @@ public $email_edit=null, $codigo_edit=null;
             $this->addError('agregar_producto', 'La cantidad supera a la existencia actual');
 
         }else{
-            $this->subtotal_producto=$value*$this->precio_venta_producto;
+            if($this->venta_por_pie===false)
+            {
+                $this->subtotal_producto=$value*$this->precio_venta_producto;
+            }else{
+
+                $this->subtotal_producto=$value*($this->precio_venta_producto*$this->longitud);
+            }
         };
     }
 
