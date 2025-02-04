@@ -372,6 +372,7 @@ public $email_edit=null, $codigo_edit=null;
         $this->disabled_codigo_producto=true;
         $this->disabled_subtotal_producto=true;
 
+
         $this->isAddProduct=true;
         $this->venta_por_pie=$productos->divisible;
         $this->longitud=$productos->longitud;

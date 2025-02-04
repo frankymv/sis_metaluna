@@ -86,14 +86,9 @@
             <x-frk.components.label-input label="diametro" :disabled="$disabled" wire:model.lazy="diametro" />
         </div>
     </div>
-
-
-
     <div class="flex w-full">
         <x-frk.components.label-input label="descripcion" :disabled="$disabled" wire:model="descripcion" />
     </div>
-
-
     <div class="flex flex-wrap w-full md:w-1/2">
         <div class="flex w-full md:w-1/3"  x-data="{open: @entangle('estado')}"  >
             <x-frk.components.toggle :disabled="$disabled" label="estado" left="Inactivo" right="Activo"   />
@@ -104,6 +99,6 @@
     </div>
 
     <div class="flex  w-full md:w-1/2 " >
-        <x-frk.components.input-money label="Precio por pie" :disabled="$disabled" wire:model="precio_venta_producto" />
+        <x-frk.components.input-money label="Precio" :disabled="$disabled" wire:model="precio_venta_producto" />
     </div>
 </div>
