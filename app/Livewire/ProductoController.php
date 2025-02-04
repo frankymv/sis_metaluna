@@ -428,7 +428,7 @@ class ProductoController extends Component
     public function exportarFila($id)
     {
 
-        $dato=Producto::find($id)->with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')->first();
+        $dato=Producto::where('id', $id)->with('marca')->with('material')->with('tipo')->with('disenio')->with('sucursales')->first();
 
             $fecha_reporte=Carbon::now()->toDateTimeString();
             $pdf = Pdf::loadView('/livewire/pdf/pdfProducto',['dato' => $dato]);
