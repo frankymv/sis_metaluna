@@ -168,7 +168,10 @@ class CreditoController extends Component
     {
         $credito=Credito::with('venta')->with('cliente')
         ->where('no_credito',$id)->first();
+
         $fecha_reporte=Carbon::now()->toDateTimeString();
+
+
 
 
         $pdf = Pdf::loadView('/livewire/pdf/pdfCredito ',['dato'=>$credito]);

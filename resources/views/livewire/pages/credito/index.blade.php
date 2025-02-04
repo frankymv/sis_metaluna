@@ -76,7 +76,7 @@
                         <td class="px-4 py-3 text-sm border">{{$data->codigo_mayorista}}</td>
 
                          <td class="px-4 py-3 text-sm border">
-                            <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
+                            <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->no_credito}})" />
                         </td>
 
 
