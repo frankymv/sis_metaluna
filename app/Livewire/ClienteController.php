@@ -206,11 +206,8 @@ class ClienteController extends Component
             }
 
 
-            if($this->tipo_cliente_id!='MAYO')
+            if($this->tipo_cliente_id==='MAYO')
             {
-                $this->isDisabledMinorista=true;
-                $this->limite_credito=0;
-
                 $data=Cliente::where('tipo_cliente','MAYO')->latest()->first();
                 $this->codigo_mayorista=$data->codigo_mayorista+1;
 
