@@ -28,7 +28,7 @@
                                             Fecha venta
                                         </th>
                                         <th scope="col" class="px-2 py-1">
-                                            Codigo Cliente
+                                            Codigo Cliente Mayorista
                                         </th>
 
                                         <th scope="col" class="px-2 py-1">
@@ -59,7 +59,7 @@
                                             {{$value->cliente->codigo_mayorista}}
                                         </th>
                                         <td class="px-2 py-1">
-                                            {{$value->cliente->nombres_cliente}}
+                                            {{$value->cliente->nombres_cliente}} {{$value->cliente->apellidos_cliente}}
                                         </th>
 
                                         <td class="px-2 py-1">
