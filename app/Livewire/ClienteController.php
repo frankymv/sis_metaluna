@@ -183,7 +183,7 @@ class ClienteController extends Component
     public function exportarFila($id)
     {
         $dato=Cliente::with('ruta')
-        ->where('id','=',$id)
+        ->where('id', $id)
         ->first();
         $fecha_reporte=Carbon::now()->toDateTimeString();
         $pdf = Pdf::loadView('/livewire/pdf/pdfCliente',['dato' => $dato]);

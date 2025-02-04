@@ -166,10 +166,8 @@ class CreditoController extends Component
 
     public function exportarFila($id)
     {
-
         $credito=Credito::with('venta')->with('cliente')
-        ->where('no_credito',1)->first();
-
+        ->where('no_credito',$id)->first();
         $fecha_reporte=Carbon::now()->toDateTimeString();
 
 
