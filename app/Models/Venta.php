@@ -46,19 +46,18 @@ class Venta extends Model
         //////CLIENTE////////
         'cliente_id',
         'sucursal_id',
+        'anticipo_id',
     ];
 
     public function Abonos(){
         // $this->belongsTo('App\Models\Rol');
          return $this->hasMany(Abono::class);
-     }
+    }
 
      public function NotaCreditos(){
         // $this->belongsTo('App\Models\Rol');
          return $this->hasMany(NotaCredito::class);
-     }
-
-
+    }
 
     public function EstadoCuentas(){
         return $this->hasMany(EstadoCuenta::class);
@@ -89,12 +88,9 @@ class Venta extends Model
         return $this->hasOne(Credito::class);
     }
 
-
     public function Rutas(){
         return $this->hasMany(Ruta::class);
     }
-
-
 
     public function Departamentos(){
         return $this->belongsToMany(Departamento::class)

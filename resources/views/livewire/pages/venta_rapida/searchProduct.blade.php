@@ -61,15 +61,27 @@
                                     <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                         <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-prewrap dark:text-white">
                                             {{$value->codigo}} /
-                                            {{$value->nombre}}
+                                            {{$value->nombre}} / {{$value->id}}
 
                                         </th>
 
                                         <td class="px-2 py-1">
                                             {{$value->existencia}}
+
                                         </td>
                                         <td class="px-2 py-1">
-                                            <x-frk.buttons.plus-button label="agregar" color="blue" wire:click="agregarCantidadProducto({{$value['id']}})" />
+
+
+                                            <td class="px-2 py-1">
+
+                                                entonces    {{ count($productosDetalle)}}
+
+                                                <x-frk.buttons.plus-button label="{{$value->id}}" color="blue" wire:click="agregarCantidadProducto({{$value['id']}})" />
+
+                                            </td>
+
+
+
                                         </td>
                                     </tr>
                                     @endforeach

@@ -31,7 +31,7 @@ class VentaRapidaController extends Component
     public $data, $per_page=10,  $id_data,$ultima_venta,$id=null;
     public $isCreate=false, $isAddProduct=false, $isSearchProduct=false, $isDetalleVenta=false,$isPrintVenta=false;
     ////venta
-    public $no_venta=null,$fecha_venta=null, $total_venta=0,$observaciones_venta=null,$forma_pago=null,$saldo_venta=0;
+    public $no_venta=null,$fecha_venta=null, $sub_total=0,$total_venta=0,$observaciones_venta=null,$forma_pago=null,$saldo_venta=0;
     //cliente
     public $cliente_id=null,$codigo_interno=null,$codigo_mayorista=null, $nombre_empresa=null,$nombres_cliente=null, $apellidos_cliente=null, $tipo_cliente=null, $nit=null,$descuento=0,$direccion_fisica=null,$direccion_departamento=null,$direccion_municipio=null;
     //efectivo
@@ -98,6 +98,7 @@ class VentaRapidaController extends Component
     protected $listeners=['edit', 'delete','show'];
 
     public $tipo_documento=null;
+    public $no_abono=null;
 
     public $abono_anticipado=0;
 //////////////liberar o desbloquear precio////
@@ -168,37 +169,73 @@ public $email_edit=null, $codigo_edit=null;
 
     /////////////////////// AGREAGR CLIENTE//////////
     public function agregarCliente($id){
+
         $cliente=Cliente::find($id);
         $this->cliente_id= $cliente->id;
-        $this->codigo_interno= $cliente->codigo_interno;
-        $this->codigo_mayorista= $cliente->codigo_mayorista;
-        $this->nombre_empresa= $cliente->nombre_empresa;
-        $this->nombres_cliente= $cliente->nombres_cliente;
-        $this->apellidos_cliente= $cliente->apellidos_Cliente;
-        $this->nit= $cliente->nit;
-        $this->descuento= $cliente->descuento;
-        $this->direccion_fisica= $cliente->direccion_fisica;
-        $this->direccion_departamento= $cliente->direccion_departamento;
-        $this->direccion_municipio= $cliente->direccion_municipio;
-        $this->limite_credito=$cliente->limite_credito;
-        $this->dias_ultimo_credito=$cliente->dias_limite_credito;
-        if ($cliente->tipo_cliente!=1) {
-            $this->tipo_cliente='MAY';
+        $abono=Abono::where('cliente_id','=',$id)->where('abono_anticipado','=',1)->where('abono_anticipado_asignado','=',0)->first();
+        $credito=Credito::where('cliente_id',$this->cliente_id)->where('activo',1)->get()->first();
+
+
+        if($abono!=null){
+            $this->no_abono=$abono->no_abono;
+        };
+
+
+        if($abono!=null && $credito!=null){
+
+            $this->alert('error', 'Abono Anticipado Pendiente de Asignar', [
+                'position' => 'center',
+                'timer' => '3000',
+                'toast' => true,
+                'showConfirmButton' => true,
+                'onConfirmed' => '',
+                'timerProgressBar' => true,
+               ]);
         }else{
-            $this->tipo_cliente='MIN';
+
+            $this->codigo_interno= $cliente->codigo_interno;
+            $this->codigo_mayorista= $cliente->codigo_mayorista;
+            $this->nombre_empresa= $cliente->nombre_empresa;
+            $this->nombres_cliente= $cliente->nombres_cliente;
+            $this->apellidos_cliente= $cliente->apellidos_Cliente;
+            $this->nit= $cliente->nit;
+            $this->descuento= $cliente->descuento;
+            $this->direccion_fisica= $cliente->direccion_fisica;
+            $this->direccion_departamento= $cliente->direccion_departamento;
+            $this->direccion_municipio= $cliente->direccion_municipio;
+            $this->limite_credito=$cliente->limite_credito;
+            $this->dias_ultimo_credito=$cliente->dias_limite_credito;
+            if ($cliente->tipo_cliente!=1) {
+                $this->tipo_cliente='MAY';
+            }else{
+                $this->tipo_cliente='MIN';
+            }
+
+
+            if($estado_cuenta=EstadoCuenta::where('cliente_id',$this->cliente_id)->first()){
+                $this->saldo_credito=$estado_cuenta->total_credito-$estado_cuenta->total_saldo;
+            }else{
+                $this->saldo_credito=0;
+            }
+            if($abono!=null){
+                $this->no_abono=$abono->no_abono;
+                $this->abono_anticipado=$abono->total_abono;
+            }else{
+                $this->abono_anticipado=0;
+            }
+
+            $this->alert('success', 'Cliente encontrado', [
+                'position' => 'center',
+                'timer' => '3000',
+                'toast' => true,
+                'showConfirmButton' => true,
+                'onConfirmed' => '',
+                'timerProgressBar' => true,
+               ]);
         }
 
 
-        if($estado_cuenta=EstadoCuenta::where('cliente_id',$this->cliente_id)->first()){
-            $this->saldo_credito=$estado_cuenta->total_credito-$estado_cuenta->total_saldo;
-        }else{
-            $this->saldo_credito=0;
-        }
-        if($data=Abono::where('cliente_id','=',$id)->first()){
-            $this->abono_anticipado=$data->total_abono;
-        }else{
-            $this->abono_anticipado=0;
-        }
+
         $this->reset(['isSearchCliente','search_nombres_cliente','search_codigo_cliente','search_nit_cliente','clientes']);
     }
 
@@ -208,109 +245,8 @@ public $email_edit=null, $codigo_edit=null;
         $this->reset(['isSearchCliente','search_nombres_cliente','search_codigo_cliente','search_nit_cliente','clientes']);
     }
 
-    public function buscarCliente(){
-        $this->validate(['buscar_nit'=>'numeric|required|min:00000|max:99999']);
-        if( $this->buscar_nit==='00000' || $this->buscar_nit===''){
-            $this->cliente_id=1;
-            $this->nit='c/f';
-            $this->codigo_interno='---';
-            $this->tipo_cliente='MIN';
-            $this->nombres_cliente= "Consumidor Final";
-            $this->apellidos_cliente= "";
-            $this->direccion_fisica= "Ciudad";
 
-            $this->alert('success', 'Cliente C/F', [
-                'position' => 'center',
-                'timer' => '2000',
-                'toast' => true,
-                'showConfirmButton' => false,
-                'onConfirmed' => '',
-                'timerProgressBar' => true,
-               ]);
-        }elseif($cliente=Cliente::where('nit','=',$this->buscar_nit)->first()){
-            $this->cliente_id= $cliente->id;
-            $this->codigo_interno= $cliente->codigo;
-            $this->nombre_empresa= $cliente->nombre_empresa;
-            $this->nombres_cliente= $cliente->nombres_cliente;
-            $this->apellidos_cliente= $cliente->apellidos_Cliente;
-            $this->nit= $cliente->nit;
-            $this->descuento= $cliente->descuento;
-            $this->direccion_fisica= $cliente->direccion_fisica;
-            $this->direccion_departamento= $cliente->direccion_departamento;
-            $this->direccion_municipio= $cliente->direccion_municipio;
-
-
-            if ($cliente->tipo_cliente!=1) {
-                $this->tipo_cliente='MAY';
-            }else{
-                $this->tipo_cliente='MIN';
-            }
-
-            $credito=EstadoCuenta::where('cliente_id','=',$cliente->id)->first();
-            if($credito){
-                $this->saldo_credito=$credito->total_credito-$credito->total_saldo;
-
-            $dataaa=DB::table('creditos')
-            ->select('fecha_credito')
-            ->where('cliente_id',2)
-            ->orderBy('fecha_credito', 'asc')
-            ->first();
-            $fechaPrimerCredito = Carbon::parse($dataaa->fecha_credito);
-
-
-
-            $fechaActual = Carbon::now();
-
-
-            $client=Cliente::where('nit','=',$this->buscar_nit)->first();
-
-            $this->dias_ultimo_credito=(int) round($client->dias_limite_credito-$fechaPrimerCredito->diffInDays($fechaActual));
-
-            }else{
-                $this->saldo_credito=0;
-            }
-            $this->alert('success', 'Cliente encontrado', [
-                'position' => 'center',
-                'timer' => '3000',
-                'toast' => true,
-                'showConfirmButton' => true,
-                'onConfirmed' => '',
-                'timerProgressBar' => true,
-               ]);
-
-               $data=Abono::where('cliente_id','=',$this->cliente_id)->first();
-                if(!$data){
-                    $this->abono_anticipado=0;
-                }else{
-                    $this->abono_anticipado=$data->total_abono;
-                }
-        }else{
-
-            $this->reset([
-                'cliente_id',
-                'nit',
-                'codigo_interno',
-                'codigo_mayorista',
-                'tipo_cliente',
-                'nombres_cliente',
-                'apellidos_cliente',
-                'direccion_fisica'
-            ]);
-            $this->alert('success', 'Cliente No encontrado', [
-                'position' => 'center',
-                'timer' => '2000',
-                'toast' => true,
-                'showConfirmButton' => false,
-                'onConfirmed' => '',
-                'timerProgressBar' => true,
-               ]);
-        }
-    }
-
-
-
-
-    //////////////// BUSCAR PRODUCTO////////////////////
+    //////////////// BOTON BUSCAR PRODUCTO ////////////////////
 
     public function buscarProducto(){
         //$this->bandera=$this->bandera+1;
@@ -371,7 +307,6 @@ public $email_edit=null, $codigo_edit=null;
         $this->disabled_existencia_producto=true;
         $this->disabled_codigo_producto=true;
         $this->disabled_subtotal_producto=true;
-
 
         $this->isAddProduct=true;
         $this->venta_por_pie=$productos->divisible;
@@ -465,11 +400,14 @@ public $email_edit=null, $codigo_edit=null;
                 $datatempproducto+=['subtotal_producto'=>$this->subtotal_producto];
 
                 array_push($this->productosDetalle,$datatempproducto);
-                $this->total_venta=$this->total_venta+$this->subtotal_producto;
+                $this->sub_total=$this->sub_total+$this->subtotal_producto;
+                $this->total_venta=$this->sub_total-$this->abono_anticipado;
                 $this->nuevo_saldo=$this->saldo_credito+$this->total_venta;
                 $this->contadorProductos+=1;
             }
         }
+
+
 
         $this->cancelProductQuantity();
         $this->alert('success', 'Producto Agregado', [
@@ -501,7 +439,7 @@ public $email_edit=null, $codigo_edit=null;
     public function store(){
 
         $this->resetValidation();
-        $saldo_actual=null;
+
         $data=null;
         $this->validate(['id_forma_pago'=>'required','id_envio'=>'required','contadorProductos'=>'required|numeric|min:1','nombres_cliente'=>'required','dias_ultimo_credito'=>'required|numeric|min:0']);
 
@@ -516,7 +454,6 @@ public $email_edit=null, $codigo_edit=null;
             $this->no_venta=$this->id;
         }
         if ($this->id_forma_pago==="EFECT") {
-
 
             $data=Venta::create(
                 [
@@ -533,18 +470,20 @@ public $email_edit=null, $codigo_edit=null;
                     'sucursal_id'=>Auth::user()->sucursal_id
                 ]);
 
+                Abono::where('no_abono',$this->no_abono)
+                ->update(['abono_anticipado_asignado' => '1','fecha_abono_anticipado_asignado' => $this->fecha_venta,'venta_id' => $this->id]);
+
+
                 $this->no_venta_detalle=$data->no_venta;
                 $this->total_venta_detalle=$data->total_venta;
                 $this->nombres_cliente_detalle=$data->cliente->nombres_cliente;
                 $this->apellidos_cliente_detalle=$data->cliente->apellidos_cliente;
-
                 foreach ($this->productosDetalle as $key => $value) {
                     $data->productos()->attach($value['id'],['cantidad' => $value['cantidad_producto'],'precio_venta' => $value['precio_final'],'sub_total' => $value['subtotal_producto']]);
                 }
                 $this->alertaNotificacion("store");
                 $this->isDetalleVenta=true;
         }
-
 
         if ($this->id_forma_pago==="CREDI" ) {
 
@@ -664,7 +603,7 @@ public $email_edit=null, $codigo_edit=null;
     }
 
 
-    public function pdfImprimir($id){
+   /* public function pdfImprimir($id){
 
 
         $this->cancel();
@@ -672,7 +611,7 @@ public $email_edit=null, $codigo_edit=null;
 
 
 
-    }
+    }*/
 
     public function exportarGeneral($id)
     {
@@ -712,20 +651,12 @@ public $email_edit=null, $codigo_edit=null;
 
     public function pdfVentaRapida($id)
     {
-
-
         $fecha_reporte=Carbon::now()->toDateTimeString();
         $saldo_actual=0;
         $saldo_anterior=0;
-
         $venta=Venta::with('productos')->where('no_venta',$id)->get()->first()->toArray();
-
         $no_venta=$venta['no_venta'];
-
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
-        //$user=User::find(1)->toArray();
-
-
 
         if ($venta['forma_pago_venta']==='CREDI') {
             $data=EstadoCuenta::where('cliente_id','=',$venta['cliente_id'])->get();
@@ -735,17 +666,6 @@ public $email_edit=null, $codigo_edit=null;
             $saldo_anterior=0;
             $saldo_actual=$venta['total_venta'];
         }
-
-/*
-
-        $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual]);
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->setPaper('leter')->stream();
-            }, "$this->title-$fecha_reporte.pdf");
-            $this->reset();
-
-*/
 
         $pdf = PDF::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual]);
 
@@ -814,3 +734,109 @@ public $email_edit=null, $codigo_edit=null;
     }
 }
 
+
+/*
+    public function buscarCliente(){
+        $this->validate(['buscar_nit'=>'numeric|required|min:00000|max:99999']);
+        if( $this->buscar_nit==='00000' || $this->buscar_nit===''){
+            $this->cliente_id=1;
+            $this->nit='c/f';
+            $this->codigo_interno='---';
+            $this->tipo_cliente='MIN';
+            $this->nombres_cliente= "Consumidor Final";
+            $this->apellidos_cliente= "";
+            $this->direccion_fisica= "Ciudad";
+
+            $this->alert('success', 'Cliente C/F', [
+                'position' => 'center',
+                'timer' => '2000',
+                'toast' => true,
+                'showConfirmButton' => false,
+                'onConfirmed' => '',
+                'timerProgressBar' => true,
+               ]);
+
+
+        }elseif($cliente=Cliente::where('nit','=',$this->buscar_nit)->first()){
+            $this->cliente_id= $cliente->id;
+            $this->codigo_interno= $cliente->codigo;
+            $this->nombre_empresa= $cliente->nombre_empresa;
+            $this->nombres_cliente= $cliente->nombres_cliente;
+            $this->apellidos_cliente= $cliente->apellidos_Cliente;
+            $this->nit= $cliente->nit;
+            $this->descuento= $cliente->descuento;
+            $this->direccion_fisica= $cliente->direccion_fisica;
+            $this->direccion_departamento= $cliente->direccion_departamento;
+            $this->direccion_municipio= $cliente->direccion_municipio;
+
+
+            if ($cliente->tipo_cliente!=1) {
+                $this->tipo_cliente='MAY';
+            }else{
+                $this->tipo_cliente='MIN';
+            }
+
+            $credito=EstadoCuenta::where('cliente_id','=',$cliente->id)->first();
+            if($credito){
+                $this->saldo_credito=$credito->total_credito-$credito->total_saldo;
+
+                $dataaa=DB::table('creditos')
+                ->select('fecha_credito')
+                ->where('cliente_id',2)
+                ->where('activo',1)
+                ->orderBy('fecha_credito', 'asc')
+                ->first();
+                $fechaPrimerCredito = Carbon::parse($dataaa->fecha_credito);
+                $fechaActual = Carbon::now();
+                $client=Cliente::where('nit','=',$this->buscar_nit)->first();
+                $this->dias_ultimo_credito=(int) round($client->dias_limite_credito-$fechaPrimerCredito->diffInDays($fechaActual));
+
+            }else{
+                $this->saldo_credito=0;
+            }
+            $this->alert('success', 'Cliente encontrado', [
+                'position' => 'center',
+                'timer' => '3000',
+                'toast' => true,
+                'showConfirmButton' => true,
+                'onConfirmed' => '',
+                'timerProgressBar' => true,
+               ]);
+
+               $data=Abono::where('cliente_id','=',$this->cliente_id)->first();
+               dd($data);
+                if(!$data){
+                    $this->no_abono=$data->no_abono;
+                    $this->abono_anticipado=0;
+
+                }else{
+                    $this->abono_anticipado=$data->total_abono;
+                }
+        }
+
+
+        else{
+
+            $this->reset([
+                'cliente_id',
+                'nit',
+                'codigo_interno',
+                'codigo_mayorista',
+                'tipo_cliente',
+                'nombres_cliente',
+                'apellidos_cliente',
+                'direccion_fisica'
+            ]);
+            $this->alert('success', 'Cliente No encontrado', [
+                'position' => 'center',
+                'timer' => '2000',
+                'toast' => true,
+                'showConfirmButton' => false,
+                'onConfirmed' => '',
+                'timerProgressBar' => true,
+               ]);
+        }
+    }
+
+
+*/

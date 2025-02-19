@@ -16,7 +16,7 @@
                  icon="fa-solid fa-file-pdf" wire:click="exportarGeneral()" />
                 <x-frk.components.button-icon color="red" icon="fa-solid fa-trash" wire:click="borrarFiltros()" />
                 <div class="flex   justify-center">
-                    <select wire:model.live="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
+                    <select wire:model.liSve="per_page" class="flex border mx-2 border-gray-400  text-sm shadow text-gray-900 rounded-md focus:border-blue-500 focus:border-2 placeholder-gray-400 focus:outline-none focus:shadow-outline"  >
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="15">15</option>
@@ -85,6 +85,7 @@
                             </td>
                             <td class="px-4 py-3 border">
                                 <p class="text-xs text-gray-600">{{$data->cliente->nombres_cliente}} {{$data->cliente->apellidos_cliente}}</p>
+                                <p class="text-xs text-gray-600">{{$data->cliente->nombres_cliente}} </p>
                             </td>
                             <td class="px-4 py-3 text-sm border">{{$data->cliente->codigo_mayorista}}</td>
                             <td class="px-4 py-3 text-sm border flex">
