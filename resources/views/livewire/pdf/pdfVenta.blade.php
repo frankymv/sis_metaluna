@@ -167,7 +167,7 @@
 <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Subtotal</p>
 </td>
 <td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$venta['total_venta']}}</p>
+<p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$venta['total_venta']+$abono['total_abono']}}</p>
 </td>
 </tr>
 
@@ -176,7 +176,7 @@
     <p class="s2" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Anticipo</p>
     </td>
     <td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-    <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$subtotal}}</p>
+    <p class="s3" style="padding-right: 4pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Q. {{$abono['total_abono']}}</p>
     </td>
 </tr>
 
@@ -190,15 +190,7 @@
 </tr>
 
 
-<tr style="height:13pt">
-<td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" colspan="2" bgcolor="#F9E1D4">
-<p class="s3" style="padding-left: 25pt;text-indent: 0pt;line-height: 12pt;text-align: left;">Abono:</p>
-</td>
-<td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-<p style="text-indent: 0pt;text-align: left;">
-<br/>
-</p>
-</td>
+
 <!--
 <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt" rowspan="2">
 <p style="text-indent: 0pt;text-align: left;">

@@ -603,22 +603,13 @@ public $email_edit=null, $codigo_edit=null;
     }
 
 
-   /* public function pdfImprimir($id){
-
-
-        $this->cancel();
-        return redirect()->away('https://www.google.com');
-
-
-
-    }*/
-
     public function exportarGeneral($id)
     {
 
         $saldo_actual=0;
         $saldo_anterior=0;
         $venta=Venta::with('productos')->where('no_venta','=',$id)->first()->toArray();
+        $abono=Abono::where('id',$venta['0']->no_venta)->first()->toArray();
 
 
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
@@ -642,7 +633,7 @@ public $email_edit=null, $codigo_edit=null;
 
 
         $fecha_reporte=Carbon::now()->toDateTimeString();
-        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_anterior'=>$saldo_anterior,'saldo_actual'=>$saldo_actual,'abono'=>$abono]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter')->stream();
             }, "$this->title-$fecha_reporte.pdf");
