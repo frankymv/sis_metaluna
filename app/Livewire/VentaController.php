@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Constantes\DataSistema;
+use App\Models\Abono;
 use App\Models\Cliente;
 use App\Models\EstadoCuenta;
 use App\Models\Ruta;
@@ -254,6 +255,8 @@ class VentaController extends Component
 
 
         $venta=Venta::with('productos')->where('id',$id)->get()->first()->toArray();
+
+        $abono=Abono::where('id',$venta['no_venta'])->first()->toArray();
         $no_venta=$venta['no_venta'];
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
         //$user=User::find(1)->toArray();
@@ -269,7 +272,7 @@ class VentaController extends Component
             $saldo_actual=$venta['total_venta'];
         }
 
-        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual]);
+        $pdf = Pdf::loadView('/livewire/pdf/pdfVenta',['venta' => $venta,'cliente'=>$cliente,'saldo_actual'=>$saldo_actual,'abono'=>$abono]);
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->setPaper('leter')->stream();
             }, "$this->title-$fecha_reporte.pdf");
