@@ -6,7 +6,7 @@
 
 
     <div class="flex items-center mx-2">
-        <x-frk.components.label label="{{$label}}" class="font-semibold text-center" />
+        <x-frk.components.label label="{{$label}}" class="font-semibold text-center text-sm" />
     </div>
     <div class="flex w-full">
         <x-frk.components.input x-ref="datetime" id="datetime" data-input {{$attributes}} placeholder="{{$placeholder}}" />

@@ -13,7 +13,7 @@
         "jantinnerezo/livewire-alert": "^3.0",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.4",
+        "livewire/livewire": "^3.5",
         "livewire/volt": "^1.0",
         "openspout/openspout": "^4.23",
         "power-components/livewire-powergrid": "^5.4",

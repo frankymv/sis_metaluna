@@ -3,9 +3,8 @@
 namespace App\Livewire;
 use Illuminate\Support\Str;
 
-use App\Models\Cliente;
+
 use App\Models\EstadoCuenta;
-use App\Models\Inventario;
 use App\Models\NotaCredito;
 use App\Models\Producto;
 use App\Models\Venta;
@@ -59,20 +58,14 @@ class NotaCreditoController extends Component
 
         public $no_venta=null,$apellidos_cliente=null;
 
-
         public $forma_pagos,$envios,$tipo_clientes,$rutas,$total_ventas=0,$saldo_total_venta=0;
         public $abonos=[],$estado_cuentas=[],$total_abonos;
-
         public $total_nota_credito=0;
         /////
-
         public $delete_no=null,$delete_nombre=null;
-
         public $filtroFecha=null;
         public $filtroFechaInicio=null;
         public $filtroFechaFin=null;
-
-
 
     protected $rules = [
         'venta_id' => 'required',
@@ -232,6 +225,14 @@ class NotaCreditoController extends Component
     public function store(){
 
         $this->validate(['no_venta'=>'required','fecha_nota_credito'=>'required','total_nota_credito'=>"numeric|required|min:1|max:$this->total_venta"]);
+        $data=NotaCredito::latest()->first();
+        if ($data) {
+            $this->id=$data->id+1;
+            $this->no_nota_credito=$this->id;
+        }else{
+            $this->id=1;
+            $this->no_nota_credito=$this->id;
+        }
 
         $venta_temp=Venta::find($this->venta_id);
         if($this->anulacion_venta){

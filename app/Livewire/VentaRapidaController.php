@@ -608,9 +608,14 @@ public $email_edit=null, $codigo_edit=null;
 
         $saldo_actual=0;
         $saldo_anterior=0;
-        $venta=Venta::with('productos')->where('no_venta','=',$id)->first()->toArray();
-        $abono=Abono::where('id',$venta['0']->no_venta)->first()->toArray();
 
+
+
+        $venta=Venta::with('productos')->where('no_venta','=',$id)->get()->first()->toArray();
+        $abono=Abono::where('id',$venta['no_venta']->no_venta)->first()->toArray();
+
+
+        /////
 
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
         $saldo_anterior=$venta['saldo_credito_cliente'];

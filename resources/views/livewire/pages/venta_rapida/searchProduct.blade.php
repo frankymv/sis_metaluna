@@ -74,9 +74,38 @@
 
                                             <td class="px-2 py-1">
 
-                                                entonces    {{ count($productosDetalle)}}
+                                                <td class="px-2 py-1">
 
-                                                <x-frk.buttons.plus-button label="{{$value->id}}" color="blue" wire:click="agregarCantidadProducto({{$value['id']}})" />
+                                                    @if (count($productosDetalle)===0)
+
+
+                                                    <x-frk.buttons.plus-button label="Agregar"  color="blue" wire:click="agregarCantidadProducto({{$value['id']}})" />
+                                                    @else
+
+
+                                                  @foreach ($productosDetalle as $item)
+
+                                                    @if ($item['id']===$value['id'])
+
+                                                    <x-frk.buttons.plus-button label="Agregar" disabled color="gray" wire:click="agregarCantidadProducto({{$value['id']}})" />
+
+                                                    @else
+
+                                                    <x-frk.buttons.plus-button label="Agregar" color="blue" wire:click="agregarCantidadProducto({{$value['id']}})" />
+
+
+                                                    @endif
+
+                                                  @endforeach
+
+
+                                                    @endif
+
+
+
+                                              </td>
+
+
 
                                             </td>
 

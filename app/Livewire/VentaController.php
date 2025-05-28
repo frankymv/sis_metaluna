@@ -222,6 +222,45 @@ class VentaController extends Component
 
     }
 
+
+    public function Credito($id){
+
+
+        $data=Venta::find($id);
+
+        if($data->envio!="ENVIO"){
+            $temp_envio="ENVIO";
+            $temp_estado_envio="SIN ASIGNAR";
+
+        }else{
+            $temp_envio="SINENVIO";
+            $temp_estado_envio="NO APLICA";
+        }
+
+        $data->update([
+
+            'envio'=>$temp_envio,
+            'estado_envio'=>$temp_estado_envio
+        ]);
+
+
+
+        $this->alert('success', 'ENVIO', [
+            'position' => 'center',
+            'timer' => '2000',
+            'toast' => true,
+            'showConfirmButton' => false,
+            'onConfirmed' => '',
+            'timerProgressBar' => true,
+            'text' => 'Envio cambiado correctamente',
+           ]);
+
+
+           $this->cancel();
+
+
+    }
+
     public function exportarGeneral()
     {
         $data_temp = Venta::with('envios')->with('cliente')
@@ -255,8 +294,8 @@ class VentaController extends Component
 
 
         $venta=Venta::with('productos')->where('id',$id)->get()->first()->toArray();
-
         $abono=Abono::where('id',$venta['no_venta'])->first()->toArray();
+
         $no_venta=$venta['no_venta'];
         $cliente=Cliente::find($venta['cliente_id'])->toArray();
         //$user=User::find(1)->toArray();

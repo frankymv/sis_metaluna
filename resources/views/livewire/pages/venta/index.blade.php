@@ -110,6 +110,7 @@
                             <td class="px-4 py-3 text-sm border flex">
                                 <x-frk.components.button-icon color="red" icon="fa-solid fa-file-pdf" wire:click="exportarFila({{$data->id}})" />
                                 <x-frk.components.button-icon color="yellow" icon="fa-solid fa-edit" wire:click="Envio({{$data->id}})" />
+                                <x-frk.components.button-icon color="blue" icon="fa-solid fa-money-bill" wire:click="Credito({{$data->id}})" />
                             </td>
                         </tr>
                         @endforeach

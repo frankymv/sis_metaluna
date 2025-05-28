@@ -1,7 +1,7 @@
 <x-frk.components.template-crud maxWidth="3xl">
     <x-slot:title>
         <div class=" w-full md:w-2/4">
-            <x-frk.components.title label="Nuevo Abono Anticiado" />
+            <x-frk.components.title label="Nuevo Abono Anticipado" />
         </div>
         <div class=" w-full md:w-1/4">
             <x-frk.components.label-input label="No abono"   wire:model.live="no_abono" />
@@ -15,12 +15,27 @@
 
 
     <div class="flex w-full flex-wrap m-4">
+
+
         <div class="flex w-full ">
-            <x-frk.components.select label="Nombre Cliente" :disabled="$disabled" error="venta_id" wire:model.live="cliente_id" id="cliente_id">
-                @foreach ($this->clientes as $data)
-                <option value="{{ $data->id }}" wire:key="tipo-{{ $data->id }}"> {{ $data->nombres_cliente }} {{ $data->codigo }}</option>
-                @endforeach
-            </x-forms.select>
+            <x-frk.components.subtitle  label="CLIENTE" />
+            <x-frk.components.button color="blue" label="Buscar" wire:click="buscarCliente()" />
+        </div>
+
+
+        <div class="flex w-full ">
+            <div class="flex w-full md:w-1/4">
+                <x-frk.components.label-input  label="codigo interno" error="codigo" :disabled="$disabled" wire:model.live="codigo_interno" />
+            </div>
+            <div class="flex w-full md:w-1/4">
+                <x-frk.components.label-input  label="nombre_empresa" error="codigo" :disabled="$disabled" wire:model.live="nombre_empresa" />
+            </div>
+            <div class="flex w-full md:w-1/4">
+                <x-frk.components.label-input  label="nombre_cliente" error="codigo" :disabled="$disabled" wire:model.live="nombres_cliente" />
+            </div>
+            <div class="flex w-full md:w-1/4">
+                <x-frk.components.label-input  label="apellidos cliente" error="codigo" :disabled="$disabled" wire:model.live="apellidos_cliente" />
+            </div>
         </div>
 
 

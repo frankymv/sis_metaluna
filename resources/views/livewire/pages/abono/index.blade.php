@@ -123,6 +123,9 @@
         @if($isSearchVenta)
             @include('livewire.pages.abono.searchVenta')
         @endif
+        @if($isSearchCliente)
+            @include('livewire.pages.abono.searchCliente')
+        @endif
         @if($isCreateAnticipado)
             @include('livewire.pages.abono.create_anticipado')
         @endif

@@ -46,6 +46,8 @@ class AbonoController extends Component
     public $cantidad_abono_anticipado=null;
 
 
+    public $clientes_search;
+
     //bono anticipado asignar
     public $saldo_credito_asignar=0;
     public $cantidad_abono_asignar=0;
@@ -56,10 +58,11 @@ class AbonoController extends Component
 
     public $ventas_credito=null;
     public $isSearchVenta=false;
+    public $isSearchCliente=false;
     public $ventas=[];
     public $no_venta=0;
 
-    public $search_no_venta,$search_nombres_cliente,$search_codigo_cliente;
+    public $search_no_venta,$search_nombres_cliente,$search_codigo_cliente,$search_nombres_cliente_anticipado,$search_codigo_cliente_anticipado;
 
     protected $listeners=['pdfExportar','delete'];
 
@@ -176,6 +179,13 @@ class AbonoController extends Component
         $this->isCreate=false;
     }
 
+    public function buscarCliente()
+    {
+
+        $this->isSearchCliente=true;
+        $this->isCreateAnticipado=false;
+    }
+
     public function updatedSearchNoVenta($value)
     {
 
@@ -193,6 +203,7 @@ class AbonoController extends Component
 
     public function updatedSearchNombresCliente($value)
     {
+
         $this->reset(['search_no_venta','search_codigo_cliente']);
 
 /*
@@ -201,7 +212,6 @@ class AbonoController extends Component
             ->with("cliente")->where('nombres_cliente','LIKE',"%$value%")
             ->get();
 */
-
 
     $this->ventas=Venta::with('cliente')->where('cancelado_total_venta','=',false)
             ->where('anulado','=',false)
@@ -214,7 +224,51 @@ class AbonoController extends Component
 
     public function updatedSearchCodigoCliente($value)
     {
+
         $this->reset(['search_nombres_cliente','search_no_venta']);
+       /* $this->ventas = DB::table('ventas')
+            ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
+            ->where('codigo_mayorista','LIKE',"%$value%")
+            ->where('cancelado_total_venta','=',false)
+            ->where('anulado','=',false)
+            ->get();
+            */
+        $this->ventas=Venta::with('cliente')
+        ->where('cancelado_total_venta','=',false)
+            ->where('anulado','=',false)
+        ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$value}%")->get();
+
+    }
+
+
+
+
+
+    ///////bomno anticipado para clientes busquieda
+
+
+
+
+    public function updatedSearchNombresClienteAnticipado($value)
+    {
+
+        $this->reset(['search_codigo_cliente_anticipado']);
+
+/*
+        $this->ventas=Venta::where('cancelado_total_venta','=',false)
+            ->where('anulado','=',false)
+            ->with("cliente")->where('nombres_cliente','LIKE',"%$value%")
+            ->get();
+*/
+
+    $this->clientes_search=Cliente::where('nombres_cliente','LIKE',"%{$value}%")->get();
+
+
+    }
+    public function updatedSearchCodigoClienteAnticipado($value)
+    {
+
+        $this->reset(['search_nombres_cliente_anticipado']);
        /* $this->ventas = DB::table('ventas')
             ->rightJoin('clientes','ventas.cliente_id','=','clientes.id')
             ->where('codigo_mayorista','LIKE',"%$value%")
@@ -224,11 +278,9 @@ class AbonoController extends Component
             */
 
 
-        $this->ventas=Venta::with('cliente')
-        ->where('cancelado_total_venta','=',false)
-            ->where('anulado','=',false)
-        ->whereRelation('cliente','codigo_mayorista','LIKE',"%{$value}%")->get();
+        $this->clientes_search=Cliente::where('codigo_mayorista','LIKE',"%{$value}%")->get();
 
+        //dd($this->clientes_search);
 
     }
 
@@ -376,6 +428,19 @@ class AbonoController extends Component
         ]);
         $this->alertaNotificacion("store");
         $this->cancel();
+    }
+
+    public function agregarCliente($id)
+    {
+
+        $this->isCreateAnticipado=false;
+        $cliente=Cliente::find($id);
+        $this->cliente_id=$cliente->cliente_id;
+        $this->codigo_interno=$cliente->codigo_interno;
+        $this->nombre_empresa=$cliente->nombre_empresa;
+        $this->nombres_cliente=$cliente->nombres_cliente;
+        $this->apellidos_cliente=$cliente->apellidos_cliente;
+
     }
 
     //////////////////////////////////ASIGNAR ABONO ANTICIPADO/////////////////////////////////////
